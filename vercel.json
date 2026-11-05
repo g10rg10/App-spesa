@@ -1,0 +1,6 @@
+{
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "redirects": [{ "source": "/", "destination": "/app/", "permanent": false }],
+  "headers": [{ "source": "/data/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] }]
+}
