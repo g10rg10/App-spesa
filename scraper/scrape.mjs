@@ -67,10 +67,14 @@ const NOT_COVERED = {
   lidl:      { name: "Lidl",      note: "Il sito blocca le richieste automatiche (401)" },
 };
 
+// Corrispondenza a inizio parola: "vino" non deve trovare "bovino", "cola" non "cioccolatini".
+const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const hasWord = (t, w) => new RegExp("(^|[^a-z0-9])" + esc(norm(w).trim())).test(t);
+
 function pickBest(results, match, unit) {
   const ok = results.filter((r) => {
     const t = norm(r.title + " " + r.pack);
-    return match.must.every((w) => w.split("|").some((alt) => t.includes(norm(alt)))) && !match.exclude.some((w) => t.includes(norm(w)));
+    return match.must.every((w) => w.split("|").some((alt) => hasWord(t, alt))) && !match.exclude.some((w) => hasWord(t, w));
   });
   ok.sort((a, b) => ((a.unit === unit ? a.ppu : null) ?? 1e9) - ((b.unit === unit ? b.ppu : null) ?? 1e9) || a.price - b.price);
   return ok[0] || null;

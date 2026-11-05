@@ -1,64 +1,6 @@
 {
- "_note": "Prodotti canonici. Per ogni catena: query di ricerca, parole obbligatorie (tutte nel titolo) e parole escluse. Si sceglie l'offerta con prezzo/kg più basso tra quelle che passano i filtri. 'must' accetta alternative separate da | (es. 'evo|extraverg').",
+ "_note": "Prodotti canonici. 'must': tutte le parole devono comparire nel titolo (alternative separate da |); 'exclude': nessuna deve comparire. Per ogni catena si sceglie l'offerta con prezzo per unità più basso.",
  "products": [
-  {
-   "id": "peperoncino-verde",
-   "name": "Peperoncino verde fresco",
-   "unit": "kg",
-   "aliases": [
-    "chilli verde",
-    "chili verde",
-    "peperoncini verdi",
-    "jalapeno"
-   ],
-   "match": {
-    "query": "peperoncino",
-    "must": [
-     "peperoncin"
-    ],
-    "exclude": [
-     "crema",
-     "frantum",
-     "macinat",
-     "merendin",
-     "olio",
-     "panzerott",
-     "pizza",
-     "ripien",
-     "salsa",
-     "secc",
-     "tonno"
-    ]
-   }
-  },
-  {
-   "id": "pomodori-ciliegino",
-   "name": "Pomodori ciliegino",
-   "unit": "kg",
-   "aliases": [
-    "pomodorini",
-    "ciliegini",
-    "cherry"
-   ],
-   "match": {
-    "query": "pomodorini",
-    "must": [
-     "ciliegin|pomodorin|datterin"
-    ],
-    "exclude": [
-     "conserva",
-     "merendin",
-     "panzerott",
-     "passata",
-     "pelati",
-     "pizza",
-     "polpa",
-     "salsa",
-     "secch",
-     "sugo"
-    ]
-   }
-  },
   {
    "id": "latte-intero",
    "name": "Latte intero",
@@ -68,18 +10,24 @@
     "latte fresco"
    ],
    "match": {
-    "query": "latte intero",
+    "query": "latte",
     "must": [
      "latte",
      "intero"
     ],
     "exclude": [
+     "biscott",
+     "caramell",
      "cioccolat",
      "condensat",
+     "gelato",
      "merendin",
+     "panin",
      "panzerott",
+     "patatin",
      "pizza",
-     "polvere"
+     "polvere",
+     "snack"
     ]
    }
   },
@@ -92,18 +40,296 @@
     "latte scremato"
    ],
    "match": {
-    "query": "latte parzialmente scremato",
+    "query": "latte ps",
     "must": [
      "latte",
      "scremat"
     ],
     "exclude": [
+     "biscott",
+     "caramell",
      "cioccolat",
+     "gelato",
      "merendin",
      "panzerott",
+     "patatin",
      "pizza",
-     "polvere"
+     "polvere",
+     "snack"
     ]
+   }
+  },
+  {
+   "id": "yogurt",
+   "name": "Yogurt",
+   "unit": "kg",
+   "aliases": [
+    "yogurt bianco",
+    "yogurt greco"
+   ],
+   "match": {
+    "query": "yogurt bianco",
+    "must": [
+     "yogurt"
+    ],
+    "exclude": [
+     "barrett",
+     "biscott",
+     "caramell",
+     "cereal",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "burro",
+   "name": "Burro",
+   "unit": "kg",
+   "aliases": [
+    "burro"
+   ],
+   "match": {
+    "query": "burro",
+    "must": [
+     "burro"
+    ],
+    "exclude": [
+     "arachid",
+     "biscott",
+     "caramell",
+     "cornett",
+     "cracker",
+     "croissant",
+     "frollin",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "mozzarella",
+   "name": "Mozzarella",
+   "unit": "kg",
+   "aliases": [
+    "fiordilatte"
+   ],
+   "match": {
+    "query": "fiordilatte",
+    "must": [
+     "mozzarell"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panat",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "pomodoro",
+     "snack",
+     "sticks"
+    ]
+   }
+  },
+  {
+   "id": "parmigiano",
+   "name": "Parmigiano Reggiano",
+   "unit": "kg",
+   "aliases": [
+    "parmigiano",
+    "parmigiano grattugiato"
+   ],
+   "match": {
+    "query": "parmigiano",
+    "must": [
+     "parmigian"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "cracker",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "grana-padano",
+   "name": "Grana Padano",
+   "unit": "kg",
+   "aliases": [
+    "grana"
+   ],
+   "match": {
+    "query": "grana",
+    "must": [
+     "grana padano"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "cracker",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "prosciutto-cotto",
+   "name": "Prosciutto cotto",
+   "unit": "kg",
+   "aliases": [
+    "cotto"
+   ],
+   "match": {
+    "query": "cotto",
+    "must": [
+     "prosciutto cotto"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "toast",
+     "tramezz"
+    ]
+   }
+  },
+  {
+   "id": "prosciutto-crudo",
+   "name": "Prosciutto crudo",
+   "unit": "kg",
+   "aliases": [
+    "crudo",
+    "parma",
+    "san daniele"
+   ],
+   "match": {
+    "query": "crudo",
+    "must": [
+     "prosciutto crudo|crudo di parma|san daniele"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "tramezz"
+    ]
+   }
+  },
+  {
+   "id": "uova",
+   "name": "Uova fresche",
+   "unit": "pz",
+   "aliases": [
+    "uovo",
+    "uova bio"
+   ],
+   "match": {
+    "query": "uovo",
+    "must": [
+     "uova"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "cioccolat",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "pasqua",
+     "pasta",
+     "patatin",
+     "pizza",
+     "snack",
+     "sorpresa"
+    ]
+   }
+  },
+  {
+   "id": "pane",
+   "name": "Pane",
+   "unit": "kg",
+   "aliases": [
+    "pane fresco",
+    "pagnotta"
+   ],
+   "match": {
+    "query": "pane fresco",
+    "must": [
+     "pane"
+    ],
+    "exclude": [
+     "al latte",
+     "burro",
+     "grattugiat",
+     "pancarr",
+     "pandoro",
+     "panettone",
+     "panino al latte",
+     "tramezz"
+    ]
+   }
+  },
+  {
+   "id": "pancarre",
+   "name": "Pancarrè / pan bauletto",
+   "unit": "kg",
+   "aliases": [
+    "pan bauletto",
+    "pancarrè",
+    "pane in cassetta"
+   ],
+   "match": {
+    "query": "pan bauletto",
+    "must": [
+     "pancarr|bauletto|in cassetta"
+    ],
+    "exclude": []
+   }
+  },
+  {
+   "id": "fette-biscottate",
+   "name": "Fette biscottate",
+   "unit": "kg",
+   "aliases": [
+    "fette biscottate"
+   ],
+   "match": {
+    "query": "fette biscottate",
+    "must": [
+     "fette biscottate"
+    ],
+    "exclude": []
    }
   },
   {
@@ -111,17 +337,327 @@
    "name": "Spaghetti",
    "unit": "kg",
    "aliases": [
-    "pasta",
+    "pasta lunga",
     "spaghettoni"
    ],
    "match": {
-    "query": "spaghetti",
+    "query": "pasta lunga",
     "must": [
      "spaghett"
     ],
     "exclude": [
-     "sugo",
-     "pronti"
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "pronti",
+     "snack",
+     "sugo"
+    ]
+   }
+  },
+  {
+   "id": "penne",
+   "name": "Penne",
+   "unit": "kg",
+   "aliases": [
+    "pasta corta",
+    "penne rigate"
+   ],
+   "match": {
+    "query": "pasta corta",
+    "must": [
+     "penne"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "pronti",
+     "snack",
+     "sugo"
+    ]
+   }
+  },
+  {
+   "id": "riso",
+   "name": "Riso",
+   "unit": "kg",
+   "aliases": [
+    "riso carnaroli",
+    "riso arborio",
+    "riso basmati"
+   ],
+   "match": {
+    "query": "riso carnaroli",
+    "must": [
+     "riso"
+    ],
+    "exclude": [
+     "bevanda",
+     "biscott",
+     "caramell",
+     "gallette",
+     "gelato",
+     "latte",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "pronto",
+     "risott",
+     "snack",
+     "soffiat"
+    ]
+   }
+  },
+  {
+   "id": "farina",
+   "name": "Farina",
+   "unit": "kg",
+   "aliases": [
+    "farina 00"
+   ],
+   "match": {
+    "query": "farina 00",
+    "must": [
+     "farina"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "cracker",
+     "dolc",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "preparato",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "zucchero",
+   "name": "Zucchero",
+   "unit": "kg",
+   "aliases": [
+    "zucchero semolato"
+   ],
+   "match": {
+    "query": "zucchero semolato",
+    "must": [
+     "zucchero"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "cioccolat",
+     "contenitor",
+     "dosatore",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "senza zucchero",
+     "setaccio",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "caffe-macinato",
+   "name": "Caffè macinato",
+   "unit": "kg",
+   "aliases": [
+    "caffè",
+    "caffe moka"
+   ],
+   "match": {
+    "query": "caffè",
+    "must": [
+     "caff"
+    ],
+    "exclude": [
+     "biscott",
+     "capsul",
+     "caramell",
+     "cialde",
+     "cioccolat",
+     "gelato",
+     "liquore",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "solubile"
+    ]
+   }
+  },
+  {
+   "id": "caffe-capsule",
+   "name": "Caffè in capsule",
+   "unit": "pz",
+   "aliases": [
+    "capsule",
+    "cialde"
+   ],
+   "match": {
+    "query": "capsule",
+    "must": [
+     "capsul|cialde"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "cassett",
+     "contenitor",
+     "gelato",
+     "macchina",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "porta",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "te",
+   "name": "Tè",
+   "unit": "pz",
+   "aliases": [
+    "tè",
+    "the",
+    "tea"
+   ],
+   "match": {
+    "query": "tè",
+    "must": [
+     "te|the|tè|tea"
+    ],
+    "exclude": [
+     "bevanda",
+     "biscott",
+     "candel",
+     "caramell",
+     "freddo",
+     "gelato",
+     "limone",
+     "limone liquido",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "tealight"
+    ]
+   }
+  },
+  {
+   "id": "biscotti",
+   "name": "Biscotti",
+   "unit": "kg",
+   "aliases": [
+    "biscotti colazione",
+    "frollini"
+   ],
+   "match": {
+    "query": "biscotti colazione",
+    "must": [
+     "biscott|frollin"
+    ],
+    "exclude": [
+     "fette",
+     "gelato"
+    ]
+   }
+  },
+  {
+   "id": "cereali",
+   "name": "Cereali colazione",
+   "unit": "kg",
+   "aliases": [
+    "corn flakes",
+    "muesli"
+   ],
+   "match": {
+    "query": "corn flakes",
+    "must": [
+     "cereal|corn flakes|muesli"
+    ],
+    "exclude": [
+     "barrett",
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "marmellata",
+   "name": "Marmellata / confettura",
+   "unit": "kg",
+   "aliases": [
+    "confettura"
+   ],
+   "match": {
+    "query": "confettura",
+    "must": [
+     "marmellat|confettur"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "crostat",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "crema-spalmabile",
+   "name": "Crema spalmabile al cacao",
+   "unit": "kg",
+   "aliases": [
+    "nutella",
+    "crema nocciole"
+   ],
+   "match": {
+    "query": "nutella",
+    "must": [
+     "crema spalmabile|nutella|crema alle nocciole|crema al cacao"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merend",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
     ]
    }
   },
@@ -131,22 +667,903 @@
    "unit": "l",
    "aliases": [
     "olio",
-    "evo",
-    "olio oliva"
+    "evo"
    ],
    "match": {
-    "query": "olio extravergine",
+    "query": "olio",
     "must": [
      "olio",
      "extraverg|evo|extra vergine"
     ],
     "exclude": [
+     "biscott",
+     "caramell",
      "carciof",
+     "gelato",
      "merendin",
      "panzerott",
+     "patatin",
      "pizza",
+     "snack",
      "sott",
      "spray",
+     "tonno"
+    ]
+   }
+  },
+  {
+   "id": "olio-semi",
+   "name": "Olio di semi",
+   "unit": "l",
+   "aliases": [
+    "olio girasole",
+    "olio di mais"
+   ],
+   "match": {
+    "query": "olio girasole",
+    "must": [
+     "olio di semi|olio di girasole|olio di mais|olio di arachide"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "aceto",
+   "name": "Aceto",
+   "unit": "l",
+   "aliases": [
+    "aceto di vino",
+    "aceto balsamico"
+   ],
+   "match": {
+    "query": "aceto di vino",
+    "must": [
+     "aceto"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "detergent",
+     "detersiv",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "piatti",
+     "pizza",
+     "snack",
+     "sott"
+    ]
+   }
+  },
+  {
+   "id": "passata",
+   "name": "Passata di pomodoro",
+   "unit": "kg",
+   "aliases": [
+    "passata",
+    "salsa di pomodoro"
+   ],
+   "match": {
+    "query": "passata",
+    "must": [
+     "passata"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "pelati",
+   "name": "Pomodori pelati / polpa",
+   "unit": "kg",
+   "aliases": [
+    "polpa di pomodoro",
+    "pelati"
+   ],
+   "match": {
+    "query": "polpa di pomodoro",
+    "must": [
+     "pelati|polpa di pomodoro"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "tonno",
+   "name": "Tonno in scatola",
+   "unit": "kg",
+   "aliases": [
+    "tonno all'olio",
+    "tonno"
+   ],
+   "match": {
+    "query": "tonno all'olio",
+    "must": [
+     "tonno"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "insalat",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "peperon",
+     "pizza",
+     "ripien",
+     "snack",
+     "tramezz"
+    ]
+   }
+  },
+  {
+   "id": "legumi",
+   "name": "Legumi in scatola",
+   "unit": "kg",
+   "aliases": [
+    "ceci",
+    "fagioli",
+    "lenticchie"
+   ],
+   "match": {
+    "query": "ceci",
+    "must": [
+     "ceci|fagiol|lenticch|piselli"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "zupp"
+    ]
+   }
+  },
+  {
+   "id": "sale",
+   "name": "Sale",
+   "unit": "kg",
+   "aliases": [
+    "sale fino",
+    "sale grosso"
+   ],
+   "match": {
+    "query": "sale fino",
+    "must": [
+     "sale"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "cracker",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "salame",
+     "salamoia",
+     "salat",
+     "sales",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "acqua",
+   "name": "Acqua minerale",
+   "unit": "l",
+   "aliases": [
+    "acqua naturale",
+    "acqua frizzante"
+   ],
+   "match": {
+    "query": "acqua naturale",
+    "must": [
+     "acqua"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "colonia",
+     "distillat",
+     "gel",
+     "gelato",
+     "merendin",
+     "micellare",
+     "ossigenat",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "profum",
+     "snack",
+     "tonica"
+    ]
+   }
+  },
+  {
+   "id": "birra",
+   "name": "Birra",
+   "unit": "l",
+   "aliases": [
+    "birra"
+   ],
+   "match": {
+    "query": "birra",
+    "must": [
+     "birra"
+    ],
+    "exclude": [
+     "analcolic",
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "vino",
+   "name": "Vino",
+   "unit": "l",
+   "aliases": [
+    "vino rosso",
+    "vino bianco"
+   ],
+   "match": {
+    "query": "vino rosso",
+    "must": [
+     "vino"
+    ],
+    "exclude": [
+     "aceto",
+     "biscott",
+     "bovino",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "succo",
+   "name": "Succo di frutta",
+   "unit": "l",
+   "aliases": [
+    "succo"
+   ],
+   "match": {
+    "query": "succo",
+    "must": [
+     "succo"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "coca-cola",
+   "name": "Cola",
+   "unit": "l",
+   "aliases": [
+    "coca cola",
+    "coca-cola",
+    "cola"
+   ],
+   "match": {
+    "query": "coca cola",
+    "must": [
+     "cola|coca"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "cioccolat",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "pollo",
+   "name": "Petto di pollo",
+   "unit": "kg",
+   "aliases": [
+    "pollo",
+    "petto di pollo"
+   ],
+   "match": {
+    "query": "pollo",
+    "must": [
+     "pollo"
+    ],
+    "exclude": [
+     "biscott",
+     "brodo",
+     "cane",
+     "cani",
+     "caramell",
+     "cordon",
+     "cotolet",
+     "croccantin",
+     "crocchet",
+     "crocchett",
+     "gatt",
+     "gelato",
+     "impanat",
+     "merendin",
+     "nugget",
+     "panat",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "wurstel"
+    ]
+   }
+  },
+  {
+   "id": "macinato",
+   "name": "Carne macinata",
+   "unit": "kg",
+   "aliases": [
+    "macinato",
+    "carne trita"
+   ],
+   "match": {
+    "query": "macinato",
+    "must": [
+     "macinat"
+    ],
+    "exclude": [
+     "biscott",
+     "caff",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "bistecca",
+   "name": "Bistecca / fettine di bovino",
+   "unit": "kg",
+   "aliases": [
+    "fettine",
+    "bistecca",
+    "manzo"
+   ],
+   "match": {
+    "query": "fettine",
+    "must": [
+     "fettin|bistecc|braciol|scottona|controfiletto|entrecote"
+    ],
+    "exclude": [
+     "biscott",
+     "bresaola",
+     "brodo",
+     "caramell",
+     "formaggio",
+     "gelato",
+     "hamburger",
+     "impanat",
+     "macinat",
+     "mare",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pesce",
+     "pizza",
+     "snack",
+     "tartare"
+    ]
+   }
+  },
+  {
+   "id": "salmone",
+   "name": "Salmone",
+   "unit": "kg",
+   "aliases": [
+    "salmone affumicato"
+   ],
+   "match": {
+    "query": "salmone affumicato",
+    "must": [
+     "salmone"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "tramezz"
+    ]
+   }
+  },
+  {
+   "id": "hamburger",
+   "name": "Hamburger",
+   "unit": "kg",
+   "aliases": [
+    "burger"
+   ],
+   "match": {
+    "query": "burger",
+    "must": [
+     "hamburger|burger"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "pane",
+     "panin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "salsa",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "wurstel",
+   "name": "Würstel",
+   "unit": "kg",
+   "aliases": [
+    "wurstel",
+    "würstel"
+   ],
+   "match": {
+    "query": "wurstel",
+    "must": [
+     "wurstel|würstel"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "mele",
+   "name": "Mele",
+   "unit": "kg",
+   "aliases": [
+    "mela",
+    "mele golden",
+    "mele fuji"
+   ],
+   "match": {
+    "query": "mela",
+    "must": [
+     "mele|mela"
+    ],
+    "exclude": [
+     "aceto",
+     "biscott",
+     "caramell",
+     "chips",
+     "composta",
+     "crostat",
+     "gelato",
+     "melanzan",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "succo",
+     "yogurt"
+    ]
+   }
+  },
+  {
+   "id": "banane",
+   "name": "Banane",
+   "unit": "kg",
+   "aliases": [
+    "banana"
+   ],
+   "match": {
+    "query": "banana",
+    "must": [
+     "banan"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "chips",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "secc",
+     "snack",
+     "succo",
+     "yogurt"
+    ]
+   }
+  },
+  {
+   "id": "arance",
+   "name": "Arance",
+   "unit": "kg",
+   "aliases": [
+    "arancia",
+    "arance da spremuta"
+   ],
+   "match": {
+    "query": "arancia",
+    "must": [
+     "arance|arancia"
+    ],
+    "exclude": [
+     "aranciat",
+     "biscott",
+     "caramell",
+     "cioccolat",
+     "gelato",
+     "marmellat",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "succo",
+     "yogurt"
+    ]
+   }
+  },
+  {
+   "id": "clementine",
+   "name": "Clementine / mandarini",
+   "unit": "kg",
+   "aliases": [
+    "mandarini",
+    "clementine"
+   ],
+   "match": {
+    "query": "mandarini",
+    "must": [
+     "clementin|mandarin"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "succo"
+    ]
+   }
+  },
+  {
+   "id": "kiwi",
+   "name": "Kiwi",
+   "unit": "kg",
+   "aliases": [
+    "kiwi"
+   ],
+   "match": {
+    "query": "kiwi",
+    "must": [
+     "kiwi"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "succo",
+     "yogurt"
+    ]
+   }
+  },
+  {
+   "id": "pere",
+   "name": "Pere",
+   "unit": "kg",
+   "aliases": [
+    "pera"
+   ],
+   "match": {
+    "query": "pera",
+    "must": [
+     "pere|pera"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "composta",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "peperon",
+     "pizza",
+     "snack",
+     "succo",
+     "yogurt"
+    ]
+   }
+  },
+  {
+   "id": "uva",
+   "name": "Uva",
+   "unit": "kg",
+   "aliases": [
+    "uva da tavola"
+   ],
+   "match": {
+    "query": "uva da tavola",
+    "must": [
+     "uva"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "secc",
+     "snack",
+     "succo",
+     "sultanin"
+    ]
+   }
+  },
+  {
+   "id": "pomodori-ciliegino",
+   "name": "Pomodori ciliegino",
+   "unit": "kg",
+   "aliases": [
+    "pomodorini",
+    "ciliegini",
+    "datterini"
+   ],
+   "match": {
+    "query": "pomodorini",
+    "must": [
+     "ciliegin|pomodorin|datterin"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "conserva",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "passata",
+     "patatin",
+     "pelati",
+     "pizza",
+     "polpa",
+     "salsa",
+     "secch",
+     "snack",
+     "sugo"
+    ]
+   }
+  },
+  {
+   "id": "patate",
+   "name": "Patate",
+   "unit": "kg",
+   "aliases": [
+    "patata"
+   ],
+   "match": {
+    "query": "patata",
+    "must": [
+     "patate"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "chips",
+     "crocchet",
+     "fritt",
+     "gelato",
+     "gnocch",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "pure ",
+     "purè",
+     "snack",
+     "speziat",
+     "surgel",
+     "vortic"
+    ]
+   }
+  },
+  {
+   "id": "cipolle",
+   "name": "Cipolle",
+   "unit": "kg",
+   "aliases": [
+    "cipolla"
+   ],
+   "match": {
+    "query": "cipolla",
+    "must": [
+     "cipoll"
+    ],
+    "exclude": [
+     "anelli",
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "sott",
+     "tonno"
+    ]
+   }
+  },
+  {
+   "id": "carote",
+   "name": "Carote",
+   "unit": "kg",
+   "aliases": [
+    "carota"
+   ],
+   "match": {
+    "query": "carota",
+    "must": [
+     "carot"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "succo",
+     "torta"
+    ]
+   }
+  },
+  {
+   "id": "zucchine",
+   "name": "Zucchine",
+   "unit": "kg",
+   "aliases": [
+    "zucchina"
+   ],
+   "match": {
+    "query": "zucchina",
+    "must": [
+     "zucchin"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "grigliat",
+     "merendin",
+     "panzerott",
+     "pastell",
+     "patatin",
+     "pizza",
+     "snack",
+     "surgel"
+    ]
+   }
+  },
+  {
+   "id": "insalata",
+   "name": "Insalata",
+   "unit": "kg",
+   "aliases": [
+    "lattuga",
+    "insalata in busta",
+    "valeriana",
+    "rucola"
+   ],
+   "match": {
+    "query": "lattuga",
+    "must": [
+     "insalat|lattuga|valerian|rucola"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "mare",
+     "merendin",
+     "panzerott",
+     "pasta",
+     "patatin",
+     "pizza",
+     "pollo",
+     "riso",
+     "snack",
      "tonno"
     ]
    }
@@ -159,15 +1576,20 @@
     "broccolo"
    ],
    "match": {
-    "query": "broccoli",
+    "query": "broccolo",
     "must": [
      "broccol"
     ],
     "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
      "merendin",
      "panzerott",
+     "patatin",
      "pesto",
      "pizza",
+     "snack",
      "surgel",
      "zuppa"
     ]
@@ -181,113 +1603,311 @@
     "avocadi"
    ],
    "match": {
-    "query": "avocado",
+    "query": "avocadi",
     "must": [
      "avocado"
     ],
     "exclude": [
+     "biscott",
+     "caramell",
      "crema",
+     "gelato",
      "guacamole",
      "merendin",
      "olio",
      "panzerott",
+     "patatin",
      "pizza",
-     "salsa"
+     "salsa",
+     "snack"
     ]
    }
   },
   {
-   "id": "banane",
-   "name": "Banane",
+   "id": "peperoncino-verde",
+   "name": "Peperoncino verde fresco",
    "unit": "kg",
    "aliases": [
-    "banana"
+    "chilli verde",
+    "chili verde",
+    "peperoncini verdi",
+    "jalapeno"
    ],
    "match": {
-    "query": "banane",
+    "query": "chilli verde",
     "must": [
-     "banan"
+     "peperoncin"
     ],
     "exclude": [
-     "chips",
+     "biscott",
+     "caramell",
+     "crema",
+     "frantum",
+     "gelato",
+     "macinat",
      "merendin",
+     "olio",
      "panzerott",
+     "patatin",
      "pizza",
+     "ripien",
+     "salsa",
      "secc",
-     "succo",
-     "yogurt"
+     "snack",
+     "tonno"
     ]
    }
   },
   {
-   "id": "uova",
-   "name": "Uova fresche",
+   "id": "zenzero",
+   "name": "Zenzero fresco",
+   "unit": "kg",
+   "aliases": [
+    "ginger"
+   ],
+   "match": {
+    "query": "ginger",
+    "must": [
+     "zenzero"
+    ],
+    "exclude": [
+     "bevanda",
+     "biscott",
+     "caramell",
+     "gelato",
+     "infuso",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack",
+     "tisana"
+    ]
+   }
+  },
+  {
+   "id": "surgelati-verdure",
+   "name": "Verdure surgelate",
+   "unit": "kg",
+   "aliases": [
+    "minestrone",
+    "piselli surgelati",
+    "spinaci surgelati"
+   ],
+   "match": {
+    "query": "minestrone",
+    "must": [
+     "minestron|spinaci|piselli"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "fresc",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "carta-igienica",
+   "name": "Carta igienica",
    "unit": "pz",
    "aliases": [
-    "uovo",
-    "uova bio"
+    "carta igienica"
    ],
    "match": {
-    "query": "uova",
+    "query": "carta igienica",
     "must": [
-     "uova"
+     "carta igienica"
     ],
     "exclude": [
-     "cioccolat",
+     "biscott",
+     "caramell",
+     "gelato",
      "merendin",
      "panzerott",
-     "pasqua",
-     "pasta",
+     "patatin",
      "pizza",
-     "sorpresa"
+     "snack"
     ]
    }
   },
   {
-   "id": "mozzarella",
-   "name": "Mozzarella",
-   "unit": "kg",
+   "id": "detersivo-lavatrice",
+   "name": "Detersivo lavatrice",
+   "unit": "l",
    "aliases": [
-    "fiordilatte",
-    "mozzarella vaccina"
+    "detersivo bucato"
    ],
    "match": {
-    "query": "mozzarella",
+    "query": "detersivo bucato",
     "must": [
-     "mozzarell"
+     "lavatrice|bucato"
     ],
     "exclude": [
+     "ammorbident",
+     "biscott",
+     "caramell",
+     "gelato",
      "merendin",
-     "panat",
      "panzerott",
+     "patatin",
      "pizza",
-     "pomodoro",
-     "sticks"
+     "snack"
     ]
    }
   },
   {
-   "id": "caffe-macinato",
-   "name": "Caffè macinato",
-   "unit": "kg",
+   "id": "detersivo-piatti",
+   "name": "Detersivo piatti",
+   "unit": "l",
    "aliases": [
-    "caffe",
-    "caffè moka"
+    "piatti a mano",
+    "lavastoviglie"
    ],
    "match": {
-    "query": "caffè macinato",
+    "query": "piatti a mano",
     "must": [
-     "caff"
+     "piatti|lavastovigl"
     ],
     "exclude": [
-     "capsul",
-     "cialde",
-     "cioccolat",
-     "liquore",
+     "biscott",
+     "caramell",
+     "gelato",
      "merendin",
      "panzerott",
+     "patatin",
      "pizza",
-     "solubile"
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "shampoo",
+   "name": "Shampoo",
+   "unit": "l",
+   "aliases": [
+    "shampoo"
+   ],
+   "match": {
+    "query": "shampoo",
+    "must": [
+     "shampoo"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "dentifricio",
+   "name": "Dentifricio",
+   "unit": "l",
+   "aliases": [
+    "dentifricio"
+   ],
+   "match": {
+    "query": "dentifricio",
+    "must": [
+     "dentifric"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "pannolini",
+   "name": "Pannolini",
+   "unit": "pz",
+   "aliases": [
+    "pannolini"
+   ],
+   "match": {
+    "query": "pannolini",
+    "must": [
+     "pannolin"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "cibo-cani",
+   "name": "Cibo per cani",
+   "unit": "kg",
+   "aliases": [
+    "crocchette cane",
+    "cibo cane"
+   ],
+   "match": {
+    "query": "crocchette cane",
+    "must": [
+     "cane|cani"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "lettier",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "snack"
+    ]
+   }
+  },
+  {
+   "id": "cibo-gatti",
+   "name": "Cibo per gatti",
+   "unit": "kg",
+   "aliases": [
+    "crocchette gatto",
+    "umido gatto"
+   ],
+   "match": {
+    "query": "crocchette gatto",
+    "must": [
+     "gatto|gatti"
+    ],
+    "exclude": [
+     "biscott",
+     "caramell",
+     "gelato",
+     "lettier",
+     "merendin",
+     "panzerott",
+     "patatin",
+     "pizza",
+     "sabbia",
+     "snack"
     ]
    }
   }

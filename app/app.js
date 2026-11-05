@@ -173,19 +173,52 @@ function chart(p) {
   <p class="muted" style="margin:6px 0 0">Minimo del periodo: ${eur(best.low.v)} da ${chainById[best.s.chain].name} il ${fmtDate(best.low.day)}. I cali improvvisi sono promo.</p>`;
 }
 
+// ---------- Offerte ----------
+let offChain = "tutte", offCat = "tutte", offSort = "sconto";
+const titleCase = (s) => (s === s.toUpperCase() ? s.charAt(0) + s.slice(1).toLowerCase() : s);
+function allOffers() {
+  return Object.entries(FLYERS).flatMap(([c, list]) => list.map((o) => ({ chain: c, ...o, pct: o.promo?.pct || 0, cat: o.category ? titleCase(o.category) : "Altro" })));
+}
+function offersView() {
+  $("#title").textContent = "Offerte";
+  $("#back").hidden = true;
+  if (MODE !== "real") { view.innerHTML = `<p class="hint">Le offerte sono disponibili solo con i dati reali.</p>`; return; }
+  const all = allOffers();
+  const cats = [...new Set(all.filter((o) => offChain === "tutte" || o.chain === offChain).map((o) => o.cat))].sort();
+  if (!cats.includes(offCat)) offCat = "tutte";
+  let list = all.filter((o) => (offChain === "tutte" || o.chain === offChain) && (offCat === "tutte" || o.cat === offCat));
+  list.sort(offSort === "sconto" ? (a, b) => b.pct - a.pct || a.price - b.price : offSort === "ppu" ? (a, b) => (a.ppu ?? 1e9) - (b.ppu ?? 1e9) : (a, b) => a.price - b.price);
+  const shown = list.slice(0, 150);
+  view.innerHTML = `
+    <div class="filters">
+      ${["tutte", ...CHAINS.map((c) => c.id)].map((c) => `<button class="chip ${offChain === c ? "on" : ""}" data-offchain="${c}">${c === "tutte" ? "Tutte le catene" : chainById[c].name}</button>`).join("")}
+    </div>
+    <div class="filters">
+      <select class="chip" id="offcat"><option value="tutte">Tutte le categorie</option>${cats.map((c) => `<option ${c === offCat ? "selected" : ""}>${c}</option>`).join("")}</select>
+      ${[["sconto", "Sconto più alto"], ["prezzo", "Prezzo più basso"], ["ppu", "€/kg più basso"]].map(([k, l]) => `<button class="chip ${offSort === k ? "on" : ""}" data-offsort="${k}">${l}</button>`).join("")}
+    </div>
+    <p class="muted">${list.length} offerte${list.length > shown.length ? ` · prime ${shown.length}` : ""} · volantini validi fino al ${fmtDate(new Date(Math.max(...all.map((o) => +new Date(o.validUntil || 0)))))}</p>
+    ${shown.map((o) => `<div class="card row"><div><b>${o.pct ? `<span class="disc">−${o.pct}%</span>` : ""}${titleCase(o.title)}</b><br><small class="muted"><span class="dot" style="background:${chainById[o.chain].color}"></span> ${chainById[o.chain].name}${o.pack ? " · " + o.pack : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("")}`;
+  $("#offcat").onchange = (e) => { offCat = e.target.value; offersView(); };
+}
+
 // ---------- Router ----------
 function route() {
   const h = location.hash;
-  if (h.startsWith("#p/")) productView(h.slice(3));
+  document.querySelectorAll(".tabs a").forEach((a) => a.classList.toggle("on", a.dataset.tab === (h.startsWith("#offerte") ? "offerte" : "cerca")));
+  if (h.startsWith("#offerte")) offersView();
+  else if (h.startsWith("#p/")) productView(h.slice(3));
   else homeView(h.startsWith("#q=") ? decodeURIComponent(h.slice(3)) : "");
 }
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-go],[data-q],[data-sort],[data-period]");
+  const t = e.target.closest("[data-go],[data-q],[data-sort],[data-period],[data-offchain],[data-offsort]");
   if (!t) return;
   if (t.dataset.go) location.hash = "#p/" + t.dataset.go;
   if (t.dataset.q) { $("#q").value = t.dataset.q; $("#q").dispatchEvent(new Event("input")); }
   if (t.dataset.sort) { sortBy = t.dataset.sort; route(); }
   if (t.dataset.period) { period = +t.dataset.period; route(); }
+  if (t.dataset.offchain) { offChain = t.dataset.offchain; offersView(); }
+  if (t.dataset.offsort) { offSort = t.dataset.offsort; offersView(); }
 });
 $("#back").onclick = () => history.length > 1 ? history.back() : (location.hash = "");
 addEventListener("hashchange", route);
