@@ -1,5 +1,5 @@
 {
- "_note": "Prodotti canonici. 'must': tutte le parole devono comparire nel titolo (alternative separate da |); 'exclude': nessuna deve comparire. Per ogni catena si sceglie l'offerta con prezzo per unità più basso.",
+ "_note": "Prodotti canonici. 'must': tutte le parole devono comparire nel titolo (alternative separate da |); 'exclude': nessuna deve comparire. Per ogni catena si sceglie l'offerta con prezzo per unità più basso. Un termine che termina con $ deve essere una parola intera.",
  "products": [
   {
    "id": "latte-intero",
@@ -23,6 +23,7 @@
      "gelato",
      "merendin",
      "panin",
+     "panna",
      "panzerott",
      "patatin",
      "pizza",
@@ -79,6 +80,7 @@
      "cereal",
      "gelato",
      "merendin",
+     "panna",
      "panzerott",
      "patatin",
      "pizza",
@@ -108,10 +110,14 @@
      "frollin",
      "gelato",
      "merendin",
+     "natalizi",
+     "pandoro",
+     "panettone",
      "panzerott",
      "patatin",
      "pizza",
-     "snack"
+     "snack",
+     "stollen"
     ]
    }
   },
@@ -545,21 +551,26 @@
    "match": {
     "query": "tè",
     "must": [
-     "te|the|tè|tea"
+     "te$|the$|tea$|infuso|tisana"
     ],
     "exclude": [
+     "avvento",
      "bevanda",
      "biscott",
+     "calendario",
      "candel",
      "caramell",
+     "decoraz",
      "freddo",
      "gelato",
      "limone",
      "limone liquido",
      "merendin",
+     "natalizi",
      "panzerott",
      "patatin",
      "pizza",
+     "ponierell",
      "snack",
      "tealight"
     ]
@@ -628,10 +639,13 @@
      "crostat",
      "gelato",
      "merendin",
+     "natalizi",
+     "panettone",
      "panzerott",
      "patatin",
      "pizza",
-     "snack"
+     "snack",
+     "stollen"
     ]
    }
   },
@@ -650,6 +664,7 @@
     ],
     "exclude": [
      "biscott",
+     "biscuits",
      "caramell",
      "gelato",
      "merend",
@@ -862,13 +877,16 @@
    "match": {
     "query": "sale fino",
     "must": [
-     "sale"
+     "sale$"
     ],
     "exclude": [
+     "bagno",
      "biscott",
      "caramell",
      "cracker",
+     "doccia",
      "gelato",
+     "lavastovigl",
      "merendin",
      "panzerott",
      "patatin",
@@ -876,6 +894,8 @@
      "salame",
      "salamoia",
      "salat",
+     "salent",
+     "salento",
      "sales",
      "snack"
     ]
@@ -1345,7 +1365,7 @@
    "match": {
     "query": "pera",
     "must": [
-     "pere|pera"
+     "pere$|pera$"
     ],
     "exclude": [
      "biscott",
@@ -1373,7 +1393,7 @@
    "match": {
     "query": "uva da tavola",
     "must": [
-     "uva"
+     "uva$"
     ],
     "exclude": [
      "biscott",
@@ -1408,8 +1428,10 @@
      "biscott",
      "caramell",
      "conserva",
+     "formagg",
      "gelato",
      "merendin",
+     "mozzarell",
      "panzerott",
      "passata",
      "patatin",
@@ -1417,6 +1439,7 @@
      "pizza",
      "polpa",
      "salsa",
+     "scamorza",
      "secch",
      "snack",
      "sugo"
@@ -1676,7 +1699,9 @@
      "caramell",
      "gelato",
      "infuso",
+     "kit",
      "merendin",
+     "pan di zenzero",
      "panzerott",
      "patatin",
      "pizza",
@@ -1701,6 +1726,7 @@
     ],
     "exclude": [
      "biscott",
+     "buona domenica",
      "caramell",
      "fresc",
      "gelato",
@@ -1708,6 +1734,7 @@
      "panzerott",
      "patatin",
      "pizza",
+     "polpett",
      "snack"
     ]
    }

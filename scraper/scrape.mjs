@@ -72,7 +72,12 @@ const NOT_COVERED = {
 
 // Corrispondenza a inizio parola: "vino" non deve trovare "bovino", "cola" non "cioccolatini".
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const hasWord = (t, w) => new RegExp("(^|[^a-z0-9])" + esc(norm(w).trim())).test(t);
+// Un termine che finisce con "$" deve essere una parola intera ("te$" non trova "tenero").
+const hasWord = (t, w) => {
+  const whole = w.endsWith("$");
+  const term = esc(norm(whole ? w.slice(0, -1) : w).trim());
+  return new RegExp("(^|[^a-z0-9])" + term + (whole ? "(?![a-z0-9])" : "")).test(t);
+};
 
 function pickBest(results, match, unit) {
   const ok = results.filter((r) => {

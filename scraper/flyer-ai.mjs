@@ -164,15 +164,25 @@ function sniff(buf) {
   return "image/jpeg";
 }
 
+// Ricava kg/l/pezzi dal formato ("500 g", "6 x 1 l", "2 kg") per calcolare il prezzo per unità se manca.
+function qtyFromPack(pack) {
+  const t = (pack || "").toLowerCase().replace(",", ".");
+  const m = t.match(/(?:(\d+)\s*x\s*)?(\d+(?:\.\d+)?)\s*(kg|g|ml|cl|l)\b/);
+  if (!m) return null;
+  const n = (m[1] ? +m[1] : 1) * +m[2];
+  return { kg: [n, "kg"], g: [n / 1000, "kg"], l: [n, "l"], cl: [n / 100, "l"], ml: [n / 1000, "l"] }[m[3]];
+}
+
 function toCommon(o, meta) {
-  const ppu = o.unit_price ?? null;
+  let ppu = o.unit_price ?? null, unit = o.unit || null;
+  if (ppu == null) { const q = qtyFromPack(o.pack); if (q && q[0] > 0) { ppu = +(o.price / q[0]).toFixed(2); unit = q[1]; } }
   return {
     title: [o.name, o.brand].filter(Boolean).join(" · "),
     pack: o.pack || "",
     category: o.category,
     price: o.price,
     ppu,
-    unit: o.unit || null,
+    unit,
     promo: o.old_price && o.old_price > o.price ? { oldPrice: o.old_price, pct: Math.floor((1 - o.price / o.old_price) * 100), until: meta.validUntil || null } : null,
     cardPrice: o.card_price && o.card_price < o.price ? o.card_price : null,
     validUntil: meta.validUntil || null,
