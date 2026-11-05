@@ -1,0 +1,23 @@
+name: Aggiorna prezzi
+on:
+  workflow_dispatch: {}
+  # Riattivare quando c'è almeno una fonte dati autorizzata/funzionante:
+  # schedule:
+  #   - cron: "17 4 * * *"   # ogni giorno alle 04:17 UTC
+permissions:
+  contents: write
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scraper/scrape.mjs
+      - name: Salva i dati nel repo
+        run: |
+          git config user.name "prezzi-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "Prezzi $(date -u +%F)"
+          git push
