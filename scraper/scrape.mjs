@@ -95,12 +95,11 @@ async function main() {
   const flyers = {}; // offerte complete per catena, per la ricerca libera nell'app
   for (const [chainId, ad] of Object.entries(ADAPTERS)) {
     if (ad.enabled === false) continue;
-    if (ad.ai && !aiAvailable()) { chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: "Volantino letto con AI: serve GROQ_API_KEY (o ANTHROPIC_API_KEY)" }); continue; }
     let errors = 0, all = null;
     if (ad.load) {
       try {
         all = await ad.load();
-        if (!all.length) throw new Error("nessuna offerta letta");
+        if (!all.length) { chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: ad.ai && !aiAvailable() ? "Volantino letto con AI: serve GROQ_API_KEY" : "Nessuna offerta letta" }); continue; }
         flyers[chainId] = all; console.log(`[${chainId}] ${all.length} offerte`);
       }
       catch (e) { console.error(`[${chainId}] ${e.message}`); chains.push({ id: chainId, name: ad.name, coverage: ad.coverage, status: "errore" }); continue; }

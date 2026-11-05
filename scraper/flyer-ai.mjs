@@ -9,7 +9,7 @@ const CACHE = new URL("../data/ai-cache.json", import.meta.url);
 // Provider: "groq" (piano gratuito, modelli open con visione) oppure "anthropic" (Claude, a pagamento).
 // Si sceglie da solo in base alla chiave presente; FLYER_PROVIDER forza la scelta.
 const PROVIDER = process.env.FLYER_PROVIDER || (process.env.GROQ_API_KEY ? "groq" : "anthropic");
-const MODEL = process.env.FLYER_MODEL || (PROVIDER === "groq" ? "meta-llama/llama-4-scout-17b-16e-instruct" : "claude-opus-5-5");
+const MODEL = process.env.FLYER_MODEL || (PROVIDER === "groq" ? "qwen/qwen3.8-27b" : "claude-opus-5-5");
 const MAX_NEW_PAGES = +(process.env.FLYER_MAX_PAGES || 80); // tetto di sicurezza sulla spesa per singola esecuzione
 
 const nullable = (type) => ({ type: [type, "null"] });
@@ -49,6 +49,8 @@ Elenca ogni prodotto in offerta con il suo prezzo. Regole:
 - Se la pagina non contiene offerte, restituisci una lista vuota.`;
 
 let cache = null;
+let newPagesThisRun = 0;   // contatore globale sulle pagine nuove (tetto di spesa/limiti)
+let providerExhausted = false; // limite giornaliero raggiunto: si riprende al prossimo giro
 async function loadCache() {
   if (!cache) { try { cache = JSON.parse(await readFile(CACHE)); } catch { cache = {}; } }
   return cache;
@@ -77,14 +79,14 @@ export async function extractFlyer(chainId, pages, meta = {}) {
     const key = createHash("sha1").update(data).digest("hex");
     let offers = c[key]?.offers;
     if (offers) cached++;
-    else if (!client || analysed >= MAX_NEW_PAGES) { skipped++; continue; }
+    else if (!client || providerExhausted || newPagesThisRun >= MAX_NEW_PAGES) { skipped++; continue; }
     else {
       offers = PROVIDER === "groq"
         ? await readPageGroq(data, pg.mediaType || sniff(data), chainId)
         : await readPage(client, data, pg.mediaType || sniff(data), chainId);
       if (offers === null) continue;
       c[key] = { chain: chainId, model: MODEL, at: new Date().toISOString().slice(0, 10), offers };
-      analysed++;
+      analysed++; newPagesThisRun++;
       await writeFile(CACHE, JSON.stringify(c)); // salva subito: se il job si interrompe non si ripaga
     }
     for (const o of offers) out.push(toCommon(o, meta));
@@ -139,7 +141,11 @@ async function readPageGroq(data, mediaType, chainId) {
       headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (res.status === 429) { const wait = (+res.headers.get("retry-after") || 20) * 1000; console.error(`[${chainId}] limite Groq, attendo ${wait / 1000}s`); await sleep(wait); continue; }
+    if (res.status === 429) {
+      const wait = (+res.headers.get("retry-after") || 20) * 1000;
+      if (wait > 120000) { providerExhausted = true; console.error(`[${chainId}] limite giornaliero Groq raggiunto: riprendo al prossimo giro`); return null; }
+      await sleep(wait); continue;
+    }
     if (!res.ok) { console.error(`[${chainId}] errore Groq ${res.status}: ${(await res.text()).slice(0, 300)}`); return null; }
     const json = await res.json();
     try {
