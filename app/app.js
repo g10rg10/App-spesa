@@ -4,7 +4,44 @@ const view = $("#view");
 const eur = (n) => n.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
 const fmtDate = (t) => new Date(t).toLocaleDateString("it-IT", { day: "numeric", month: "short" });
 const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
-const chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
+let chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
+let MODE = "demo";
+let FLYERS = {};      // offerte complete dei volantini (dati reali)
+let OTHER_CHAINS = []; // catene senza dati
+const COLORS = { eurospin: "#ca8a04", lidl: "#1d4ed8", coop: "#e85d04", conad: "#2a9d8f", esselunga: "#d62828", carrefour: "#7c3aed" };
+
+// Prova a caricare i dati reali prodotti dallo scraper; altrimenti resta in demo.
+async function loadReal() {
+  if (new URLSearchParams(location.search).has("demo")) return;
+  try {
+    const [latest, hist] = await Promise.all(["../data/latest.json", "../data/history.json"].map((u) => fetch(u, { cache: "no-store" }).then((r) => { if (!r.ok) throw 0; return r.json(); })));
+    const day = (d) => new Date(d + "T00:00:00").getTime();
+    const covered = latest.chains.filter((c) => c.status === "ok" || c.status === "parziale");
+    CHAINS = covered.map((c) => ({ id: c.id, name: c.name, color: COLORS[c.id] || "#555", coverage: c.coverage }));
+    OTHER_CHAINS = latest.chains.filter((c) => !covered.includes(c));
+    PRODUCTS = latest.products.map((p) => {
+      const listings = {};
+      for (const c of covered) {
+        const o = p.offers[c.id];
+        if (!o) continue;
+        if (!o.found || !o.ppu) { listings[c.id] = null; continue; }
+        const qty = o.price / o.ppu;
+        listings[c.id] = {
+          label: `${o.title} · ${o.pack}`, qty, price: o.price, listPrice: o.promo?.oldPrice ?? o.price,
+          promo: o.promo ? { pct: (o.promo.pct || 0) / 100, until: day(o.promo.until) } : null,
+          validUntil: o.validUntil ? day(o.validUntil) : null, updatedAt: day(o.updatedAt),
+          history: (hist[p.id]?.[c.id] || []).map(([d, , ppu, promo]) => ({ day: day(d), price: ppu * qty, promo: !!promo })),
+        };
+      }
+      return { ...p, category: "", listings };
+    });
+    FLYERS = latest.flyers || {};
+    chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
+    MODE = "real";
+    $(".badge").textContent = "DATI REALI";
+    $(".badge").style.color = "var(--good)";
+  } catch {}
+}
 const unitLabel = (u) => ({ kg: "kg", l: "litro", pz: "pezzo" }[u]);
 const store = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
@@ -21,6 +58,7 @@ function km(a, b) {
   return 2 * R * Math.asin(Math.sqrt(x));
 }
 function nearest(chainId) {
+  if (MODE === "real") return null;
   return STORES.filter((s) => s.chain === chainId).map((s) => ({ ...s, km: km(userPos, s) })).sort((a, b) => a.km - b.km)[0];
 }
 
@@ -36,12 +74,13 @@ function search(q) {
 }
 const offers = (p) => Object.entries(p.listings).filter(([, l]) => l).map(([chain, l]) => ({ chain, ...l, ppu: l.price / l.qty }));
 const bestOffer = (p) => offers(p).sort((a, b) => a.ppu - b.ppu)[0];
+const flyerHits = (q) => { const t = norm(q).split(/\s+/).filter(Boolean); if (!t.length) return []; return Object.entries(FLYERS).flatMap(([c, list]) => list.filter((o) => t.every((w) => norm(o.title + " " + o.pack + " " + (o.category || "")).includes(w))).map((o) => ({ chain: c, ...o }))).sort((a, b) => (a.ppu ?? 1e9) - (b.ppu ?? 1e9)).slice(0, 30); };
 
 // ---------- Alert ----------
 const getAlerts = () => store.get("alerts", {});
 function triggeredAlerts() {
   const a = getAlerts();
-  return PRODUCTS.filter((p) => a[p.id] && bestOffer(p).ppu <= a[p.id]).map((p) => ({ p, best: bestOffer(p), target: a[p.id] }));
+  return PRODUCTS.filter((p) => a[p.id] && bestOffer(p) && bestOffer(p).ppu <= a[p.id]).map((p) => ({ p, best: bestOffer(p), target: a[p.id] }));
 }
 
 // ---------- Viste ----------
@@ -52,15 +91,16 @@ function homeView(q = "") {
   view.innerHTML = `
     ${hits.map(({ p, best, target }) => `<div class="banner" data-go="${p.id}">🔔 <b>${p.name}</b> è sceso a ${eur(best.ppu)}/${unitLabel(p.unit)} da ${chainById[best.chain].name} (soglia ${eur(target)})</div>`).join("")}
     <input id="q" class="search" type="search" placeholder="Cerca un prodotto, es. chilli verde" value="${q.replace(/"/g, "&quot;")}" autocomplete="off" autofocus>
-    <div class="chips">${["chilli verde", "latte", "olio", "avocado", "zenzero", "uova"].map((s) => `<button class="chip" data-q="${s}">${s}</button>`).join("")}</div>
+    <div class="chips">${(MODE === "real" ? ["latte", "olio", "caffè", "grana", "clementine", "chilli verde"] : ["chilli verde", "latte", "olio", "avocado", "zenzero", "uova"]).map((s) => `<button class="chip" data-q="${s}">${s}</button>`).join("")}</div>
     <div id="results"></div>`;
   const input = $("#q");
   const render = () => {
     const v = input.value; history.replaceState(null, "", v ? `#q=${encodeURIComponent(v)}` : "#");
-    const res = search(v);
+    const res = search(v), fh = MODE === "real" ? flyerHits(v) : [];
+    const flyerHtml = fh.length ? `<h2>Nei volantini (${fh.length})</h2>` + fh.map((o) => `<div class="card row"><div><b>${o.title}</b><br><small>${chainById[o.chain]?.name || o.chain} · ${o.pack}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("") : "";
     $("#results").innerHTML = !v.trim() ? `<p class="hint">Scrivi il nome di un prodotto: ti mostro dove costa meno, al kg o al litro.</p>`
-      : !res.length ? `<p class="hint">Nessun prodotto trovato per “${v}”. Prova con un nome più generico.</p>`
-      : res.map((p) => { const b = bestOffer(p); return `<div class="card prod" data-go="${p.id}"><div><b>${p.name}</b><br><small>${offers(p).length} catene su ${CHAINS.length} · ${p.category}</small></div><div class="price" style="font-size:16px">da ${eur(b.ppu)}<br><small>/${unitLabel(p.unit)} · ${chainById[b.chain].name}</small></div></div>`; }).join("");
+      : !res.length && !fh.length ? `<p class="hint">Nessun prodotto trovato per “${v}”. Prova con un nome più generico.</p>`
+      : res.map((p) => { const b = bestOffer(p); return `<div class="card prod" data-go="${p.id}"><div><b>${p.name}</b><br><small>${offers(p).length ? `${offers(p).length} su ${CHAINS.length} ${CHAINS.length === 1 ? "catena" : "catene"}` : "nessuna offerta oggi"}${p.category ? " · " + p.category : ""}</small></div><div class="price" style="font-size:16px">${b ? `da ${eur(b.ppu)}<br><small>/${unitLabel(p.unit)} · ${chainById[b.chain].name}</small>` : `<small class="muted">non trovato da<br>${CHAINS.map((c) => c.name).join(", ")}</small>`}</div></div>`; }).join("") + flyerHtml;
   };
   input.addEventListener("input", render);
   render();
@@ -82,24 +122,27 @@ function productView(id) {
       <button class="chip ${sortBy === "ppu" ? "on" : ""}" data-sort="ppu">€/${u}</button>
       <button class="chip ${sortBy === "price" ? "on" : ""}" data-sort="price">Prezzo confezione</button>
     </div>
+    ${!list.length ? `<p class="hint">Al momento nessuna catena coperta lo vende a un prezzo rilevato.</p>` : ""}
     ${list.map((o, i) => { const s = nearest(o.chain); const age = Math.round((TODAY - o.updatedAt) / 86400000); return `
       <div class="card row ${i === 0 ? "best" : ""}">
         <div class="chain"><span class="dot" style="background:${chainById[o.chain].color}"></span>${chainById[o.chain].name}${i === 0 ? '<span class="tag">PIÙ CONVENIENTE</span>' : ""}</div>
         <div class="price">${o.promo ? `<span class="old">${eur(o.listPrice)}</span>` : ""}${eur(o.price)}</div>
         <div class="muted">${o.label}</div>
         <div class="ppu">${eur(o.ppu)}/${u}</div>
-        <div class="muted">📍 ${s ? `${s.name} · ${s.km.toFixed(1)} km${posIsReal ? "" : " (da Milano centro)"}` : "nessun negozio in zona"}</div><div></div>
+        <div class="muted">📍 ${s ? `${s.name} · ${s.km.toFixed(1)} km${posIsReal ? "" : " (da Milano centro)"}` : `<a href="https://www.google.com/maps/search/${encodeURIComponent(chainById[o.chain].name)}" target="_blank" rel="noopener">Negozio più vicino</a>`}</div><div></div>
+        ${o.validUntil && !o.promo ? `<div class="muted">Prezzo volantino valido fino al ${fmtDate(o.validUntil)}</div><div></div>` : ""}
         <div class="muted ${age > 0 ? "stale" : ""}">Aggiornato ${age === 0 ? "oggi" : age === 1 ? "ieri" : `${age} giorni fa`}</div><div></div>
         ${o.promo ? (o.promo.until < TODAY ? `<div class="stale">⚠ Promo finita il ${fmtDate(o.promo.until)}: prezzo da verificare</div><div></div>` : `<div class="promo">−${Math.round(o.promo.pct * 100)}% fino al ${fmtDate(o.promo.until)}</div><div></div>`) : ""}
       </div>`; }).join("")}
-    ${missing.map((m) => `<div class="missing">✕ Non trovato da ${m}</div>`).join("")}
+    ${missing.map((m) => `<div class="missing">✕ ${MODE === "real" ? `Non nel volantino ${m} di questa settimana` : `Non trovato da ${m}`}</div>`).join("")}
+    ${OTHER_CHAINS.length ? `<p class="muted">Dati non ancora disponibili per: ${OTHER_CHAINS.map((c) => c.name).join(", ")}.</p>` : ""}
     <h2>Storico prezzo (€/${u})</h2>
     <div class="toggle">${[30, 90].map((d) => `<button class="chip ${period === d ? "on" : ""}" data-period="${d}">${d} giorni</button>`).join("")}</div>
     <div class="card">${chart(p)}</div>
     <h2>Avvisami quando scende</h2>
     <div class="card">
       <div class="alert">
-        <span>Sotto</span><input id="thr" type="number" inputmode="decimal" step="0.01" min="0" value="${alertVal ?? (list[0].ppu * 0.9).toFixed(2)}"><span>€/${u}</span>
+        <span>Sotto</span><input id="thr" type="number" inputmode="decimal" step="0.01" min="0" value="${alertVal ?? (list[0] ? (list[0].ppu * 0.9).toFixed(2) : "")}"><span>€/${u}</span>
         <button class="btn" id="saveAlert">${alertVal ? "Aggiorna" : "Attiva alert"}</button>
         ${alertVal ? '<button class="btn ghost" id="delAlert">Rimuovi</button>' : ""}
       </div>
@@ -112,6 +155,7 @@ function productView(id) {
 function chart(p) {
   const W = 340, H = 180, L = 36, B = 20, T = 8, R = 8;
   const series = offers(p).map((o) => ({ chain: o.chain, pts: o.history.slice(-period).map((h) => ({ day: h.day, v: h.price / o.qty, promo: !!h.promo })) }));
+  if (!series.length || series.every((s) => s.pts.length < 2)) return `<p class="muted" style="margin:0">Lo storico si costruisce un giorno alla volta: ${series[0]?.pts.length || 0} rilevazione finora. Torna tra qualche giorno.</p>`;
   const all = series.flatMap((s) => s.pts.map((x) => x.v));
   let min = Math.min(...all), max = Math.max(...all); const pad = (max - min) * 0.1 || 0.1; min -= pad; max += pad;
   const t0 = series[0].pts[0].day, t1 = series[0].pts.at(-1).day;
@@ -144,4 +188,4 @@ document.addEventListener("click", (e) => {
 });
 $("#back").onclick = () => history.length > 1 ? history.back() : (location.hash = "");
 addEventListener("hashchange", route);
-route();
+loadReal().then(route);

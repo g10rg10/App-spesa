@@ -1,29 +1,295 @@
 {
-  "_note": "Prodotti canonici. Per ogni catena: query di ricerca, parole obbligatorie (tutte nel titolo) e parole escluse. Si sceglie l'offerta con prezzo/kg più basso tra quelle che passano i filtri.",
-  "products": [
-    { "id": "peperoncino-verde", "name": "Peperoncino verde fresco", "unit": "kg", "aliases": ["chilli verde", "chili verde", "peperoncini verdi", "jalapeno"],
-      "match": { "query": "peperoncino", "must": ["peperoncin"], "exclude": ["tonno", "ripien", "secc", "frantum", "macinat", "olio", "salsa", "crema"] } },
-    { "id": "pomodori-ciliegino", "name": "Pomodori ciliegino", "unit": "kg", "aliases": ["pomodorini", "ciliegini", "cherry"],
-      "match": { "query": "pomodorini", "must": ["pomodor"], "exclude": ["secch", "salsa", "passata", "sugo", "pelati", "polpa", "conserva"] } },
-    { "id": "latte-intero", "name": "Latte intero", "unit": "l", "aliases": ["latte", "latte fresco"],
-      "match": { "query": "latte intero", "must": ["latte", "intero"], "exclude": ["cioccolat", "polvere", "condensat"] } },
-    { "id": "latte-ps", "name": "Latte parzialmente scremato", "unit": "l", "aliases": ["latte ps", "latte scremato"],
-      "match": { "query": "latte parzialmente scremato", "must": ["latte", "scremat"], "exclude": ["cioccolat", "polvere"] } },
-    { "id": "spaghetti", "name": "Spaghetti", "unit": "kg", "aliases": ["pasta", "spaghettoni"],
-      "match": { "query": "spaghetti", "must": ["spaghett"], "exclude": ["sugo", "pronti"] } },
-    { "id": "olio-evo", "name": "Olio extravergine d'oliva", "unit": "l", "aliases": ["olio", "evo", "olio oliva"],
-      "match": { "query": "olio extravergine", "must": ["olio"], "exclude": ["tonno", "sott", "carciof", "spray"] } },
-    { "id": "broccoli", "name": "Broccoli", "unit": "kg", "aliases": ["broccolo"],
-      "match": { "query": "broccoli", "must": ["broccol"], "exclude": ["surgel", "zuppa", "pesto"] } },
-    { "id": "avocado", "name": "Avocado", "unit": "kg", "aliases": ["avocadi"],
-      "match": { "query": "avocado", "must": ["avocado"], "exclude": ["crema", "salsa", "guacamole", "olio"] } },
-    { "id": "banane", "name": "Banane", "unit": "kg", "aliases": ["banana"],
-      "match": { "query": "banane", "must": ["banan"], "exclude": ["chips", "secc", "yogurt", "succo"] } },
-    { "id": "uova", "name": "Uova fresche", "unit": "pz", "aliases": ["uovo", "uova bio"],
-      "match": { "query": "uova", "must": ["uova"], "exclude": ["pasta", "cioccolat", "pasqua", "sorpresa"] } },
-    { "id": "mozzarella", "name": "Mozzarella", "unit": "kg", "aliases": ["fiordilatte", "mozzarella vaccina"],
-      "match": { "query": "mozzarella", "must": ["mozzarell"], "exclude": ["pizza", "panat", "sticks"] } },
-    { "id": "caffe-macinato", "name": "Caffè macinato", "unit": "kg", "aliases": ["caffe", "caffè moka"],
-      "match": { "query": "caffè macinato", "must": ["caff"], "exclude": ["capsul", "cialde", "solubile", "cioccolat", "liquore"] } }
-  ]
+ "_note": "Prodotti canonici. Per ogni catena: query di ricerca, parole obbligatorie (tutte nel titolo) e parole escluse. Si sceglie l'offerta con prezzo/kg più basso tra quelle che passano i filtri. 'must' accetta alternative separate da | (es. 'evo|extraverg').",
+ "products": [
+  {
+   "id": "peperoncino-verde",
+   "name": "Peperoncino verde fresco",
+   "unit": "kg",
+   "aliases": [
+    "chilli verde",
+    "chili verde",
+    "peperoncini verdi",
+    "jalapeno"
+   ],
+   "match": {
+    "query": "peperoncino",
+    "must": [
+     "peperoncin"
+    ],
+    "exclude": [
+     "crema",
+     "frantum",
+     "macinat",
+     "merendin",
+     "olio",
+     "panzerott",
+     "pizza",
+     "ripien",
+     "salsa",
+     "secc",
+     "tonno"
+    ]
+   }
+  },
+  {
+   "id": "pomodori-ciliegino",
+   "name": "Pomodori ciliegino",
+   "unit": "kg",
+   "aliases": [
+    "pomodorini",
+    "ciliegini",
+    "cherry"
+   ],
+   "match": {
+    "query": "pomodorini",
+    "must": [
+     "ciliegin|pomodorin|datterin"
+    ],
+    "exclude": [
+     "conserva",
+     "merendin",
+     "panzerott",
+     "passata",
+     "pelati",
+     "pizza",
+     "polpa",
+     "salsa",
+     "secch",
+     "sugo"
+    ]
+   }
+  },
+  {
+   "id": "latte-intero",
+   "name": "Latte intero",
+   "unit": "l",
+   "aliases": [
+    "latte",
+    "latte fresco"
+   ],
+   "match": {
+    "query": "latte intero",
+    "must": [
+     "latte",
+     "intero"
+    ],
+    "exclude": [
+     "cioccolat",
+     "condensat",
+     "merendin",
+     "panzerott",
+     "pizza",
+     "polvere"
+    ]
+   }
+  },
+  {
+   "id": "latte-ps",
+   "name": "Latte parzialmente scremato",
+   "unit": "l",
+   "aliases": [
+    "latte ps",
+    "latte scremato"
+   ],
+   "match": {
+    "query": "latte parzialmente scremato",
+    "must": [
+     "latte",
+     "scremat"
+    ],
+    "exclude": [
+     "cioccolat",
+     "merendin",
+     "panzerott",
+     "pizza",
+     "polvere"
+    ]
+   }
+  },
+  {
+   "id": "spaghetti",
+   "name": "Spaghetti",
+   "unit": "kg",
+   "aliases": [
+    "pasta",
+    "spaghettoni"
+   ],
+   "match": {
+    "query": "spaghetti",
+    "must": [
+     "spaghett"
+    ],
+    "exclude": [
+     "sugo",
+     "pronti"
+    ]
+   }
+  },
+  {
+   "id": "olio-evo",
+   "name": "Olio extravergine d'oliva",
+   "unit": "l",
+   "aliases": [
+    "olio",
+    "evo",
+    "olio oliva"
+   ],
+   "match": {
+    "query": "olio extravergine",
+    "must": [
+     "olio",
+     "extraverg|evo|extra vergine"
+    ],
+    "exclude": [
+     "carciof",
+     "merendin",
+     "panzerott",
+     "pizza",
+     "sott",
+     "spray",
+     "tonno"
+    ]
+   }
+  },
+  {
+   "id": "broccoli",
+   "name": "Broccoli",
+   "unit": "kg",
+   "aliases": [
+    "broccolo"
+   ],
+   "match": {
+    "query": "broccoli",
+    "must": [
+     "broccol"
+    ],
+    "exclude": [
+     "merendin",
+     "panzerott",
+     "pesto",
+     "pizza",
+     "surgel",
+     "zuppa"
+    ]
+   }
+  },
+  {
+   "id": "avocado",
+   "name": "Avocado",
+   "unit": "kg",
+   "aliases": [
+    "avocadi"
+   ],
+   "match": {
+    "query": "avocado",
+    "must": [
+     "avocado"
+    ],
+    "exclude": [
+     "crema",
+     "guacamole",
+     "merendin",
+     "olio",
+     "panzerott",
+     "pizza",
+     "salsa"
+    ]
+   }
+  },
+  {
+   "id": "banane",
+   "name": "Banane",
+   "unit": "kg",
+   "aliases": [
+    "banana"
+   ],
+   "match": {
+    "query": "banane",
+    "must": [
+     "banan"
+    ],
+    "exclude": [
+     "chips",
+     "merendin",
+     "panzerott",
+     "pizza",
+     "secc",
+     "succo",
+     "yogurt"
+    ]
+   }
+  },
+  {
+   "id": "uova",
+   "name": "Uova fresche",
+   "unit": "pz",
+   "aliases": [
+    "uovo",
+    "uova bio"
+   ],
+   "match": {
+    "query": "uova",
+    "must": [
+     "uova"
+    ],
+    "exclude": [
+     "cioccolat",
+     "merendin",
+     "panzerott",
+     "pasqua",
+     "pasta",
+     "pizza",
+     "sorpresa"
+    ]
+   }
+  },
+  {
+   "id": "mozzarella",
+   "name": "Mozzarella",
+   "unit": "kg",
+   "aliases": [
+    "fiordilatte",
+    "mozzarella vaccina"
+   ],
+   "match": {
+    "query": "mozzarella",
+    "must": [
+     "mozzarell"
+    ],
+    "exclude": [
+     "merendin",
+     "panat",
+     "panzerott",
+     "pizza",
+     "pomodoro",
+     "sticks"
+    ]
+   }
+  },
+  {
+   "id": "caffe-macinato",
+   "name": "Caffè macinato",
+   "unit": "kg",
+   "aliases": [
+    "caffe",
+    "caffè moka"
+   ],
+   "match": {
+    "query": "caffè macinato",
+    "must": [
+     "caff"
+    ],
+    "exclude": [
+     "capsul",
+     "cialde",
+     "cioccolat",
+     "liquore",
+     "merendin",
+     "panzerott",
+     "pizza",
+     "solubile"
+    ]
+   }
+  }
+ ]
 }

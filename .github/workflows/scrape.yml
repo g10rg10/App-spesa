@@ -1,18 +1,20 @@
 name: Aggiorna prezzi
 on:
   workflow_dispatch: {}
-  # Riattivare quando c'è almeno una fonte dati autorizzata/funzionante:
-  # schedule:
-  #   - cron: "17 4 * * *"   # ogni giorno alle 04:17 UTC
+  schedule:
+    - cron: "17 4 * * *"   # ogni giorno alle 04:17 UTC (05:17 / 06:17 in Italia)
 permissions:
   contents: write
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
+      - name: Installa browser headless
+        run: npm install --no-save playwright@1.63.0 && npx playwright install --with-deps chromium
       - run: node scraper/scrape.mjs
       - name: Salva i dati nel repo
         run: |

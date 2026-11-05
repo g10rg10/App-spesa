@@ -6,22 +6,23 @@ Cerchi un prodotto per nome ("chilli verde") e vedi in quali catene costa meno, 
 
 | Cartella | Cosa fa | Stato |
 |---|---|---|
-| `app/` | PWA mobile: ricerca, confronto prezzi, negozio più vicino, promo con scadenza, "non trovato da X", grafico storico 30/90 giorni, alert sotto soglia | ✅ funziona su **dati demo** |
-| `scraper/` | Script giornaliero con un adapter per catena + catalogo prodotti con regole di abbinamento | ⚠️ struttura pronta, nessuna fonte attiva |
-| `.github/workflows/scrape.yml` | Lancia lo scraper e salva i dati in `data/` | ⏸ solo manuale, schedule commentato |
+| `app/` | PWA mobile: ricerca, confronto prezzi, promo con scadenza, "non trovato da X", grafico storico, alert sotto soglia, ricerca libera nei volantini | ✅ usa i **dati reali** di `data/` se ci sono, altrimenti la demo (`?demo` per forzarla) |
+| `scraper/` | Un adapter per catena + catalogo prodotti con regole di abbinamento (`catalog.json`) | ✅ Eurospin attivo (volantino) |
+| `.github/workflows/scrape.yml` | Ogni notte alle 04:17 UTC aggiorna `data/latest.json` e aggiunge una riga a `data/history.json` | ✅ attivo |
 
-**Provarla:** apri `app/index.html` nel browser. Per usarla dal telefono attiva GitHub Pages sul repo (Settings → Pages → branch `master`) e apri `…/app/`.
+**Provarla:** `python3 -m http.server` nella cartella del repo, poi apri `localhost:8000/app/`. Aprendo il file direttamente vedi solo la demo. Per usarla dal telefono attiva GitHub Pages sul repo (Settings → Pages → branch `master`) e apri `…/app/`.
 
 ## Test sulle fonti dati (5 nov 2026)
 
 | Catena | Esito |
 |---|---|
+| **Eurospin** | ✅ **Il volantino digitale pubblico contiene i dati strutturati** (~250 offerte con prezzo, prezzo barrato, €/kg e validità). Una visita al giorno con un browser headless |
 | Lidl | API di ricerca con prezzo, €/kg e promo con date. **Dopo poche richieste risponde 401**: blocca l'accesso automatico |
 | Coop (coopshop.it) | API aperta, ma **senza negozio selezionato non restituisce prezzi** |
 | Conad, Carrefour | Bloccano le richieste automatiche (403) |
 | Esselunga | Prezzi online solo dopo login/CAP |
 
-Conclusione: lo scraping diretto dei siti delle catene non è una base solida. I siti si difendono, i termini d'uso lo vietano e in UE esiste un diritto specifico sui database. Aggirare i blocchi non è una strada da prendere.
+Conclusione: lo scraping dei *siti* delle catene diretto dei siti delle catene non è una base solida. I siti si difendono, i termini d'uso lo vietano e in UE esiste un diritto specifico sui database. Aggirare i blocchi non è una strada da prendere.
 
 ## Strade realistiche per i dati
 
@@ -30,7 +31,19 @@ Conclusione: lo scraping diretto dei siti delle catene non è una base solida. I
 3. **Accordi.** Chiedere un feed alle catene più piccole o ai discount locali, che hanno interesse a farsi trovare.
 4. **Fornitori di dati** già esistenti (a pagamento).
 
-Le opzioni 1 e 2 sono fattibili da soli e senza rischi legali.
+Le opzioni 1 e 2 sono fattibili da soli. Eurospin è già l'opzione 1, senza nemmeno bisogno dell'AI.
+
+## Aggiungere una catena
+1. In `scraper/` scrivi un modulo che restituisce `[{ title, pack, price, ppu, unit, promo, url }]` (vedi `eurospin.mjs`).
+2. Registralo in `ADAPTERS` dentro `scrape.mjs`.
+3. Esegui `node scraper/scrape.mjs` e controlla gli abbinamenti in `data/latest.json`. Se un prodotto finisce nel posto sbagliato, correggi `must`/`exclude` in `catalog.json`.
+
+## Limiti attuali
+- Una sola catena reale: il confronto tra catene arriva solo con la seconda fonte.
+- Eurospin = solo prodotti **in volantino**. "Non trovato" significa "non in offerta questa settimana", non "non venduto".
+- Lo storico parte dal 5/11/2026 e cresce di un punto al giorno.
+- Alert: controllati quando apri l'app. Le notifiche push richiedono un piccolo backend.
+- Negozio più vicino: in modalità reale apre Google Maps (manca l'elenco dei punti vendita).
 
 ## Prossimo passo
 Mostrare il prototipo a 5 persone e chiedere: *"Lo useresti prima di fare la spesa? Quanto spesso?"*. Se la risposta è sì, si investe sulla fonte dati 1 o 2.

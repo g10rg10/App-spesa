@@ -2,7 +2,7 @@
 // catene, negozi, prodotti normalizzati, listino per catena (null = non venduto).
 // Lo storico è generato in modo deterministico per simulare 90 giorni di rilevazioni.
 
-const CHAINS = [
+var CHAINS = [
   { id: "esselunga", name: "Esselunga", color: "#d62828" },
   { id: "coop",      name: "Coop",      color: "#e85d04" },
   { id: "conad",     name: "Conad",     color: "#2a9d8f" },
@@ -27,7 +27,7 @@ const STORES = [
 ];
 
 // qty in kg o litri; base = prezzo tipico della confezione
-const PRODUCTS = [
+var PRODUCTS = [
   { id: "peperoncino-verde", name: "Peperoncino verde fresco", unit: "kg", category: "Ortofrutta",
     aliases: ["chilli verde", "chili verde", "peperoncini verdi", "jalapeno", "peperoncino piccante"],
     listings: {
