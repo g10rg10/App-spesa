@@ -8,7 +8,7 @@ let chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
 let MODE = "demo";
 let FLYERS = {};      // offerte complete dei volantini (dati reali)
 let OTHER_CHAINS = []; // catene senza dati
-const COLORS = { eurospin: "#ca8a04", penny: "#cd1719", lidl: "#1d4ed8", coop: "#e85d04", conad: "#2a9d8f", esselunga: "#d62828", carrefour: "#7c3aed" };
+const COLORS = { eurospin: "#ca8a04", penny: "#cd1719", aldi: "#00005f", md: "#e30613", tigros: "#00843d", lidl: "#1d4ed8", coop: "#e85d04", conad: "#2a9d8f", esselunga: "#d62828", carrefour: "#7c3aed" };
 
 // Prova a caricare i dati reali prodotti dallo scraper; altrimenti resta in demo.
 async function loadReal() {

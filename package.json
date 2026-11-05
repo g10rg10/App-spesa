@@ -1,0 +1,10 @@
+{
+  "name": "app-spesa",
+  "private": true,
+  "type": "module",
+  "scripts": { "scrape": "node scraper/scrape.mjs" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
+    "playwright": "1.63.0"
+  }
+}

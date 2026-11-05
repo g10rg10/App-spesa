@@ -3,6 +3,8 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { loadEurospin } from "./eurospin.mjs";
 import { loadPenny } from "./penny.mjs";
+import { loadAldi } from "./aldi.mjs";
+import { aiAvailable } from "./flyer-ai.mjs";
 
 const ROOT = new URL("../", import.meta.url);
 const UA = "Mozilla/5.0 (compatible; AppSpesaBot/0.1; prototipo personale)";
@@ -31,6 +33,7 @@ function parseQty(text) {
 const ADAPTERS = {
   eurospin: { name: "Eurospin", coverage: "volantino", load: loadEurospin },
   penny:    { name: "Penny",    coverage: "volantino", load: loadPenny },
+  aldi:     { name: "Aldi",     coverage: "volantino", load: loadAldi, ai: true },
   lidl: {
     name: "Lidl",
     coverage: "sito",
@@ -92,9 +95,14 @@ async function main() {
   const flyers = {}; // offerte complete per catena, per la ricerca libera nell'app
   for (const [chainId, ad] of Object.entries(ADAPTERS)) {
     if (ad.enabled === false) continue;
+    if (ad.ai && !aiAvailable()) { chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: "Volantino letto con AI: serve ANTHROPIC_API_KEY" }); continue; }
     let errors = 0, all = null;
     if (ad.load) {
-      try { all = await ad.load(); flyers[chainId] = all; console.log(`[${chainId}] ${all.length} offerte`); }
+      try {
+        all = await ad.load();
+        if (!all.length) throw new Error("nessuna offerta letta");
+        flyers[chainId] = all; console.log(`[${chainId}] ${all.length} offerte`);
+      }
       catch (e) { console.error(`[${chainId}] ${e.message}`); chains.push({ id: chainId, name: ad.name, coverage: ad.coverage, status: "errore" }); continue; }
     }
     for (const [i, p] of catalog.products.entries()) {
