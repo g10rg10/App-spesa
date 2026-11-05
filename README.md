@@ -10,7 +10,9 @@ Cerchi un prodotto per nome ("chilli verde") e vedi in quali catene costa meno, 
 | `scraper/` | Un adapter per catena + catalogo prodotti con regole di abbinamento (`catalog.json`) | ✅ Eurospin e Penny attivi (volantino) |
 | `.github/workflows/scrape.yml` | Ogni notte alle 04:17 UTC aggiorna `data/latest.json` e aggiunge una riga a `data/history.json` | ✅ attivo |
 
-**Provarla:** `python3 -m http.server` nella cartella del repo, poi apri `localhost:8000/app/`. Aprendo il file direttamente vedi solo la demo. Per usarla dal telefono attiva GitHub Pages sul repo (Settings → Pages → branch `master`) e apri `…/app/`.
+**Online:** https://app-spesa-nu.vercel.app (si aggiorna da solo a ogni push e a ogni aggiornamento notturno dei prezzi).
+
+**In locale:** `python3 -m http.server` nella cartella del repo, poi apri `localhost:8000/app/`. Aprendo il file direttamente vedi solo la demo. Per usarla dal telefono attiva GitHub Pages sul repo (Settings → Pages → branch `master`) e apri `…/app/`.
 
 ## Test sulle fonti dati (5 nov 2026)
 
