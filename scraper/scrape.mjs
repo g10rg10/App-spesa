@@ -2,6 +2,7 @@
 // Uso: node scraper/scrape.mjs  -> aggiorna data/latest.json e data/history.json
 import { readFile, writeFile } from "node:fs/promises";
 import { loadEurospin } from "./eurospin.mjs";
+import { loadPenny } from "./penny.mjs";
 
 const ROOT = new URL("../", import.meta.url);
 const UA = "Mozilla/5.0 (compatible; AppSpesaBot/0.1; prototipo personale)";
@@ -29,6 +30,7 @@ function parseQty(text) {
 // Ogni offerta: { title, pack, price, ppu, unit, promo, url }
 const ADAPTERS = {
   eurospin: { name: "Eurospin", coverage: "volantino", load: loadEurospin },
+  penny:    { name: "Penny",    coverage: "volantino", load: loadPenny },
   lidl: {
     name: "Lidl",
     coverage: "sito",

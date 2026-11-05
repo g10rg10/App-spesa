@@ -8,7 +8,7 @@ let chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
 let MODE = "demo";
 let FLYERS = {};      // offerte complete dei volantini (dati reali)
 let OTHER_CHAINS = []; // catene senza dati
-const COLORS = { eurospin: "#ca8a04", lidl: "#1d4ed8", coop: "#e85d04", conad: "#2a9d8f", esselunga: "#d62828", carrefour: "#7c3aed" };
+const COLORS = { eurospin: "#ca8a04", penny: "#cd1719", lidl: "#1d4ed8", coop: "#e85d04", conad: "#2a9d8f", esselunga: "#d62828", carrefour: "#7c3aed" };
 
 // Prova a caricare i dati reali prodotti dallo scraper; altrimenti resta in demo.
 async function loadReal() {
@@ -29,7 +29,7 @@ async function loadReal() {
         listings[c.id] = {
           label: `${o.title} · ${o.pack}`, qty, price: o.price, listPrice: o.promo?.oldPrice ?? o.price,
           promo: o.promo ? { pct: (o.promo.pct || 0) / 100, until: day(o.promo.until) } : null,
-          validUntil: o.validUntil ? day(o.validUntil) : null, updatedAt: day(o.updatedAt),
+          validUntil: o.validUntil ? day(o.validUntil) : null, updatedAt: day(o.updatedAt), cardPrice: o.cardPrice || null,
           history: (hist[p.id]?.[c.id] || []).map(([d, , ppu, promo]) => ({ day: day(d), price: ppu * qty, promo: !!promo })),
         };
       }
@@ -97,7 +97,7 @@ function homeView(q = "") {
   const render = () => {
     const v = input.value; history.replaceState(null, "", v ? `#q=${encodeURIComponent(v)}` : "#");
     const res = search(v), fh = MODE === "real" ? flyerHits(v) : [];
-    const flyerHtml = fh.length ? `<h2>Nei volantini (${fh.length})</h2>` + fh.map((o) => `<div class="card row"><div><b>${o.title}</b><br><small>${chainById[o.chain]?.name || o.chain} · ${o.pack}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("") : "";
+    const flyerHtml = fh.length ? `<h2>Nei volantini (${fh.length})</h2>` + fh.map((o) => `<div class="card row"><div><b>${o.title}</b><br><small>${chainById[o.chain]?.name || o.chain} · ${o.pack}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("") : "";
     $("#results").innerHTML = !v.trim() ? `<p class="hint">Scrivi il nome di un prodotto: ti mostro dove costa meno, al kg o al litro.</p>`
       : !res.length && !fh.length ? `<p class="hint">Nessun prodotto trovato per “${v}”. Prova con un nome più generico.</p>`
       : res.map((p) => { const b = bestOffer(p); return `<div class="card prod" data-go="${p.id}"><div><b>${p.name}</b><br><small>${offers(p).length ? `${offers(p).length} su ${CHAINS.length} ${CHAINS.length === 1 ? "catena" : "catene"}` : "nessuna offerta oggi"}${p.category ? " · " + p.category : ""}</small></div><div class="price" style="font-size:16px">${b ? `da ${eur(b.ppu)}<br><small>/${unitLabel(p.unit)} · ${chainById[b.chain].name}</small>` : `<small class="muted">non trovato da<br>${CHAINS.map((c) => c.name).join(", ")}</small>`}</div></div>`; }).join("") + flyerHtml;
@@ -130,6 +130,7 @@ function productView(id) {
         <div class="muted">${o.label}</div>
         <div class="ppu">${eur(o.ppu)}/${u}</div>
         <div class="muted">📍 ${s ? `${s.name} · ${s.km.toFixed(1)} km${posIsReal ? "" : " (da Milano centro)"}` : `<a href="https://www.google.com/maps/search/${encodeURIComponent(chainById[o.chain].name)}" target="_blank" rel="noopener">Negozio più vicino</a>`}</div><div></div>
+        ${o.cardPrice ? `<div class="promo">Con carta fedeltà: ${eur(o.cardPrice)}</div><div></div>` : ""}
         ${o.validUntil && !o.promo ? `<div class="muted">Prezzo volantino valido fino al ${fmtDate(o.validUntil)}</div><div></div>` : ""}
         <div class="muted ${age > 0 ? "stale" : ""}">Aggiornato ${age === 0 ? "oggi" : age === 1 ? "ieri" : `${age} giorni fa`}</div><div></div>
         ${o.promo ? (o.promo.until < TODAY ? `<div class="stale">⚠ Promo finita il ${fmtDate(o.promo.until)}: prezzo da verificare</div><div></div>` : `<div class="promo">−${Math.round(o.promo.pct * 100)}% fino al ${fmtDate(o.promo.until)}</div><div></div>`) : ""}

@@ -43,7 +43,7 @@ export async function loadEurospin() {
       pack: prop(e, "DESCRIPTION") || "",
       category: prop(e, "CATEGORY"),
       price,
-      ppu: prop(e, "END-KG-LT-PRICE"),
+      ppu: prop(e, "END-KG-LT-PRICE") ?? (/^al (kg|l)/i.test(prop(e, "DESCRIPTION") || "") ? price : null),
       unit,
       promo: old && old > price ? { oldPrice: old, pct: prop(e, "DISCOUNT-RATE"), until: day(prop(e, "END-DATE-VALIDITY")) } : null,
       validFrom: day(prop(e, "START-DATE-VALIDITY")),
