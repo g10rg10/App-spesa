@@ -51,3 +51,10 @@ Le opzioni 1 e 2 sono fattibili da soli. Eurospin è già l'opzione 1, senza nem
 
 ## Prossimo passo
 Mostrare il prototipo a 5 persone e chiedere: *"Lo useresti prima di fare la spesa? Quanto spesso?"*. Se la risposta è sì, si investe sulla fonte dati 1 o 2.
+
+## Volantini a immagini (AI)
+`scraper/flyer-ai.mjs` legge le pagine dei volantini pubblicati come immagini (es. Aldi) con un modello con visione.
+- **Groq** (predefinito se c'è `GROQ_API_KEY`): piano gratuito, modello `meta-llama/llama-4-scout-17b-16e-instruct`.
+- **Claude** (se c'è `ANTHROPIC_API_KEY`): più preciso, a pagamento.
+- Ogni pagina viene letta una volta sola e salvata in `data/ai-cache.json`.
+- Variabili opzionali (GitHub → Settings → Secrets and variables → Actions → Variables): `FLYER_MODEL`, `FLYER_PROVIDER`.

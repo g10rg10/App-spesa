@@ -6,7 +6,10 @@ import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 
 const CACHE = new URL("../data/ai-cache.json", import.meta.url);
-const MODEL = process.env.FLYER_MODEL || "claude-opus-5-5";
+// Provider: "groq" (piano gratuito, modelli open con visione) oppure "anthropic" (Claude, a pagamento).
+// Si sceglie da solo in base alla chiave presente; FLYER_PROVIDER forza la scelta.
+const PROVIDER = process.env.FLYER_PROVIDER || (process.env.GROQ_API_KEY ? "groq" : "anthropic");
+const MODEL = process.env.FLYER_MODEL || (PROVIDER === "groq" ? "meta-llama/llama-4-scout-17b-16e-instruct" : "claude-opus-5-5");
 const MAX_NEW_PAGES = +(process.env.FLYER_MAX_PAGES || 80); // tetto di sicurezza sulla spesa per singola esecuzione
 
 const nullable = (type) => ({ type: [type, "null"] });
@@ -51,7 +54,8 @@ async function loadCache() {
   return cache;
 }
 
-export const aiAvailable = () => !!(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
+export const aiAvailable = () => (PROVIDER === "groq" ? !!process.env.GROQ_API_KEY : !!(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
  * pages: [{ url, data?: Buffer, mediaType? }]
@@ -60,7 +64,7 @@ export const aiAvailable = () => !!(process.env.ANTHROPIC_API_KEY || process.env
  */
 export async function extractFlyer(chainId, pages, meta = {}) {
   const c = await loadCache();
-  const client = aiAvailable() ? new Anthropic() : null;
+  const client = !aiAvailable() ? null : PROVIDER === "groq" ? "groq" : new Anthropic();
   const out = [];
   let analysed = 0, cached = 0, skipped = 0;
   for (const pg of pages) {
@@ -75,7 +79,9 @@ export async function extractFlyer(chainId, pages, meta = {}) {
     if (offers) cached++;
     else if (!client || analysed >= MAX_NEW_PAGES) { skipped++; continue; }
     else {
-      offers = await readPage(client, data, pg.mediaType || sniff(data), chainId);
+      offers = PROVIDER === "groq"
+        ? await readPageGroq(data, pg.mediaType || sniff(data), chainId)
+        : await readPage(client, data, pg.mediaType || sniff(data), chainId);
       if (offers === null) continue;
       c[key] = { chain: chainId, model: MODEL, at: new Date().toISOString().slice(0, 10), offers };
       analysed++;
@@ -83,7 +89,7 @@ export async function extractFlyer(chainId, pages, meta = {}) {
     }
     for (const o of offers) out.push(toCommon(o, meta));
   }
-  console.log(`[${chainId}] pagine: ${analysed} lette con AI, ${cached} dalla cache, ${skipped} saltate${client ? "" : " (manca ANTHROPIC_API_KEY)"}`);
+  console.log(`[${chainId}] pagine: ${analysed} lette con ${PROVIDER}/${MODEL}, ${cached} dalla cache, ${skipped} saltate${client ? "" : " (manca la chiave API)"}`);
   return out;
 }
 
@@ -113,6 +119,37 @@ async function readPage(client, data, mediaType, chainId) {
     else console.error(`[${chainId}] ${e.message}`);
     return null;
   }
+}
+
+// Groq: API compatibile OpenAI. Il piano gratuito ha limiti al minuto, quindi rallentiamo e ritentiamo sui 429.
+async function readPageGroq(data, mediaType, chainId) {
+  const body = {
+    model: MODEL,
+    temperature: 0,
+    max_completion_tokens: 8000,
+    response_format: { type: "json_object" },
+    messages: [{ role: "user", content: [
+      { type: "text", text: PROMPT + "\n\nRispondi SOLO con un oggetto JSON conforme a questo schema:\n" + JSON.stringify(SCHEMA) },
+      { type: "image_url", image_url: { url: `data:${mediaType};base64,${data.toString("base64")}` } },
+    ] }],
+  };
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.status === 429) { const wait = (+res.headers.get("retry-after") || 20) * 1000; console.error(`[${chainId}] limite Groq, attendo ${wait / 1000}s`); await sleep(wait); continue; }
+    if (!res.ok) { console.error(`[${chainId}] errore Groq ${res.status}: ${(await res.text()).slice(0, 300)}`); return null; }
+    const json = await res.json();
+    try {
+      const offers = JSON.parse(json.choices[0].message.content).offers;
+      if (!Array.isArray(offers)) throw new Error("campo offers mancante");
+      await sleep(+(process.env.FLYER_DELAY_MS || 2500));
+      return offers.filter((o) => o && typeof o.name === "string" && typeof o.price === "number" && o.price > 0);
+    } catch (e) { console.error(`[${chainId}] risposta Groq non valida: ${e.message}`); return null; }
+  }
+  return null;
 }
 
 function sniff(buf) {

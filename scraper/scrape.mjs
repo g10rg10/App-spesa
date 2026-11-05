@@ -95,7 +95,7 @@ async function main() {
   const flyers = {}; // offerte complete per catena, per la ricerca libera nell'app
   for (const [chainId, ad] of Object.entries(ADAPTERS)) {
     if (ad.enabled === false) continue;
-    if (ad.ai && !aiAvailable()) { chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: "Volantino letto con AI: serve ANTHROPIC_API_KEY" }); continue; }
+    if (ad.ai && !aiAvailable()) { chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: "Volantino letto con AI: serve GROQ_API_KEY (o ANTHROPIC_API_KEY)" }); continue; }
     let errors = 0, all = null;
     if (ad.load) {
       try {

@@ -17,6 +17,7 @@ jobs:
         run: npm ci && npx playwright install --with-deps chromium
       - run: node scraper/scrape.mjs
         env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FLYER_MODEL: ${{ vars.FLYER_MODEL }}
       - name: Salva i dati nel repo
