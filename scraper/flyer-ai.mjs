@@ -39,6 +39,7 @@ const GROQ_MODEL = process.env.GROQ_MODEL || process.env.FLYER_MODEL || "qwen/qw
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-opus-5-5";
 const GITHUB_MODEL = process.env.GITHUB_MODEL || "openai/gpt-4o-mini";
 let geminiModel = process.env.GEMINI_MODEL || null;
+let geminiCandidates = null; // modelli Flash disponibili, dal migliore; si scorre se uno è sovraccarico o senza quota
 const modelOf = (p) => ({ gemini: geminiModel || "gemini", groq: GROQ_MODEL, github: GITHUB_MODEL }[p] || CLAUDE_MODEL);
 const MAX_NEW_PAGES = +(process.env.FLYER_MAX_PAGES || 80); // tetto di sicurezza sulla spesa per singola esecuzione
 
@@ -238,7 +239,10 @@ async function readPageGithub(data, mediaType, chainId) {
     }
     if (res.status === 401 || res.status === 403) { exhausted.add("github"); console.error(`[${chainId}] GitHub Models non autorizzato (serve "models: read" nel workflow)`); return null; }
     if (!res.ok) { const txt = await res.text(); if (res.status === 413 || /too large|size/i.test(txt)) { console.error(`[${chainId}] pagina troppo grande per GitHub Models`); return null; } console.error(`[${chainId}] errore GitHub Models ${res.status}: ${txt.slice(0, 200)}`); return null; }
-    const json = await res.json();
+    const raw = await res.text();
+    let json;
+    try { json = JSON.parse(raw); }
+    catch { exhausted.add("github"); console.error(`[${chainId}] GitHub Models: risposta non JSON (status ${res.status}, ${res.headers.get("content-type")}): ${raw.slice(0, 120)}`); return null; }
     if (json.usage) tokensUsed += json.usage.total_tokens || 0;
     try {
       const offers = JSON.parse(json.choices[0].message.content).offers;
@@ -252,7 +256,8 @@ async function readPageGithub(data, mediaType, chainId) {
 
 // Gemini (Google AI Studio). Sceglie il modello "Flash" più recente e stabile disponibile per la chiave.
 async function resolveGeminiModel() {
-  if (geminiModel) return geminiModel;
+  if (geminiCandidates) return geminiCandidates[0] || null;
+  geminiCandidates = process.env.GEMINI_MODEL ? [process.env.GEMINI_MODEL] : [];
   try {
     const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", { headers: { "x-goog-api-key": process.env.GEMINI_API_KEY } });
     const list = ((await r.json()).models || []).filter((m) => (m.supportedGenerationMethods || []).includes("generateContent"))
@@ -260,16 +265,27 @@ async function resolveGeminiModel() {
       .filter((n) => /^gemini-[\d.]+-flash/.test(n) && !/(image|tts|audio|live|thinking|exp|embedding)/.test(n));
     const score = (n) => (parseFloat(n.match(/gemini-([\d.]+)/)[1]) * 100) - (/preview/.test(n) ? 50 : 0) - (/lite/.test(n) ? 20 : 0) - (/-\d{3,}$/.test(n) ? 1 : 0);
     list.sort((a, b) => score(b) - score(a));
-    geminiModel = list[0] || "gemini-2.5-flash";
-  } catch { geminiModel = "gemini-2.5-flash"; }
-  console.log(`[ai] modello Gemini: ${geminiModel}`);
+    for (const m of list) if (!geminiCandidates.includes(m)) geminiCandidates.push(m);
+  } catch {}
+  if (!geminiCandidates.length) geminiCandidates.push("gemini-2.5-flash");
+  geminiModel = geminiCandidates[0];
+  console.log(`[ai] modelli Gemini disponibili: ${geminiCandidates.join(", ")}`);
+  return geminiModel;
+}
+// Passa al prossimo modello Gemini; se finiti, Gemini è esaurito per oggi.
+function nextGeminiModel(reason) {
+  const old = geminiCandidates.shift();
+  geminiModel = geminiCandidates[0] || null;
+  console.error(`[ai] Gemini ${old}: ${reason}${geminiModel ? ` → provo ${geminiModel}` : " → nessun altro modello, Gemini esaurito per oggi"}`);
+  if (!geminiModel) exhausted.add("gemini");
   return geminiModel;
 }
 let geminiNoThinking = true;
 async function readPageGemini(data, mediaType, chainId) {
-  const model = await resolveGeminiModel();
+  let model = await resolveGeminiModel();
   const cfg = () => ({ temperature: 0, maxOutputTokens: 8192, responseMimeType: "application/json", ...(geminiNoThinking ? { thinkingConfig: { thinkingBudget: 0 } } : {}) });
-  for (let attempt = 1; attempt <= 4; attempt++) {
+  let busy = 0; // 503 consecutivi sullo stesso modello
+  for (let attempt = 1; attempt <= 8 && model; attempt++) {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: "POST",
       headers: { "x-goog-api-key": process.env.GEMINI_API_KEY, "Content-Type": "application/json" },
@@ -279,20 +295,23 @@ async function readPageGemini(data, mediaType, chainId) {
       ] }], generationConfig: cfg() }),
     });
     if (res.status === 429) {
-      const err = await res.json().catch(() => ({}));
-      const details = JSON.stringify(err);
-      if (/PerDay|per day/i.test(details)) { exhausted.add("gemini"); console.error(`[${chainId}] quota giornaliera Gemini esaurita`); return null; }
+      const details = JSON.stringify(await res.json().catch(() => ({})));
+      if (/PerDay|per day|limit: 0/i.test(details)) { model = nextGeminiModel(`quota giornaliera esaurita (${(details.match(/"quotaId":"([^"]+)/) || [])[1] || "?"})`); continue; }
       const delay = +(details.match(/"retryDelay":"(\d+)/)?.[1] || 20);
       await sleep(Math.min(delay, 90) * 1000); continue;
+    }
+    if (res.status === 503 || res.status === 500) {
+      if (++busy >= 2) { busy = 0; model = nextGeminiModel(`sovraccarico (${res.status})`); continue; }
+      await sleep(15000); continue;
     }
     if (!res.ok) {
       const txt = await res.text();
       if (res.status === 400 && geminiNoThinking && /thinking/i.test(txt)) { geminiNoThinking = false; attempt--; continue; }
-      if (res.status === 400 && /API key|API_KEY/i.test(txt) || res.status === 403) { exhausted.add("gemini"); console.error(`[${chainId}] chiave Gemini non valida o senza permessi: ${txt.slice(0, 200)}`); return null; }
-      if (res.status === 404) { exhausted.add("gemini"); console.error(`[${chainId}] modello Gemini ${model} non disponibile`); return null; }
-      if (res.status >= 500 && attempt < 4) { await sleep(5000); continue; }
+      if ((res.status === 400 && /API key|API_KEY/i.test(txt)) || res.status === 403) { exhausted.add("gemini"); console.error(`[${chainId}] chiave Gemini non valida o senza permessi: ${txt.slice(0, 200)}`); return null; }
+      if (res.status === 404) { model = nextGeminiModel("non disponibile (404)"); continue; }
       console.error(`[${chainId}] errore Gemini ${res.status}: ${txt.slice(0, 300)}`); return null;
     }
+    busy = 0;
     const json = await res.json();
     if (json.usageMetadata) tokensUsed += json.usageMetadata.totalTokenCount || 0;
     const text = (json.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("");
