@@ -10,15 +10,17 @@
 </head>
 <body>
 <header class="top">
-  <button id="back" class="icon" aria-label="Indietro" hidden>←</button>
-  <h1 id="title">Spesa Smart</h1>
-  <span class="badge">DEMO</span>
+  <button id="back" class="back" aria-label="Indietro" hidden>‹</button>
+  <div class="titles">
+    <h1 id="title">Spesa Smart</h1>
+    <div id="subtitle">Dati dimostrativi</div>
+  </div>
 </header>
 <main id="view"></main>
-<nav class="tabs">
-  <a href="#" data-tab="cerca">🔍<span>Cerca</span></a>
-  <a href="#catalogo" data-tab="catalogo">📋<span>Catalogo</span></a>
-  <a href="#offerte" data-tab="offerte">🏷️<span>Offerte</span></a>
+<nav class="tabs" aria-label="Sezioni">
+  <a href="#" data-tab="cerca"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Cerca</span></a>
+  <a href="#catalogo" data-tab="catalogo"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Catalogo</span></a>
+  <a href="#offerte" data-tab="offerte"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12Z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg><span>Offerte</span></a>
 </nav>
 <script src="data.js"></script>
 <script src="app.js"></script>

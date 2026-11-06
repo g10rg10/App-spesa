@@ -1,4 +1,4 @@
-// Spesa Smart – prototipo. Dati da data.js (demo). Alert salvati sul dispositivo.
+// Spesa Smart. Dati reali da ../data/latest.json (fallback: demo in data.js). Avvisi salvati sul dispositivo.
 const $ = (s) => document.querySelector(s);
 const view = $("#view");
 const eur = (n) => n.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
@@ -45,12 +45,13 @@ async function loadReal() {
     FLYERS = latest.flyers || {};
     chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
     MODE = "real";
-    $(".badge").textContent = "DATI REALI";
-    $(".badge").style.color = "var(--good)";
+    const d = latest.date ? new Date(latest.date + "T00:00:00") : null;
+    const ago = d ? Math.round((TODAY - d) / 86400000) : null;
+    $("#subtitle").textContent = `${CHAINS.length} catene · aggiornato ${ago === 0 ? "oggi" : ago === 1 ? "ieri" : d ? fmtDate(d) : ""}`;
   } catch {}
 }
 const unitLabel = (u) => ({ kg: "kg", l: "litro", pz: "pezzo" }[u]);
-const store = {
+const store_ = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
@@ -138,177 +139,256 @@ const flyerHits = (q) => {
   // Se la ricerca corrisponde a prodotti del catalogo, mostra solo le offerte che l'AI ha riconosciuto come quei prodotti.
   const pids = new Set(search(q).map((p) => p.id));
   const hasPid = Object.values(FLYERS).some((l) => l.some((o) => o.pid));
-  const ok = (o) => (pids.size && hasPid ? pids.has(o.pid) : t.every((w) => mainWord(o.title, w)));
+  // AI e parola chiave devono essere d'accordo: "Omogeneizzato" non è latte anche se l'AI sbaglia.
+  const ok = (o) => t.every((w) => mainWord(o.title, w)) && (!pids.size || !hasPid || pids.has(o.pid));
   return Object.entries(FLYERS).flatMap(([c, list]) => list.filter(ok).map((o) => ({ chain: c, ...o })))
     .sort((a, b) => (a.ppu ?? 1e9) - (b.ppu ?? 1e9)).slice(0, 30);
 };
 
 // ---------- Alert ----------
-const getAlerts = () => store.get("alerts", {});
+const getAlerts = () => store_.get("alerts", {});
 function triggeredAlerts() {
   const a = getAlerts();
   return PRODUCTS.filter((p) => a[p.id] && bestOffer(p) && bestOffer(p).ppu <= a[p.id]).map((p) => ({ p, best: bestOffer(p), target: a[p.id] }));
 }
 
-// ---------- Viste ----------
+// ---------- Componenti ----------
+// Nomi leggibili: "TONNO PINNA GIALLA · ONDINA" -> "Tonno pinna gialla · Ondina"
+function pretty(s) {
+  return (s || "").split(" · ").map((part, i) => {
+    if (part !== part.toUpperCase()) return part;
+    const low = part.toLowerCase();
+    return i === 0 ? low.charAt(0).toUpperCase() + low.slice(1) : low.replace(/(^|\s)\S/g, (c) => c.toUpperCase());
+  }).join(" · ");
+}
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const perUnit = (v, u) => `${eur(v)}<span class="u">/${u === "l" || u === "litro" ? "l" : u === "pezzo" ? "pz" : u}</span>`;
+const chainName = (id) => chainById[id]?.name || id;
+const isFood = (o) => !/non alimentare|casa e igiene/i.test(o.category || "");
+const pctOff = (o) => o.promo?.pct ? Math.round(o.promo.pct * (o.promo.pct <= 1 ? 100 : 1)) : 0;
+
+function offerRow(o, { go } = {}) {
+  const pct = o.promo?.pct || 0;
+  return `<div class="item"${go ? ` data-go="${go}"` : ""}>
+    ${logo(o.chain, 32)}
+    <div class="item-main">
+      <div class="item-title">${pct ? `<span class="off">−${pct}%</span>` : ""}${esc(pretty(o.title))}</div>
+      <div class="item-meta">${esc(chainName(o.chain))}${o.pack ? ` · ${esc(o.pack)}` : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}</div>
+      ${o.cardPrice ? `<div class="item-note">Con carta fedeltà ${eur(o.cardPrice)}</div>` : ""}
+    </div>
+    <div class="item-price">
+      <div class="p">${eur(o.price)}</div>
+      ${o.promo ? `<div class="was">${eur(o.promo.oldPrice)}</div>` : ""}
+      ${o.ppu ? `<div class="sub">${perUnit(o.ppu, o.unit)}</div>` : ""}
+    </div>
+  </div>`;
+}
+
+function productRow(p) {
+  const list = offers(p).sort((a, b) => a.ppu - b.ppu);
+  const b = list[0];
+  const save = list.length > 1 ? Math.round((1 - list[0].ppu / list.at(-1).ppu) * 100) : 0;
+  return `<div class="item" data-go="${p.id}">
+    ${b ? logo(b.chain, 32) : `<span class="logo empty" style="width:32px;height:32px"></span>`}
+    <div class="item-main">
+      <div class="item-title">${esc(p.name)}</div>
+      <div class="item-meta">${!b ? "Nessuna offerta questa settimana" : list.length > 1 ? `${list.length} catene · risparmi fino al ${save}%` : `Solo da ${esc(chainName(b.chain))}`}</div>
+    </div>
+    <div class="item-price">${b ? `<div class="sub">da</div><div class="p">${perUnit(b.ppu, p.unit)}</div>` : `<div class="sub">—</div>`}</div>
+    <span class="chev">›</span>
+  </div>`;
+}
+
+const sel = (id, value, options) => `<label class="select"><select id="${id}">${options.map(([v, l]) => `<option value="${esc(v)}" ${v === value ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></label>`;
+const section = (title, body, more = "") => `<section><div class="sec-head"><h2>${title}</h2>${more}</div>${body}</section>`;
+const empty = (t) => `<p class="empty">${t}</p>`;
+function setHeader(title, back = false) {
+  $("#title").textContent = title;
+  $("#back").hidden = !back;
+}
+
+// ---------- Home e ricerca ----------
 function homeView(q = "") {
-  $("#title").textContent = "Spesa Smart";
-  $("#back").hidden = true;
+  setHeader("Spesa Smart");
   const hits = triggeredAlerts();
   view.innerHTML = `
-    ${hits.map(({ p, best, target }) => `<div class="banner" data-go="${p.id}">🔔 <b>${p.name}</b> è sceso a ${eur(best.ppu)}/${unitLabel(p.unit)} da ${chainById[best.chain].name} (soglia ${eur(target)})</div>`).join("")}
-    <input id="q" class="search" type="search" placeholder="Cerca un prodotto, es. chilli verde" value="${q.replace(/"/g, "&quot;")}" autocomplete="off" autofocus>
-    <div class="chips">${(MODE === "real" ? ["latte", "olio", "caffè", "grana", "clementine", "chilli verde"] : ["chilli verde", "latte", "olio", "avocado", "zenzero", "uova"]).map((s) => `<button class="chip" data-q="${s}">${s}</button>`).join("")}</div>
+    ${hits.map(({ p, best, target }) => `<div class="banner" data-go="${p.id}">🔔 <b>${esc(p.name)}</b> è sceso a ${perUnit(best.ppu, p.unit)} da ${esc(chainName(best.chain))} (la tua soglia: ${eur(target)})</div>`).join("")}
+    <div class="searchbar"><span>🔍</span><input id="q" type="search" placeholder="Cerca un prodotto: latte, tonno, caffè…" value="${esc(q)}" autocomplete="off"></div>
     <div id="results"></div>`;
   const input = $("#q");
   const render = () => {
-    const v = input.value; history.replaceState(null, "", v ? `#q=${encodeURIComponent(v)}` : "#");
-    const res = search(v), fh = MODE === "real" ? flyerHits(v) : [];
-    const flyerHtml = fh.length ? `<h2>Nei volantini (${fh.length})</h2>` + fh.map((o) => `<div class="card row"><div><b>${o.title}</b><br><small>${logo(o.chain, 14)} ${chainById[o.chain]?.name || o.chain} · ${o.pack}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("") : "";
-    $("#results").innerHTML = !v.trim() ? `<p class="hint">Scrivi il nome di un prodotto: ti mostro dove costa meno, al kg o al litro.</p>`
-      : !res.length && !fh.length ? `<p class="hint">Nessun prodotto trovato per “${v}”. Prova con un nome più generico.</p>`
-      : res.map((p) => { const b = bestOffer(p); return `<div class="card prod" data-go="${p.id}"><div><b>${p.name}</b><br><small>${offers(p).length ? `${offers(p).length} su ${CHAINS.length} ${CHAINS.length === 1 ? "catena" : "catene"}` : "nessuna offerta oggi"}${p.category ? " · " + p.category : ""}</small></div><div class="price" style="font-size:16px">${b ? `da ${eur(b.ppu)}<br><small>/${unitLabel(p.unit)} · ${logo(b.chain, 14)} ${chainById[b.chain].name}</small>` : `<small class="muted">non trovato da<br>${CHAINS.map((c) => c.name).join(", ")}</small>`}</div></div>`; }).join("") + flyerHtml;
+    const v = input.value.trim();
+    history.replaceState(null, "", v ? `#q=${encodeURIComponent(v)}` : "#");
+    $("#results").innerHTML = v ? resultsHtml(v) : homeHtml();
   };
   input.addEventListener("input", render);
   render();
+  if (!q) input.blur();
 }
 
-let sortBy = "ppu";
+function homeHtml() {
+  const compared = PRODUCTS.filter((p) => offers(p).length > 1)
+    .map((p) => { const l = offers(p).sort((a, b) => a.ppu - b.ppu); return { p, save: 1 - l[0].ppu / l.at(-1).ppu }; })
+    .sort((a, b) => b.save - a.save).slice(0, 6);
+  const deals = allOffers().filter((o) => isFood(o) && o.promo?.pct).sort((a, b) => b.promo.pct - a.promo.pct).slice(0, 5);
+  const popular = PRODUCTS.filter((p) => offers(p).length).slice(0, 10);
+  return `
+    <div class="quick">${popular.map((p) => `<button class="chip" data-go="${p.id}">${esc(p.name)}</button>`).join("")}</div>
+    ${compared.length ? section("Dove risparmi di più", compared.map(({ p }) => productRow(p)).join(""), `<a class="more" href="#catalogo">Tutti ›</a>`) : ""}
+    ${deals.length ? section("Sconti più forti di oggi", deals.map((o) => offerRow(o, { go: o.pid })).join(""), `<a class="more" href="#offerte">Tutte ›</a>`) : ""}
+    <p class="foot">Prezzi presi dai volantini di ${CHAINS.map((c) => `${logo(c.id, 16)} ${esc(c.name)}`).join(", ")}${MODE === "real" ? "" : " (dati dimostrativi)"}.</p>`;
+}
+
+function resultsHtml(v) {
+  const res = search(v), fh = MODE === "real" ? flyerHits(v) : [];
+  if (!res.length && !fh.length) return empty(`Nessun risultato per “${esc(v)}”. Prova con un nome più semplice, es. “tonno” invece di “tonno pinna gialla”.`);
+  return `
+    ${res.length ? section("Confronta i prezzi", res.map(productRow).join("")) : ""}
+    ${fh.length ? section(`Nei volantini <small>(${fh.length})</small>`, fh.map((o) => offerRow(o, { go: o.pid })).join("")) : ""}`;
+}
+
+// ---------- Scheda prodotto ----------
 let period = 30;
 function productView(id) {
   const p = PRODUCTS.find((x) => x.id === id);
   if (!p) return homeView();
-  $("#title").textContent = p.name;
-  $("#back").hidden = false;
-  const list = offers(p).sort((a, b) => a[sortBy] - b[sortBy]);
-  const missing = Object.entries(p.listings).filter(([, l]) => !l).map(([c]) => chainById[c].name);
-  const alertVal = getAlerts()[p.id];
+  setHeader(p.name, true);
   const u = unitLabel(p.unit);
+  const list = offers(p).sort((a, b) => a.ppu - b.ppu);
+  const best = list[0], worst = list.at(-1);
+  const missing = Object.entries(p.listings).filter(([, l]) => !l).map(([c]) => chainName(c));
+  const alertVal = getAlerts()[p.id];
+  // Negozio: nel riquadro in alto sempre (anche l'invito ad attivare la posizione), nelle righe solo se trovato.
+  const store = (c, always = false) => {
+    const s = nearest(c); if (s) return `📍 ${esc(s.name)} · ${s.km.toFixed(1)} km`;
+    if (!always && !NEARBY[c]) return "";
+    const line = storeLine(c); return line ? `📍 ${line}` : "";
+  };
+
+  const hero = !best ? `<div class="hero none"><b>Nessuna offerta questa settimana</b><p>Nessuna delle catene coperte ha ${esc(p.name.toLowerCase())} in volantino in questo momento. Attiva un avviso qui sotto per sapere quando torna.</p></div>` : `
+    <div class="hero">
+      <div class="hero-label">Più conveniente</div>
+      <div class="hero-chain">${logo(best.chain, 36)}<span>${esc(chainName(best.chain))}</span></div>
+      <div class="hero-price">${perUnit(best.ppu, p.unit)}</div>
+      <div class="hero-pack">${esc(pretty(best.label))} → <b>${eur(best.price)}</b>${best.promo ? ` <span class="off">−${Math.round(best.promo.pct * 100)}%</span>` : ""}</div>
+      ${list.length > 1 ? `<div class="hero-save">Risparmi il ${Math.round((1 - best.ppu / worst.ppu) * 100)}% rispetto a ${esc(chainName(worst.chain))}</div>` : ""}
+      ${store(best.chain, true) ? `<div class="hero-store">${store(best.chain, true)}</div>` : ""}
+    </div>`;
+
   view.innerHTML = `
-    <div class="toggle">
-      <button class="chip ${sortBy === "ppu" ? "on" : ""}" data-sort="ppu">€/${u}</button>
-      <button class="chip ${sortBy === "price" ? "on" : ""}" data-sort="price">Prezzo confezione</button>
-    </div>
-    ${!list.length ? `<p class="hint">Al momento nessuna catena coperta lo vende a un prezzo rilevato.</p>` : ""}
-    ${list.map((o, i) => { const s = nearest(o.chain); const age = Math.round((TODAY - o.updatedAt) / 86400000); return `
-      <div class="card row ${i === 0 ? "best" : ""}">
-        <div class="chain">${logo(o.chain)}${chainById[o.chain].name}${i === 0 ? '<span class="tag">PIÙ CONVENIENTE</span>' : ""}</div>
-        <div class="price">${o.promo ? `<span class="old">${eur(o.listPrice)}</span>` : ""}${eur(o.price)}</div>
-        <div class="muted">${o.label}</div>
-        <div class="ppu">${eur(o.ppu)}/${u}</div>
-        <div class="muted">📍 ${s ? `${s.name} · ${s.km.toFixed(1)} km${posIsReal ? "" : " (da Milano centro)"}` : storeLine(o.chain)}</div><div></div>
-        ${o.cardPrice ? `<div class="promo">Con carta fedeltà: ${eur(o.cardPrice)}</div><div></div>` : ""}
-        ${o.validUntil && !o.promo ? `<div class="muted">Prezzo volantino valido fino al ${fmtDate(o.validUntil)}</div><div></div>` : ""}
-        <div class="muted ${age > 0 ? "stale" : ""}">Aggiornato ${age === 0 ? "oggi" : age === 1 ? "ieri" : `${age} giorni fa`}</div><div></div>
-        ${o.promo ? (o.promo.until < TODAY ? `<div class="stale">⚠ Promo finita il ${fmtDate(o.promo.until)}: prezzo da verificare</div><div></div>` : `<div class="promo">−${Math.round(o.promo.pct * 100)}% fino al ${fmtDate(o.promo.until)}</div><div></div>`) : ""}
-      </div>`; }).join("")}
-    ${missing.map((m) => `<div class="missing">✕ ${MODE === "real" ? `Non nel volantino ${m} di questa settimana` : `Non trovato da ${m}`}</div>`).join("")}
-    ${OTHER_CHAINS.length ? `<p class="muted">Dati non ancora disponibili per: ${OTHER_CHAINS.map((c) => c.name).join(", ")}.</p>` : ""}
-    <h2>Storico prezzo (€/${u})</h2>
-    <div class="toggle">${[30, 90].map((d) => `<button class="chip ${period === d ? "on" : ""}" data-period="${d}">${d} giorni</button>`).join("")}</div>
-    <div class="card">${chart(p)}</div>
-    <h2>Avvisami quando scende</h2>
-    <div class="card">
+    ${hero}
+    ${list.length > 1 ? section("Tutti i prezzi <small>al " + u + "</small>", list.map((o, i) => `
+      <div class="item ${i === 0 ? "best" : ""}">
+        ${logo(o.chain, 32)}
+        <div class="item-main">
+          <div class="item-title">${esc(chainName(o.chain))}${o.promo ? ` <span class="off">−${Math.round(o.promo.pct * 100)}%</span>` : ""}</div>
+          <div class="item-meta">${esc(pretty(o.label))} · ${eur(o.price)}</div>
+          ${o.cardPrice ? `<div class="item-note">Con carta fedeltà ${eur(o.cardPrice)}</div>` : ""}
+          ${o.promo && o.promo.until < TODAY ? `<div class="item-warn">Promo finita il ${fmtDate(o.promo.until)}: prezzo da verificare</div>` : ""}
+          ${i > 0 && store(o.chain) ? `<div class="item-meta">${store(o.chain)}</div>` : ""}
+        </div>
+        <div class="item-price"><div class="p">${perUnit(o.ppu, p.unit)}</div>${i > 0 ? `<div class="diff">+${Math.round((o.ppu / best.ppu - 1) * 100)}%</div>` : `<div class="best-tag">migliore</div>`}</div>
+      </div>`).join("")) : ""}
+    ${missing.length ? `<p class="note">Non in offerta questa settimana da: ${missing.map(esc).join(", ")}.</p>` : ""}
+    ${OTHER_CHAINS.length ? `<p class="note">Non ancora coperte: ${OTHER_CHAINS.map((c) => esc(c.name)).join(", ")}.</p>` : ""}
+    ${section(`Andamento del prezzo <small>al ${u}</small>`, `<div class="seg">${[30, 90].map((d) => `<button class="${period === d ? "on" : ""}" data-period="${d}">${d} giorni</button>`).join("")}</div><div class="card">${chart(p)}</div>`)}
+    ${section("Avvisami quando scende", `<div class="card">
       <div class="alert">
-        <span>Sotto</span><input id="thr" type="number" inputmode="decimal" step="0.01" min="0" value="${alertVal ?? (list[0] ? (list[0].ppu * 0.9).toFixed(2) : "")}"><span>€/${u}</span>
-        <button class="btn" id="saveAlert">${alertVal ? "Aggiorna" : "Attiva alert"}</button>
+        <span>Sotto</span><input id="thr" type="number" inputmode="decimal" step="0.01" min="0" value="${alertVal ?? (best ? (best.ppu * 0.9).toFixed(2) : "")}"><span>€/${u}</span>
+        <button class="btn" id="saveAlert">${alertVal ? "Aggiorna" : "Attiva"}</button>
         ${alertVal ? '<button class="btn ghost" id="delAlert">Rimuovi</button>' : ""}
       </div>
-      <p class="muted" style="margin:8px 0 0">${alertVal ? `Attivo: ti avviso sotto ${eur(alertVal)}/${u} in qualsiasi catena.` : "Ti avviso quando il prezzo più basso, in qualsiasi catena, scende sotto questa soglia."}</p>
-    </div>`;
-  $("#saveAlert").onclick = () => { const v = parseFloat($("#thr").value); if (v > 0) { store.set("alerts", { ...getAlerts(), [p.id]: v }); productView(id); } };
-  $("#delAlert") && ($("#delAlert").onclick = () => { const a = getAlerts(); delete a[p.id]; store.set("alerts", a); productView(id); });
+      <p class="note" style="margin:8px 0 0">${alertVal ? `Attivo: ti avviso sotto ${eur(alertVal)}/${u} in qualsiasi catena.` : "Ti avviso quando il prezzo più basso, in qualsiasi catena, scende sotto questa soglia."}</p>
+    </div>`)}`;
+  $("#saveAlert").onclick = () => { const v = parseFloat($("#thr").value); if (v > 0) { store_.set("alerts", { ...getAlerts(), [p.id]: v }); productView(id); } };
+  $("#delAlert") && ($("#delAlert").onclick = () => { const a = getAlerts(); delete a[p.id]; store_.set("alerts", a); productView(id); });
 }
 
 function chart(p) {
-  const W = 340, H = 180, L = 36, B = 20, T = 8, R = 8;
-  const series = offers(p).map((o) => ({ chain: o.chain, pts: o.history.slice(-period).map((h) => ({ day: h.day, v: h.price / o.qty, promo: !!h.promo })) }));
-  if (!series.length || series.every((s) => s.pts.length < 2)) return `<p class="muted" style="margin:0">Lo storico si costruisce un giorno alla volta: ${series[0]?.pts.length || 0} rilevazione finora. Torna tra qualche giorno.</p>`;
+  const W = 340, H = 170, L = 36, B = 20, T = 8, R = 8;
+  const series = offers(p).map((o) => ({ chain: o.chain, pts: o.history.slice(-period).map((h) => ({ day: h.day, v: h.price / o.qty })) }));
+  if (!series.length || series.every((s) => s.pts.length < 2)) return `<p class="note" style="margin:0">Il grafico si costruisce un giorno alla volta: torna tra qualche giorno per vedere come cambia il prezzo.</p>`;
   const all = series.flatMap((s) => s.pts.map((x) => x.v));
   let min = Math.min(...all), max = Math.max(...all); const pad = (max - min) * 0.1 || 0.1; min -= pad; max += pad;
-  const t0 = series[0].pts[0].day, t1 = series[0].pts.at(-1).day;
-  const x = (t) => L + ((t - t0) / (t1 - t0)) * (W - L - R), y = (v) => T + (1 - (v - min) / (max - min)) * (H - T - B);
+  const t0 = Math.min(...series.map((s) => s.pts[0]?.day ?? Infinity)), t1 = Math.max(...series.map((s) => s.pts.at(-1)?.day ?? 0));
+  const x = (t) => L + ((t - t0) / Math.max(1, t1 - t0)) * (W - L - R), y = (v) => T + (1 - (v - min) / (max - min)) * (H - T - B);
   const ticks = [min + pad, (min + max) / 2, max - pad];
-  const best = series.map((s) => ({ s, low: s.pts.reduce((a, b) => (b.v < a.v ? b : a)) })).sort((a, b) => a.low.v - b.low.v)[0];
-  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Storico prezzi">
-    ${ticks.map((v) => `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="currentColor" opacity=".08"/><text x="${L - 4}" y="${y(v) + 3}" text-anchor="end">${v.toFixed(2)}</text>`).join("")}
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Andamento del prezzo">
+    ${ticks.map((v) => `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="currentColor" opacity=".1"/><text x="${L - 4}" y="${y(v) + 3}" text-anchor="end">${v.toFixed(2)}</text>`).join("")}
     <text x="${L}" y="${H - 4}">${fmtDate(t0)}</text><text x="${W - R}" y="${H - 4}" text-anchor="end">oggi</text>
-    ${series.map((s) => `<polyline fill="none" stroke="${chainById[s.chain].color}" stroke-width="2" stroke-linejoin="round" points="${s.pts.map((q) => `${x(q.day).toFixed(1)},${y(q.v).toFixed(1)}`).join(" ")}"/>`).join("")}
-    <circle cx="${x(best.low.day)}" cy="${y(best.low.v)}" r="4" fill="${chainById[best.s.chain].color}" stroke="#fff" stroke-width="1.5"/>
+    ${series.filter((s) => s.pts.length > 1).map((s) => `<polyline fill="none" stroke="${chainById[s.chain].color}" stroke-width="2.5" stroke-linejoin="round" points="${s.pts.map((q) => `${x(q.day).toFixed(1)},${y(q.v).toFixed(1)}`).join(" ")}"/>`).join("")}
   </svg>
-  <div class="chips" style="margin:6px 0 0">${series.map((s) => `<span class="muted">${logo(s.chain)} ${chainById[s.chain].name}</span>`).join("")}</div>
-  <p class="muted" style="margin:6px 0 0">Minimo del periodo: ${eur(best.low.v)} da ${chainById[best.s.chain].name} il ${fmtDate(best.low.day)}. I cali improvvisi sono promo.</p>`;
+  <div class="legend">${series.map((s) => `<span><i style="background:${chainById[s.chain].color}"></i>${esc(chainName(s.chain))}</span>`).join("")}</div>`;
 }
 
 // ---------- Offerte ----------
-let offChain = "tutte", offCat = "tutte", offSort = "sconto", maxPrice = 0, offQ = "";
-const PRICE_STEPS = [0, 1, 2, 5, 10];
-const priceChips = () => `<div class="filters">${PRICE_STEPS.map((v) => `<button class="chip ${maxPrice === v ? "on" : ""}" data-maxprice="${v}">${v ? `fino a ${v} €` : "Qualsiasi prezzo"}</button>`).join("")}</div>`;
-const titleCase = (s) => (s === s.toUpperCase() ? s.charAt(0) + s.slice(1).toLowerCase() : s);
+let offChain = "tutte", offCat = "tutte", offSort = "sconto", offQ = "";
 function allOffers() {
-  return Object.entries(FLYERS).flatMap(([c, list]) => list.map((o) => ({ chain: c, ...o, pct: o.promo?.pct || 0, cat: o.category ? titleCase(o.category) : "Altro" })));
+  return Object.entries(FLYERS).flatMap(([c, list]) => list.map((o) => ({ chain: c, ...o, cat: o.category ? pretty(o.category) : "Altro" })));
 }
 function offersView() {
-  $("#title").textContent = "Offerte";
-  $("#back").hidden = true;
-  if (MODE !== "real") { view.innerHTML = `<p class="hint">Le offerte sono disponibili solo con i dati reali.</p>`; return; }
+  setHeader("Offerte");
+  if (MODE !== "real") { view.innerHTML = empty("Le offerte sono disponibili solo con i dati reali."); return; }
   const all = allOffers();
-  const cats = [...new Set(all.filter((o) => offChain === "tutte" || o.chain === offChain).map((o) => o.cat))].sort();
-  if (!cats.includes(offCat)) offCat = "tutte";
-  const qWords = norm(offQ).split(/\s+/).filter(Boolean);
-  let list = all.filter((o) => (offChain === "tutte" || o.chain === offChain) && (offCat === "tutte" || o.cat === offCat) && (!maxPrice || o.price <= maxPrice)
-    && qWords.every((w) => mainWord(o.title, w) || wordRe(w).test(norm(o.pack))));
-  list.sort(offSort === "sconto" ? (a, b) => b.pct - a.pct || a.price - b.price : offSort === "ppu" ? (a, b) => (a.ppu ?? 1e9) - (b.ppu ?? 1e9) : (a, b) => a.price - b.price);
-  const shown = list.slice(0, 150);
+  const cats = [...new Set(all.map((o) => o.cat))].sort();
   view.innerHTML = `
-    <input id="offq" class="search" type="search" placeholder="Cerca nelle offerte, es. tonno, pannolini…" value="${offQ.replace(/"/g, "&quot;")}" autocomplete="off" style="margin-bottom:10px">
+    <div class="searchbar"><span>🔍</span><input id="offq" type="search" placeholder="Cerca nelle offerte: tonno, pannolini…" value="${esc(offQ)}" autocomplete="off"></div>
     <div class="filters">
-      ${["tutte", ...CHAINS.map((c) => c.id)].map((c) => `<button class="chip ${offChain === c ? "on" : ""}" data-offchain="${c}">${c === "tutte" ? "Tutte le catene" : logo(c, 16) + " " + chainById[c].name}</button>`).join("")}
+      ${sel("f-chain", offChain, [["tutte", "Tutte le catene"], ...CHAINS.map((c) => [c.id, c.name])])}
+      ${sel("f-cat", offCat, [["tutte", "Tutte le categorie"], ...cats.map((c) => [c, c])])}
+      ${sel("f-sort", offSort, [["sconto", "Sconto più alto"], ["prezzo", "Prezzo più basso"], ["ppu", "€/kg più basso"]])}
     </div>
-    <div class="filters">
-      <select class="chip" id="offcat"><option value="tutte">Tutte le categorie</option>${cats.map((c) => `<option ${c === offCat ? "selected" : ""}>${c}</option>`).join("")}</select>
-      ${[["sconto", "Sconto più alto"], ["prezzo", "Prezzo più basso"], ["ppu", "€/kg più basso"]].map(([k, l]) => `<button class="chip ${offSort === k ? "on" : ""}" data-offsort="${k}">${l}</button>`).join("")}
-    </div>
-    ${priceChips()}
-    <div id="offlist"><p class="muted">${list.length} offerte${list.length > shown.length ? ` · prime ${shown.length}` : ""} · volantini validi fino al ${fmtDate(new Date(Math.max(...all.map((o) => +new Date(o.validUntil || 0)))))}</p>
-    ${shown.map((o) => `<div class="card row"><div><b>${o.pct ? `<span class="disc">−${o.pct}%</span>` : ""}${titleCase(o.title)}</b><br><small class="muted">${logo(o.chain)} ${chainById[o.chain].name}${o.pack ? " · " + o.pack : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("")}${!list.length ? `<p class="hint">Nessuna offerta con questi filtri.</p>` : ""}</div>`;
-  const inp = $("#offq");
-  inp.oninput = () => { offQ = inp.value; const pos = inp.selectionStart; offersView(); const n = $("#offq"); n.focus(); n.setSelectionRange(pos, pos); };
-  $("#offcat").onchange = (e) => { offCat = e.target.value; offersView(); };
+    <div id="offlist"></div>`;
+  const draw = () => {
+    const qWords = norm(offQ).split(/\s+/).filter(Boolean);
+    const list = all.filter((o) => (offChain === "tutte" || o.chain === offChain) && (offCat === "tutte" || o.cat === offCat)
+      && qWords.every((w) => mainWord(o.title, w) || wordRe(w).test(norm(o.pack))));
+    list.sort(offSort === "sconto" ? (a, b) => (b.promo?.pct || 0) - (a.promo?.pct || 0) || a.price - b.price : offSort === "ppu" ? (a, b) => (a.ppu ?? 1e9) - (b.ppu ?? 1e9) : (a, b) => a.price - b.price);
+    const shown = list.slice(0, 120);
+    $("#offlist").innerHTML = `<p class="count">${list.length} offerte${list.length > shown.length ? ` · prime ${shown.length}` : ""}</p>`
+      + (shown.length ? `<div class="list">${shown.map((o) => offerRow(o, { go: o.pid })).join("")}</div>` : empty("Nessuna offerta con questi filtri."));
+  };
+  $("#offq").oninput = (e) => { offQ = e.target.value; draw(); };
+  $("#f-chain").onchange = (e) => { offChain = e.target.value; draw(); };
+  $("#f-cat").onchange = (e) => { offCat = e.target.value; draw(); };
+  $("#f-sort").onchange = (e) => { offSort = e.target.value; draw(); };
+  draw();
 }
 
 // ---------- Catalogo ----------
-let catOnlyAvail = false, catChain = "tutte", catCat = "tutte", catSort = "nome";
+let catChain = "tutte", catCat = "tutte", catSort = "nome", catAvail = "tutti";
 function catalogView() {
-  $("#title").textContent = "Catalogo";
-  $("#back").hidden = true;
-  const pick = (p) => (catChain === "tutte" ? bestOffer(p) : offers(p).find((o) => o.chain === catChain));
+  setHeader("Catalogo");
   const cats = [...new Set(PRODUCTS.map((p) => p.category || "Altro"))].sort();
-  let rows = PRODUCTS.map((p) => ({ p, b: pick(p), n: offers(p).length }))
-    .filter((r) => (!catOnlyAvail && catChain === "tutte" || r.b) && (!maxPrice || (r.b && r.b.price <= maxPrice)) && (catCat === "tutte" || (r.p.category || "Altro") === catCat));
-  if (catSort !== "nome") {
-    rows.sort((a, b) => (a.b ? (catSort === "ppu" ? a.b.ppu : a.b.price) : 1e9) - (b.b ? (catSort === "ppu" ? b.b.ppu : b.b.price) : 1e9));
-  }
-  const groups = {};
-  for (const r of rows) (groups[r.p.category || "Altro"] ||= []).push(r);
-  setTimeout(() => { const sel = $("#catcat"); if (sel) sel.onchange = (e) => { catCat = e.target.value; catalogView(); }; });
-  const upd = Math.max(0, ...PRODUCTS.flatMap((p) => offers(p).map((o) => o.updatedAt || 0)));
   view.innerHTML = `
     <div class="filters">
-      ${["tutte", ...CHAINS.map((c) => c.id)].map((c) => `<button class="chip ${catChain === c ? "on" : ""}" data-catchain="${c}">${c === "tutte" ? "Tutte le catene" : logo(c, 16) + " " + chainById[c].name}</button>`).join("")}
+      ${sel("c-chain", catChain, [["tutte", "Tutte le catene"], ...CHAINS.map((c) => [c.id, c.name])])}
+      ${sel("c-cat", catCat, [["tutte", "Tutte le categorie"], ...cats.map((c) => [c, c])])}
+      ${sel("c-sort", catSort, [["nome", "Per categoria"], ["prezzo", "Prezzo più basso"], ["ppu", "€/kg più basso"]])}
+      ${sel("c-avail", catAvail, [["tutti", "Tutti i prodotti"], ["prezzo", "Solo con prezzo"]])}
     </div>
-    <div class="filters">
-      <select class="chip" id="catcat"><option value="tutte">Tutte le categorie</option>${cats.map((c) => `<option ${c === catCat ? "selected" : ""}>${c}</option>`).join("")}</select>
-      ${[["nome", "A-Z"], ["prezzo", "Prezzo più basso"], ["ppu", "€/kg più basso"]].map(([k, l]) => `<button class="chip ${catSort === k ? "on" : ""}" data-catsort="${k}">${l}</button>`).join("")}
-      <button class="chip ${catOnlyAvail ? "on" : ""}" data-onlyavail="1">Solo con prezzo</button>
-    </div>
-    ${priceChips()}
-    <p class="muted">${rows.length} prodotti · ${PRODUCTS.filter((p) => bestOffer(p)).length} con almeno un prezzo${upd ? ` · aggiornato ${fmtDate(upd)}` : ""}${maxPrice ? ` · prezzo confezione fino a ${maxPrice} €` : ""}</p>
-    ${(catSort === "nome" ? Object.keys(groups).sort().map((g) => [g, groups[g].sort((a, b) => a.p.name.localeCompare(b.p.name))]) : [["", rows]]).map(([g, items]) => (g ? `<h2>${g}</h2>` : "") + items.map(({ p, b, n }) => `
-      <div class="card prod" data-go="${p.id}">
-        <div><b>${p.name}</b><br><small class="muted">${n ? `${n} su ${CHAINS.length} ${CHAINS.length === 1 ? "catena" : "catene"}${b.promo ? " · in offerta" : ""}` : "nessuna offerta questa settimana"}</small></div>
-        <div class="price" style="font-size:16px">${b ? `${eur(b.ppu)}<small class="muted">/${unitLabel(p.unit)}</small><br><small class="muted">${logo(b.chain, 14)} ${eur(b.price)}</small>` : `<small class="muted">—</small>`}</div>
-      </div>`).join("")).join("")}`;
+    <div id="catlist"></div>`;
+  const draw = () => {
+    const pick = (p) => (catChain === "tutte" ? bestOffer(p) : offers(p).find((o) => o.chain === catChain));
+    let rows = PRODUCTS.map((p) => ({ p, b: pick(p) }))
+      .filter((r) => (catAvail === "tutti" && catChain === "tutte" || r.b) && (catCat === "tutte" || (r.p.category || "Altro") === catCat));
+    const withPrice = rows.filter((r) => r.b).length;
+    let html = `<p class="count">${rows.length} prodotti · ${withPrice} con un prezzo questa settimana</p>`;
+    if (catSort === "nome") {
+      const groups = {};
+      for (const r of rows) (groups[r.p.category || "Altro"] ||= []).push(r);
+      html += Object.keys(groups).sort().map((g) => section(esc(g), `<div class="list">${groups[g].sort((a, b) => a.p.name.localeCompare(b.p.name)).map(({ p }) => productRow(p)).join("")}</div>`)).join("");
+    } else {
+      rows.sort((a, b) => (a.b ? (catSort === "ppu" ? a.b.ppu : a.b.price) : 1e9) - (b.b ? (catSort === "ppu" ? b.b.ppu : b.b.price) : 1e9));
+      html += `<div class="list">${rows.map(({ p }) => productRow(p)).join("")}</div>`;
+    }
+    $("#catlist").innerHTML = rows.length ? html : empty("Nessun prodotto con questi filtri.");
+  };
+  $("#c-chain").onchange = (e) => { catChain = e.target.value; draw(); };
+  $("#c-cat").onchange = (e) => { catCat = e.target.value; draw(); };
+  $("#c-sort").onchange = (e) => { catSort = e.target.value; draw(); };
+  $("#c-avail").onchange = (e) => { catAvail = e.target.value; draw(); };
+  draw();
 }
 
 // ---------- Router ----------
@@ -320,21 +400,14 @@ function route() {
   else if (tab === "catalogo") catalogView();
   else if (h.startsWith("#p/")) productView(h.slice(3));
   else homeView(h.startsWith("#q=") ? decodeURIComponent(h.slice(3)) : "");
+  window.scrollTo(0, 0);
 }
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-go],[data-q],[data-sort],[data-period],[data-offchain],[data-offsort],[data-maxprice],[data-onlyavail],[data-askpos],[data-catchain],[data-catsort]");
+  const t = e.target.closest("[data-go],[data-period],[data-askpos]");
   if (!t) return;
-  if (t.dataset.go) location.hash = "#p/" + t.dataset.go;
-  if (t.dataset.q) { $("#q").value = t.dataset.q; $("#q").dispatchEvent(new Event("input")); }
-  if (t.dataset.sort) { sortBy = t.dataset.sort; route(); }
+  if (t.dataset.go && t.dataset.go !== "undefined") location.hash = "#p/" + t.dataset.go;
   if (t.dataset.period) { period = +t.dataset.period; route(); }
-  if (t.dataset.offchain) { offChain = t.dataset.offchain; offersView(); }
-  if (t.dataset.offsort) { offSort = t.dataset.offsort; offersView(); }
   if (t.dataset.askpos) { e.preventDefault(); askPosition(); }
-  if (t.dataset.maxprice) { maxPrice = +t.dataset.maxprice; route(); }
-  if (t.dataset.onlyavail) { catOnlyAvail = !catOnlyAvail; catalogView(); }
-  if (t.dataset.catchain) { catChain = t.dataset.catchain; catalogView(); }
-  if (t.dataset.catsort) { catSort = t.dataset.catsort; catalogView(); }
 });
 $("#back").onclick = () => history.length > 1 ? history.back() : (location.hash = "");
 addEventListener("hashchange", route);
