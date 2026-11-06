@@ -27,20 +27,22 @@ async function shrink(data) {
 const CACHE = new URL("../data/ai-cache.json", import.meta.url);
 // Provider in coda: si usa il primo con la chiave presente; quando esaurisce la quota del giorno si passa al successivo.
 //  - gemini    (GEMINI_API_KEY)    piano gratuito, modello Flash scelto automaticamente (o GEMINI_MODEL)
+//  - mistral   (MISTRAL_API_KEY)   piano gratuito "Experiment", modello con visione (MISTRAL_MODEL)
 //  - groq      (GROQ_API_KEY)      piano gratuito, modello con visione (GROQ_MODEL)
 //  - github    (GITHUB_MODELS_TOKEN) GitHub Models, gratuito: nel workflow è il token automatico di GitHub
 //  - anthropic (ANTHROPIC_API_KEY) a pagamento, Claude
 // FLYER_PROVIDERS cambia l'ordine, es. "groq,gemini".
-const KEYS = { gemini: "GEMINI_API_KEY", groq: "GROQ_API_KEY", github: "GITHUB_MODELS_TOKEN", anthropic: "ANTHROPIC_API_KEY" };
-const PROVIDERS = (process.env.FLYER_PROVIDERS || "gemini,groq,github,anthropic").split(",").map((x) => x.trim()).filter((p) => KEYS[p] && process.env[KEYS[p]]);
+const KEYS = { gemini: "GEMINI_API_KEY", mistral: "MISTRAL_API_KEY", groq: "GROQ_API_KEY", github: "GITHUB_MODELS_TOKEN", anthropic: "ANTHROPIC_API_KEY" };
+const PROVIDERS = (process.env.FLYER_PROVIDERS || "gemini,mistral,groq,github,anthropic").split(",").map((x) => x.trim()).filter((p) => KEYS[p] && process.env[KEYS[p]]);
 const exhausted = new Set();
 const currentProvider = () => PROVIDERS.find((p) => !exhausted.has(p)) || null;
 const GROQ_MODEL = process.env.GROQ_MODEL || process.env.FLYER_MODEL || "qwen/qwen3.8-27b";
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-opus-5-5";
 const GITHUB_MODEL = process.env.GITHUB_MODEL || "openai/gpt-4o-mini";
+const MISTRAL_MODEL = process.env.MISTRAL_MODEL || "mistral-small-latest";
 let geminiModel = process.env.GEMINI_MODEL || null;
 let geminiCandidates = null; // modelli Flash disponibili, dal migliore; si scorre se uno è sovraccarico o senza quota
-const modelOf = (p) => ({ gemini: geminiModel || "gemini", groq: GROQ_MODEL, github: GITHUB_MODEL }[p] || CLAUDE_MODEL);
+const modelOf = (p) => ({ gemini: geminiModel || "gemini", mistral: MISTRAL_MODEL, groq: GROQ_MODEL, github: GITHUB_MODEL }[p] || CLAUDE_MODEL);
 const MAX_NEW_PAGES = +(process.env.FLYER_MAX_PAGES || 80); // tetto di sicurezza sulla spesa per singola esecuzione
 // Tempo massimo per la lettura AI: dopo, si smette di leggere pagine nuove e si salvano i dati.
 // Deve restare sotto il limite del workflow, altrimenti GitHub interrompe il giro prima del salvataggio.
@@ -125,6 +127,7 @@ export async function extractFlyer(chainId, pages, meta = {}) {
         provider = p;
         try {
           offers = p === "gemini" ? await readPageGemini(small.data, mt, chainId)
+            : p === "mistral" ? await readPageMistral(small.data, mt, chainId)
             : p === "groq" ? await readPageGroq(small.data, mt, chainId)
             : p === "github" ? await readPageGithub(small.data, mt, chainId)
             : await readPage(new Anthropic(), small.data, mt, chainId);
@@ -213,11 +216,48 @@ async function readPageGroq(data, mediaType, chainId) {
     const json = await res.json();
     if (json.usage) tokensUsed += json.usage.total_tokens || 0;
     try {
-      const offers = JSON.parse(json.choices[0].message.content).offers;
-      if (!Array.isArray(offers)) throw new Error("campo offers mancante");
+      const offers = pickOffers(JSON.parse(json.choices[0].message.content));
+      if (!offers) throw new Error("nessun elenco di offerte nella risposta");
       await sleep(+(process.env.FLYER_DELAY_MS || 2500));
       return offers.filter((o) => o && typeof o.name === "string" && typeof o.price === "number" && o.price > 0);
     } catch (e) { console.error(`[${chainId}] risposta Groq non valida: ${e.message}`); return null; }
+  }
+  return null;
+}
+
+// Mistral (La Plateforme): API compatibile OpenAI, piano gratuito con limiti al minuto.
+async function readPageMistral(data, mediaType, chainId) {
+  const body = {
+    model: MISTRAL_MODEL, temperature: 0, max_tokens: 4000, response_format: { type: "json_object" },
+    messages: [{ role: "user", content: [
+      { type: "text", text: `${PROMPT}\n- unit è "kg", "l", "pz" o null. category è una di: ${CATEGORIES}.\nRispondi SOLO con JSON in questo formato:\n${GROQ_EXAMPLE}` },
+      { type: "image_url", image_url: `data:${mediaType};base64,${data.toString("base64")}` },
+    ] }],
+  };
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${process.env.MISTRAL_API_KEY}`, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.status === 429) {
+      const txt = await res.text();
+      if (/month|day|quota|capacity exceeded/i.test(txt) && attempt >= 3) { exhausted.add("mistral"); console.error(`[${chainId}] limite Mistral raggiunto: ${txt.slice(0, 120)}`); return null; }
+      await sleep(+(res.headers.get("retry-after") || 30) * 1000); continue;
+    }
+    if (res.status === 401 || res.status === 403) { exhausted.add("mistral"); console.error(`[${chainId}] chiave Mistral non valida`); return null; }
+    if (res.status >= 500 && attempt < 4) { await sleep(10000); continue; }
+    const raw = await res.text();
+    if (!res.ok) { console.error(`[${chainId}] errore Mistral ${res.status}: ${raw.slice(0, 200)}`); return null; }
+    let json;
+    try { json = JSON.parse(raw); } catch { exhausted.add("mistral"); console.error(`[${chainId}] Mistral: risposta non JSON: ${raw.slice(0, 120)}`); return null; }
+    if (json.usage) tokensUsed += json.usage.total_tokens || 0;
+    try {
+      const offers = pickOffers(JSON.parse(json.choices[0].message.content));
+      if (!offers) throw new Error("nessun elenco di offerte nella risposta");
+      await sleep(+(process.env.MISTRAL_DELAY_MS || 2500));
+      return offers.filter((o) => o && typeof o.name === "string" && typeof o.price === "number" && o.price > 0);
+    } catch (e) { console.error(`[${chainId}] risposta Mistral non valida: ${e.message}`); return null; }
   }
   return null;
 }
@@ -250,8 +290,8 @@ async function readPageGithub(data, mediaType, chainId) {
     catch { exhausted.add("github"); console.error(`[${chainId}] GitHub Models: risposta non JSON (status ${res.status}, ${res.headers.get("content-type")}): ${raw.slice(0, 120)}`); return null; }
     if (json.usage) tokensUsed += json.usage.total_tokens || 0;
     try {
-      const offers = JSON.parse(json.choices[0].message.content).offers;
-      if (!Array.isArray(offers)) throw new Error("campo offers mancante");
+      const offers = pickOffers(JSON.parse(json.choices[0].message.content));
+      if (!offers) throw new Error("nessun elenco di offerte nella risposta");
       await sleep(4500); // ~15 richieste al minuto al massimo
       return offers.filter((o) => o && typeof o.name === "string" && typeof o.price === "number" && o.price > 0);
     } catch (e) { console.error(`[${chainId}] risposta GitHub Models non valida: ${e.message}`); return null; }
@@ -285,10 +325,10 @@ function nextGeminiModel(reason) {
   if (!geminiModel) exhausted.add("gemini");
   return geminiModel;
 }
-let geminiNoThinking = true;
+const geminiThinkingOk = {}; // modello -> false se non accetta thinkingConfig
 async function readPageGemini(data, mediaType, chainId) {
   let model = await resolveGeminiModel();
-  const cfg = () => ({ temperature: 0, maxOutputTokens: 8192, responseMimeType: "application/json", ...(geminiNoThinking ? { thinkingConfig: { thinkingBudget: 0 } } : {}) });
+  const cfg = () => ({ temperature: 0, maxOutputTokens: 8192, responseMimeType: "application/json", ...(geminiThinkingOk[model] !== false ? { thinkingConfig: { thinkingBudget: 0 } } : {}) });
   let busy = 0; // 503 consecutivi sullo stesso modello
   for (let attempt = 1; attempt <= 8 && model; attempt++) {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
@@ -311,7 +351,11 @@ async function readPageGemini(data, mediaType, chainId) {
     }
     if (!res.ok) {
       const txt = await res.text();
-      if (res.status === 400 && geminiNoThinking && /thinking/i.test(txt)) { geminiNoThinking = false; attempt--; continue; }
+      // 400 generico: spesso è thinkingConfig non supportato da quel modello → riprova senza, poi cambia modello
+      if (res.status === 400 && !/API key|API_KEY/i.test(txt)) {
+        if (geminiThinkingOk[model] !== false) { geminiThinkingOk[model] = false; continue; }
+        model = nextGeminiModel("richiesta rifiutata (400)"); continue;
+      }
       if ((res.status === 400 && /API key|API_KEY/i.test(txt)) || res.status === 403) { exhausted.add("gemini"); console.error(`[${chainId}] chiave Gemini non valida o senza permessi: ${txt.slice(0, 200)}`); return null; }
       if (res.status === 404) { model = nextGeminiModel("non disponibile (404)"); continue; }
       console.error(`[${chainId}] errore Gemini ${res.status}: ${txt.slice(0, 300)}`); return null;
@@ -321,13 +365,21 @@ async function readPageGemini(data, mediaType, chainId) {
     if (json.usageMetadata) tokensUsed += json.usageMetadata.totalTokenCount || 0;
     const text = (json.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("");
     try {
-      const offers = JSON.parse(text.replace(/^```(?:json)?|```$/g, "")).offers;
-      if (!Array.isArray(offers)) throw new Error("campo offers mancante");
+      const offers = pickOffers(JSON.parse(text.replace(/^```(?:json)?|```$/g, "")));
+      if (!offers) throw new Error("nessun elenco di offerte nella risposta");
       await sleep(+(process.env.GEMINI_DELAY_MS || 6500)); // piano gratuito: ~10 richieste al minuto
       return offers.filter((o) => o && typeof o.name === "string" && typeof o.price === "number" && o.price > 0);
     } catch (e) { console.error(`[${chainId}] risposta Gemini non valida: ${e.message}`); return null; }
   }
   return null;
+}
+
+// I modelli non sempre rispettano il nome del campo: accetta {offers:[...]}, un elenco diretto o il primo elenco trovato.
+function pickOffers(obj) {
+  if (Array.isArray(obj)) return obj;
+  if (obj && Array.isArray(obj.offers)) return obj.offers;
+  const arr = obj && Object.values(obj).find(Array.isArray);
+  return arr || null;
 }
 
 function sniff(buf) {
