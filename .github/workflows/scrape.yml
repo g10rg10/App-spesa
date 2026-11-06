@@ -13,7 +13,7 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 110
+    timeout-minutes: 355   # repo pubblico: minuti illimitati, massimo GitHub 6 ore (da privato tornare a ~60)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,7 +21,7 @@ jobs:
       - name: Installa dipendenze e browser headless
         run: npm ci && npx playwright install --with-deps chromium && sudo apt-get install -y poppler-utils
       - run: node scraper/scrape.mjs
-        timeout-minutes: 85
+        timeout-minutes: 340
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
@@ -30,8 +30,8 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FLYER_MODEL: ${{ vars.FLYER_MODEL }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
-          FLYER_MAX_PAGES: "400"
-          FLYER_TIME_BUDGET_MIN: "65"
+          FLYER_MAX_PAGES: "2000"
+          FLYER_TIME_BUDGET_MIN: "320"   # da privato: 40
       - name: Salva i dati nel repo
         if: always()   # anche se lo scraper si interrompe, le pagine già lette (cache) non si perdono
         run: |
