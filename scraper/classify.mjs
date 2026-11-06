@@ -61,7 +61,7 @@ ${items}`;
     });
     if (res.status === 429) {
       const wait = (+res.headers.get("retry-after") || 20) * 1000;
-      if (wait > 120000) { console.error("[classifica] limite giornaliero Groq raggiunto"); return null; }
+      if (wait > 120000 || /per day/i.test(await res.clone().text())) { console.error("[classifica] limite giornaliero Groq raggiunto"); return null; }
       await sleep(wait); continue;
     }
     if (!res.ok) {

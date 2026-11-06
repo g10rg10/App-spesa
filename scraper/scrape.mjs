@@ -117,7 +117,7 @@ async function main() {
     if (ad.load) {
       try {
         all = await ad.load();
-        if (!all.length) { chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: ad.ai && !aiAvailable() ? "Volantino letto con AI: serve GROQ_API_KEY" : "Nessuna offerta letta" }); continue; }
+        if (!all.length) { chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: ad.ai ? (aiAvailable() ? "Volantino in lettura con AI: pronto nei prossimi giri" : "Volantino letto con AI: serve GROQ_API_KEY su GitHub") : "Nessuna offerta letta" }); continue; }
         flyers[chainId] = all; console.log(`[${chainId}] ${all.length} offerte`);
         cls = await classify(all, catalog);
         for (const o of all) { const pid = cls.get(offerKey(o)); if (pid) o.pid = pid; } // l'app usa pid per la ricerca

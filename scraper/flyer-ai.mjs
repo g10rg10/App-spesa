@@ -10,14 +10,15 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 const run = promisify(execFile);
 
-// Le pagine troppo pesanti (> 2,5 MB) vengono ridotte a 1600 px di lato lungo con ImageMagick:
-// i modelli leggono bene a questa risoluzione e Groq rifiuta immagini oltre ~4 MB.
+// Le pagine vengono ridotte a 1280 px di lato lungo con ImageMagick: i prezzi restano leggibili e
+// i token per pagina scendono molto (il piano gratuito di Groq ha un tetto di token al giorno).
+const MAX_SIDE = +(process.env.FLYER_MAX_SIDE || 1280);
 async function shrink(data) {
-  if (data.length < 2_500_000) return { data, mediaType: null };
+  if (data.length < 150_000) return { data, mediaType: null };
   const dir = await mkdtemp(join(tmpdir(), "pg-"));
   try {
     await writeFile(join(dir, "in"), data);
-    await run("convert", [join(dir, "in"), "-resize", "1600x1600>", "-quality", "85", join(dir, "out.jpg")]);
+    await run("convert", [join(dir, "in"), "-resize", `${MAX_SIDE}x${MAX_SIDE}>`, "-quality", "85", join(dir, "out.jpg")]);
     return { data: await readFile(join(dir, "out.jpg")), mediaType: "image/jpeg" };
   } catch { return { data, mediaType: null }; }
   finally { await rm(dir, { recursive: true, force: true }); }
@@ -69,6 +70,7 @@ Elenca ogni prodotto in offerta con il suo prezzo. Regole:
 let cache = null;
 let newPagesThisRun = 0;   // contatore globale sulle pagine nuove (tetto di spesa/limiti)
 let providerExhausted = false; // limite giornaliero raggiunto: si riprende al prossimo giro
+let tokensUsed = 0;
 async function loadCache() {
   if (!cache) { try { cache = JSON.parse(await readFile(CACHE)); } catch { cache = {}; } }
   return cache;
@@ -109,7 +111,7 @@ export async function extractFlyer(chainId, pages, meta = {}) {
     }
     for (const o of offers) out.push(toCommon(o, meta));
   }
-  console.log(`[${chainId}] pagine: ${analysed} lette con ${PROVIDER}/${MODEL}, ${cached} dalla cache, ${skipped} saltate${client ? "" : " (manca la chiave API)"}`);
+  console.log(`[${chainId}] pagine: ${analysed} lette con ${PROVIDER}/${MODEL}${analysed && tokensUsed ? ` (~${Math.round(tokensUsed / Math.max(1, newPagesThisRun))} token/pagina)` : ""}, ${cached} dalla cache, ${skipped} saltate${client ? "" : " (manca la chiave API)"}`);
   return out;
 }
 
@@ -141,15 +143,20 @@ async function readPage(client, data, mediaType, chainId) {
   }
 }
 
-// Groq: API compatibile OpenAI. Il piano gratuito ha limiti al minuto, quindi rallentiamo e ritentiamo sui 429.
+// Groq: API compatibile OpenAI. Il piano gratuito ha limiti al minuto e al giorno: niente ragionamento
+// (inutile per leggere un volantino e costoso in token), risposta compatta, nuovi tentativi sui 429.
+const GROQ_EXAMPLE = '{"offers":[{"name":"Mascarpone","brand":"Cucina","pack":"500 g","price":2.69,"old_price":2.99,"unit_price":5.38,"unit":"kg","card_price":null,"category":"Latticini e uova"}]}';
+const CATEGORIES = SCHEMA.properties.offers.items.properties.category.enum.join(", ");
+let groqNoReasoning = true;
 async function readPageGroq(data, mediaType, chainId) {
   const body = {
     model: MODEL,
     temperature: 0,
-    max_completion_tokens: 8000,
+    max_completion_tokens: 4000,
     response_format: { type: "json_object" },
+    ...(groqNoReasoning ? { reasoning_effort: "none" } : {}),
     messages: [{ role: "user", content: [
-      { type: "text", text: PROMPT + "\n\nRispondi SOLO con un oggetto JSON conforme a questo schema:\n" + JSON.stringify(SCHEMA) },
+      { type: "text", text: `${PROMPT}\n- unit è "kg", "l", "pz" o null. category è una di: ${CATEGORIES}.\nRispondi SOLO con JSON in questo formato:\n${GROQ_EXAMPLE}` },
       { type: "image_url", image_url: { url: `data:${mediaType};base64,${data.toString("base64")}` } },
     ] }],
   };
@@ -161,11 +168,18 @@ async function readPageGroq(data, mediaType, chainId) {
     });
     if (res.status === 429) {
       const wait = (+res.headers.get("retry-after") || 20) * 1000;
-      if (wait > 120000) { providerExhausted = true; console.error(`[${chainId}] limite giornaliero Groq raggiunto: riprendo al prossimo giro`); return null; }
+      const txt = await res.text();
+      if (wait > 120000 || /tokens per day|TPD|requests per day|RPD/i.test(txt)) { providerExhausted = true; console.error(`[${chainId}] limite giornaliero Groq raggiunto: riprendo al prossimo giro`); return null; }
       await sleep(wait); continue;
     }
-    if (!res.ok) { console.error(`[${chainId}] errore Groq ${res.status}: ${(await res.text()).slice(0, 300)}`); return null; }
+    if (!res.ok) {
+      const txt = await res.text();
+      if (res.status === 400 && groqNoReasoning && /reasoning/i.test(txt)) { groqNoReasoning = false; delete body.reasoning_effort; attempt--; continue; }
+      if (/tokens per day|TPD/i.test(txt)) { providerExhausted = true; console.error(`[${chainId}] limite giornaliero Groq raggiunto: riprendo al prossimo giro`); return null; }
+      console.error(`[${chainId}] errore Groq ${res.status}: ${txt.slice(0, 300)}`); return null;
+    }
     const json = await res.json();
+    if (json.usage) tokensUsed += json.usage.total_tokens || 0;
     try {
       const offers = JSON.parse(json.choices[0].message.content).offers;
       if (!Array.isArray(offers)) throw new Error("campo offers mancante");
