@@ -28,16 +28,18 @@ const CACHE = new URL("../data/ai-cache.json", import.meta.url);
 // Provider in coda: si usa il primo con la chiave presente; quando esaurisce la quota del giorno si passa al successivo.
 //  - gemini    (GEMINI_API_KEY)    piano gratuito, modello Flash scelto automaticamente (o GEMINI_MODEL)
 //  - groq      (GROQ_API_KEY)      piano gratuito, modello con visione (GROQ_MODEL)
+//  - github    (GITHUB_MODELS_TOKEN) GitHub Models, gratuito: nel workflow è il token automatico di GitHub
 //  - anthropic (ANTHROPIC_API_KEY) a pagamento, Claude
 // FLYER_PROVIDERS cambia l'ordine, es. "groq,gemini".
-const KEYS = { gemini: "GEMINI_API_KEY", groq: "GROQ_API_KEY", anthropic: "ANTHROPIC_API_KEY" };
-const PROVIDERS = (process.env.FLYER_PROVIDERS || "gemini,groq,anthropic").split(",").map((x) => x.trim()).filter((p) => KEYS[p] && process.env[KEYS[p]]);
+const KEYS = { gemini: "GEMINI_API_KEY", groq: "GROQ_API_KEY", github: "GITHUB_MODELS_TOKEN", anthropic: "ANTHROPIC_API_KEY" };
+const PROVIDERS = (process.env.FLYER_PROVIDERS || "gemini,groq,github,anthropic").split(",").map((x) => x.trim()).filter((p) => KEYS[p] && process.env[KEYS[p]]);
 const exhausted = new Set();
 const currentProvider = () => PROVIDERS.find((p) => !exhausted.has(p)) || null;
 const GROQ_MODEL = process.env.GROQ_MODEL || process.env.FLYER_MODEL || "qwen/qwen3.8-27b";
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-opus-5-5";
+const GITHUB_MODEL = process.env.GITHUB_MODEL || "openai/gpt-4o-mini";
 let geminiModel = process.env.GEMINI_MODEL || null;
-const modelOf = (p) => (p === "gemini" ? geminiModel || "gemini" : p === "groq" ? GROQ_MODEL : CLAUDE_MODEL);
+const modelOf = (p) => ({ gemini: geminiModel || "gemini", groq: GROQ_MODEL, github: GITHUB_MODEL }[p] || CLAUDE_MODEL);
 const MAX_NEW_PAGES = +(process.env.FLYER_MAX_PAGES || 80); // tetto di sicurezza sulla spesa per singola esecuzione
 
 const nullable = (type) => ({ type: [type, "null"] });
@@ -115,9 +117,16 @@ export async function extractFlyer(chainId, pages, meta = {}) {
       let provider = null;
       for (let p = currentProvider(); p; p = currentProvider()) {
         provider = p;
-        offers = p === "gemini" ? await readPageGemini(small.data, mt, chainId)
-          : p === "groq" ? await readPageGroq(small.data, mt, chainId)
-          : await readPage(new Anthropic(), small.data, mt, chainId);
+        try {
+          offers = p === "gemini" ? await readPageGemini(small.data, mt, chainId)
+            : p === "groq" ? await readPageGroq(small.data, mt, chainId)
+            : p === "github" ? await readPageGithub(small.data, mt, chainId)
+            : await readPage(new Anthropic(), small.data, mt, chainId);
+        } catch (e) {
+          // Una risposta inattesa non deve fermare il giro: si scarta questo provider per oggi.
+          console.error(`[${chainId}] ${p}: risposta inattesa (${e.message.slice(0, 120)}), passo al successivo`);
+          exhausted.add(p); offers = null;
+        }
         if (offers !== null || !exhausted.has(p)) break;
       }
       if (!offers) { if (!currentProvider()) skipped++; continue; }
@@ -203,6 +212,40 @@ async function readPageGroq(data, mediaType, chainId) {
       await sleep(+(process.env.FLYER_DELAY_MS || 2500));
       return offers.filter((o) => o && typeof o.name === "string" && typeof o.price === "number" && o.price > 0);
     } catch (e) { console.error(`[${chainId}] risposta Groq non valida: ${e.message}`); return null; }
+  }
+  return null;
+}
+
+// GitHub Models: API compatibile OpenAI. Quota gratuita bassa (decine di richieste al giorno): fa da riserva.
+async function readPageGithub(data, mediaType, chainId) {
+  const body = {
+    model: GITHUB_MODEL, temperature: 0, max_tokens: 4000, response_format: { type: "json_object" },
+    messages: [{ role: "user", content: [
+      { type: "text", text: `${PROMPT}\n- unit è "kg", "l", "pz" o null. category è una di: ${CATEGORIES}.\nRispondi SOLO con JSON in questo formato:\n${GROQ_EXAMPLE}` },
+      { type: "image_url", image_url: { url: `data:${mediaType};base64,${data.toString("base64")}`, detail: "high" } },
+    ] }],
+  };
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const res = await fetch("https://models.github.ai/inference/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${process.env.GITHUB_MODELS_TOKEN}`, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.status === 429) {
+      const wait = +(res.headers.get("retry-after") || 60);
+      if (wait > 120) { exhausted.add("github"); console.error(`[${chainId}] quota giornaliera GitHub Models esaurita`); return null; }
+      await sleep(wait * 1000); continue;
+    }
+    if (res.status === 401 || res.status === 403) { exhausted.add("github"); console.error(`[${chainId}] GitHub Models non autorizzato (serve "models: read" nel workflow)`); return null; }
+    if (!res.ok) { const txt = await res.text(); if (res.status === 413 || /too large|size/i.test(txt)) { console.error(`[${chainId}] pagina troppo grande per GitHub Models`); return null; } console.error(`[${chainId}] errore GitHub Models ${res.status}: ${txt.slice(0, 200)}`); return null; }
+    const json = await res.json();
+    if (json.usage) tokensUsed += json.usage.total_tokens || 0;
+    try {
+      const offers = JSON.parse(json.choices[0].message.content).offers;
+      if (!Array.isArray(offers)) throw new Error("campo offers mancante");
+      await sleep(4500); // ~15 richieste al minuto al massimo
+      return offers.filter((o) => o && typeof o.name === "string" && typeof o.price === "number" && o.price > 0);
+    } catch (e) { console.error(`[${chainId}] risposta GitHub Models non valida: ${e.message}`); return null; }
   }
   return null;
 }
