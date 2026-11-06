@@ -274,7 +274,7 @@ async function readPageGithub(data, mediaType, chainId) {
   for (let attempt = 1; attempt <= 3; attempt++) {
     const res = await fetch("https://models.github.ai/inference/chat/completions", {
       method: "POST",
-      headers: { Authorization: `Bearer ${process.env.GITHUB_MODELS_TOKEN}`, "Content-Type": "application/json", Accept: "application/json" },
+      headers: { Authorization: `Bearer ${process.env.GITHUB_MODELS_TOKEN}`, "Content-Type": "application/json", Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
       body: JSON.stringify(body),
     });
     if (res.status === 429) {
