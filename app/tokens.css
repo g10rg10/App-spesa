@@ -1,0 +1,89 @@
+/* Spesa Smart · design tokens
+   Tema chiaro di default, scuro automatico da sistema.
+   Forzabile con <html data-theme="light|dark">.
+   Tutte le coppie testo/sfondo passano WCAG AA (rapporti nei commenti). */
+
+:root {
+  color-scheme: light;
+
+  /* Neutri: struttura */
+  --bg: #F6F6F3;        /* sfondo pagina */
+  --surface: #FFFFFF;   /* card, dock, liste */
+  --sunk: #EEEEEA;      /* tracce barre, segmented, tile logo */
+  --line: #E2E2DC;      /* bordi e divisori */
+  --ink: #16201A;       /* testo primario · 15,4:1 su bg */
+  --muted: #5C655F;     /* testo secondario · 5,6:1 su bg, 5,2:1 su sunk */
+
+  /* Verde: azioni, risparmio, scheda attiva */
+  --brand: #0F5C3F;     /* 8,0:1 con bianco */
+  --onbrand: #FFFFFF;
+  --soft: #E3EFE7;      /* fondo scheda attiva · brand sopra 6,8:1 */
+
+  /* Riquadro verdetto */
+  --hero: #0F5C3F;
+  --onhero: #FFFFFF;
+  --herom: #CFE5D8;     /* testo secondario sul verdetto · 6,0:1 */
+
+  /* Giallo cartellino: logo, verdetto, avviso scattato */
+  --tag: #FFD23F;
+  --ontag: #16201A;     /* 11,6:1 */
+
+  /* Rosso: SOLO badge sconto */
+  --sale: #C8321C;
+  --onsale: #FFFFFF;    /* 5,3:1 */
+
+  /* Tipografia */
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: Figtree, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Forme e spazi */
+  --r-xs: 7px;   /* badge */
+  --r-sm: 12px;  /* tile, bottoni icona */
+  --r-md: 16px;  /* campi, bottoni */
+  --r-lg: 20px;  /* card e liste */
+  --r-xl: 24px;  /* verdetto */
+  --gutter: 16px;
+  --tap: 44px;   /* bersaglio minimo */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0F1311;
+    --surface: #171C19;
+    --sunk: #1F2622;
+    --line: #2B332E;
+    --ink: #ECEFEC;     /* 16,2:1 */
+    --muted: #A3ACA6;   /* 7,4:1 su surface */
+    --brand: #5FD39A;   /* 9,3:1 su surface */
+    --onbrand: #0A1A11; /* 9,6:1 */
+    --soft: #1A3326;    /* brand sopra 7,3:1 */
+    --hero: #1B3A2C;
+    --onhero: #ECEFEC;  /* 10,7:1 */
+    --herom: #B5CFC0;   /* 7,5:1 */
+    --tag: #FFD23F;
+    --ontag: #16201A;
+    --sale: #FF7A5C;
+    --onsale: #1F0E09;  /* 7,3:1 */
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0F1311;
+  --surface: #171C19;
+  --sunk: #1F2622;
+  --line: #2B332E;
+  --ink: #ECEFEC;
+  --muted: #A3ACA6;
+  --brand: #5FD39A;
+  --onbrand: #0A1A11;
+  --soft: #1A3326;
+  --hero: #1B3A2C;
+  --onhero: #ECEFEC;
+  --herom: #B5CFC0;
+  --tag: #FFD23F;
+  --ontag: #16201A;
+  --sale: #FF7A5C;
+  --onsale: #1F0E09;
+}
