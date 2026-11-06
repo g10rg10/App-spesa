@@ -1,7 +1,7 @@
 // Spesa Smart · PWA statica. Dati reali da ../data/latest.json (fallback: demo in data.js).
 // Design: docs/HANDOFF.md. Logica di formato e confronto: format.js (testata da format.test.mjs).
 import { euro, unitPrice, validUntil, updatedAt, discountLabel, savingPct, diffLabel, savingEuro,
-  isReliableComparison, sentenceCase, normalizeCategory, listVerdict } from "./format.js";
+  isReliableComparison, sentenceCase, normalizeCategory, listVerdict } from "./format.js?v=202611060857";
 
 /* global CHAINS, PRODUCTS, TODAY */
 const $ = (s, el = document) => el.querySelector(s);

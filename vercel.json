@@ -26,6 +26,15 @@
           "value": "attachment"
         }
       ]
+    },
+    {
+      "source": "/app/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
     }
   ]
 }
