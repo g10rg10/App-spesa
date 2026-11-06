@@ -14,19 +14,22 @@ Cerchi un prodotto per nome ("chilli verde") e vedi in quali catene costa meno, 
 
 **In locale:** `python3 -m http.server` nella cartella del repo, poi apri `localhost:8000/app/`. Aprendo il file direttamente vedi solo la demo. Per usarla dal telefono attiva GitHub Pages sul repo (Settings → Pages → branch `master`) e apri `…/app/`.
 
-## Test sulle fonti dati (5 nov 2026)
+## Catene coperte (6 nov 2026)
 
-| Catena | Esito |
-|---|---|
-| **Eurospin** | ✅ **Il volantino digitale pubblico contiene i dati strutturati** (~250 offerte con prezzo, prezzo barrato, €/kg e validità). Una visita al giorno con un browser headless |
-| **Penny** | ✅ Pagine pubbliche del volantino su penny.it (~50 offerte). Prezzo per tutti separato da quello con PENNYCard |
-| MD | Volantino solo come sfogliabile, senza dati strutturati: candidato per l'estrazione con AI |
-| Lidl | API di ricerca con prezzo, €/kg e promo con date. **Dopo poche richieste risponde 401**: blocca l'accesso automatico |
-| Coop (coopshop.it) | API aperta, ma **senza negozio selezionato non restituisce prezzi** |
-| Conad, Carrefour | Bloccano le richieste automatiche (403) |
-| Esselunga | Prezzi online solo dopo login/CAP |
+| Catena | Fonte | Metodo |
+|---|---|---|
+| Eurospin | volantino digitale (dati strutturati) | diretto |
+| Penny | pagine volantino su penny.it | diretto |
+| Aldi | volantino Publitas (immagini) | AI (Groq) |
+| Tigros | piattaforma ebsn, pagine PNG | AI (Groq) |
+| Basko | piattaforma ebsn + volantinoggi.it | AI (Groq) |
+| MD | PDF per zona (default `nord-macel-gastro`, variabile `MD_ZONA`) | PDF → immagini → AI |
+| Carrefour | pagine per area (default Market Nord-Est, variabile `CARREFOUR_STORE_URL`) | AI (Groq) |
+| Lidl | blocca le richieste automatiche (401) | — |
+| Coop, Conad, Bennet | bloccano (403) | — |
+| Esselunga | prezzi solo con login | — |
 
-Conclusione: lo scraping dei *siti* delle catene diretto dei siti delle catene non è una base solida. I siti si difendono, i termini d'uso lo vietano e in UE esiste un diritto specifico sui database. Aggirare i blocchi non è una strada da prendere.
+Il piano gratuito di Groq legge circa 1 pagina al minuto: i volantini nuovi si completano in 1-2 giri (il workflow gira 2 volte al giorno) grazie alla cache.
 
 ## Strade realistiche per i dati
 

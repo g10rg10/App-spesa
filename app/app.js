@@ -7,7 +7,7 @@ const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").tri
 let chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
 let MODE = "demo";
 // Loghi: icona ufficiale del sito della catena (favicon). Se non si carica resta il pallino colorato.
-const DOMAINS = { eurospin: "eurospin.it", penny: "penny.it", aldi: "aldi.it", lidl: "lidl.it", esselunga: "esselunga.it", coop: "coop.it", conad: "conad.it", carrefour: "carrefour.it", md: "mdspa.it", tigros: "tigros.it" };
+const DOMAINS = { eurospin: "eurospin.it", penny: "penny.it", aldi: "aldi.it", lidl: "lidl.it", esselunga: "esselunga.it", coop: "coop.it", conad: "conad.it", carrefour: "carrefour.it", md: "mdspa.it", tigros: "tigros.it", basko: "basko.it" };
 function logo(chainId, size = 20) {
   const c = chainById[chainId] || {};
   const d = DOMAINS[chainId];
@@ -15,7 +15,7 @@ function logo(chainId, size = 20) {
 }
 let FLYERS = {};      // offerte complete dei volantini (dati reali)
 let OTHER_CHAINS = []; // catene senza dati
-const COLORS = { eurospin: "#ca8a04", penny: "#cd1719", aldi: "#00005f", md: "#e30613", tigros: "#00843d", lidl: "#1d4ed8", coop: "#e85d04", conad: "#2a9d8f", esselunga: "#d62828", carrefour: "#7c3aed" };
+const COLORS = { eurospin: "#ca8a04", penny: "#cd1719", aldi: "#00005f", md: "#e30613", tigros: "#00843d", basko: "#e2001a", lidl: "#1d4ed8", coop: "#e85d04", conad: "#2a9d8f", esselunga: "#d62828", carrefour: "#7c3aed" };
 
 // Prova a caricare i dati reali prodotti dallo scraper; altrimenti resta in demo.
 async function loadReal() {

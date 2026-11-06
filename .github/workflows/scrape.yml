@@ -3,6 +3,7 @@ on:
   workflow_dispatch: {}
   schedule:
     - cron: "17 4 * * *"   # ogni giorno alle 04:17 UTC (05:17 / 06:17 in Italia)
+    - cron: "17 14 * * *"  # secondo giro: con il piano gratuito di Groq (~1 pagina/minuto) recupera le pagine rimaste
 permissions:
   contents: write
 jobs:
@@ -14,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - name: Installa dipendenze e browser headless
-        run: npm ci && npx playwright install --with-deps chromium
+        run: npm ci && npx playwright install --with-deps chromium && sudo apt-get install -y poppler-utils
       - run: node scraper/scrape.mjs
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}

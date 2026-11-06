@@ -4,6 +4,9 @@ import { readFile, writeFile } from "node:fs/promises";
 import { loadEurospin } from "./eurospin.mjs";
 import { loadPenny } from "./penny.mjs";
 import { loadAldi } from "./aldi.mjs";
+import { ebsnChain } from "./ebsn.mjs";
+import { loadMd } from "./md.mjs";
+import { loadCarrefour } from "./carrefour.mjs";
 import { aiAvailable } from "./flyer-ai.mjs";
 import { classify, offerKey } from "./classify.mjs";
 
@@ -35,6 +38,10 @@ const ADAPTERS = {
   eurospin: { name: "Eurospin", coverage: "volantino", load: loadEurospin },
   penny:    { name: "Penny",    coverage: "volantino", load: loadPenny },
   aldi:     { name: "Aldi",     coverage: "volantino", load: loadAldi, ai: true },
+  tigros:   { name: "Tigros",   coverage: "volantino", load: ebsnChain("tigros", "www.tigros.it"), ai: true },
+  carrefour: { name: "Carrefour", coverage: "volantino", load: loadCarrefour, ai: true },
+  md:       { name: "MD",       coverage: "volantino", load: loadMd, ai: true },
+  basko:    { name: "Basko",    coverage: "volantino", load: ebsnChain("basko", "www.basko.it"), ai: true },
   lidl: {
     name: "Lidl",
     coverage: "sito",
@@ -67,7 +74,6 @@ const NOT_COVERED = {
   esselunga: { name: "Esselunga", note: "Prezzi online visibili solo dopo login/CAP" },
   coop:      { name: "Coop",      note: "L'API c'è ma senza negozio selezionato non restituisce prezzi" },
   conad:     { name: "Conad",     note: "Il sito blocca le richieste automatiche (403)" },
-  carrefour: { name: "Carrefour", note: "Il sito blocca le richieste automatiche (403)" },
   lidl:      { name: "Lidl",      note: "Il sito blocca le richieste automatiche (401)" },
 };
 

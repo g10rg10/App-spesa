@@ -3,7 +3,25 @@
 // (chiave = impronta SHA-1 dell'immagine), quindi si paga solo quando esce un volantino nuovo.
 import Anthropic from "@anthropic-ai/sdk";
 import { createHash } from "node:crypto";
-import { readFile, writeFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { promisify } from "node:util";
+const run = promisify(execFile);
+
+// Le pagine troppo pesanti (> 2,5 MB) vengono ridotte a 1600 px di lato lungo con ImageMagick:
+// i modelli leggono bene a questa risoluzione e Groq rifiuta immagini oltre ~4 MB.
+async function shrink(data) {
+  if (data.length < 2_500_000) return { data, mediaType: null };
+  const dir = await mkdtemp(join(tmpdir(), "pg-"));
+  try {
+    await writeFile(join(dir, "in"), data);
+    await run("convert", [join(dir, "in"), "-resize", "1600x1600>", "-quality", "85", join(dir, "out.jpg")]);
+    return { data: await readFile(join(dir, "out.jpg")), mediaType: "image/jpeg" };
+  } catch { return { data, mediaType: null }; }
+  finally { await rm(dir, { recursive: true, force: true }); }
+}
 
 const CACHE = new URL("../data/ai-cache.json", import.meta.url);
 // Provider: "groq" (piano gratuito, modelli open con visione) oppure "anthropic" (Claude, a pagamento).
@@ -81,9 +99,9 @@ export async function extractFlyer(chainId, pages, meta = {}) {
     if (offers) cached++;
     else if (!client || providerExhausted || newPagesThisRun >= MAX_NEW_PAGES) { skipped++; continue; }
     else {
-      offers = PROVIDER === "groq"
-        ? await readPageGroq(data, pg.mediaType || sniff(data), chainId)
-        : await readPage(client, data, pg.mediaType || sniff(data), chainId);
+      const small = await shrink(data);
+      const mt = small.mediaType || pg.mediaType || sniff(small.data);
+      offers = PROVIDER === "groq" ? await readPageGroq(small.data, mt, chainId) : await readPage(client, small.data, mt, chainId);
       if (offers === null) continue;
       c[key] = { chain: chainId, model: MODEL, at: new Date().toISOString().slice(0, 10), offers };
       analysed++; newPagesThisRun++;
