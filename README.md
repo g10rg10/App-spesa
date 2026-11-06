@@ -14,22 +14,25 @@ Cerchi un prodotto per nome ("chilli verde") e vedi in quali catene costa meno, 
 
 **In locale:** `python3 -m http.server` nella cartella del repo, poi apri `localhost:8000/app/`. Aprendo il file direttamente vedi solo la demo. Per usarla dal telefono attiva GitHub Pages sul repo (Settings → Pages → branch `master`) e apri `…/app/`.
 
-## Catene coperte (6 nov 2026)
+## Catene coperte
 
-| Catena | Fonte | Metodo |
+Elenco completo delle insegne italiane (162, raggruppate in ~80 catene alimentari) in `scraper/insegne.json`
+(fonte: QBerg, Grande Distribuzione Italia 2025). Nell'app: pagina **Catene** (link in fondo alla home).
+
+| Fonte | Catene | Metodo |
 |---|---|---|
-| Eurospin | volantino digitale (dati strutturati) | diretto |
-| Penny | pagine volantino su penny.it | diretto |
-| Aldi | volantino Publitas (immagini) | AI (Groq) |
-| Tigros | piattaforma ebsn, pagine PNG | AI (Groq) |
-| Basko | piattaforma ebsn + volantinoggi.it | AI (Groq) |
-| MD | PDF per zona (default `nord-macel-gastro`, variabile `MD_ZONA`) | PDF → immagini → AI |
-| Carrefour | pagine per area (default Market Nord-Est, variabile `CARREFOUR_STORE_URL`) | AI (Groq) |
-| Lidl | blocca le richieste automatiche (401) | — |
-| Coop, Conad, Bennet | bloccano (403) | — |
-| Esselunga | prezzi solo con login | — |
+| volantino digitale Eurospin | Eurospin | dati strutturati |
+| penny.it | Penny | pagine HTML |
+| Publitas | Aldi | immagini → AI |
+| PDF per zona | MD (`MD_ZONA`) | PDF → immagini → AI |
+| youroperator | Carrefour (`CARREFOUR_STORE_URL`) | immagini → AI |
+| ebsn | Tigros, Basko | immagini → AI |
+| **volantinoggi.it** | Conad, Coop, Despar/Eurospar/Interspar, Crai, Todis, Famila, Sisa, A&O, Bennet, Iperal, Alì, Galassia, Gulliver, Pewex, Pim, Coal, Emi, Prestofresco, Sidis, Piccolo | immagini → AI |
+| bloccate | Lidl (401), Esselunga (login) | — |
 
-Il piano gratuito di Groq legge circa 1 pagina al minuto: i volantini nuovi si completano in 1-2 giri (il workflow gira 2 volte al giorno) grazie alla cache.
+Città di riferimento per i volantini regionali: Milano (`REF_LAT`, `REF_LON`).
+La lettura AI segue la priorità per numero di punti vendita (`PRIORITY` in `scrape.mjs`): con il piano gratuito di Groq
+(~200.000 token/giorno) le catene si completano in più giri grazie alla cache.
 
 ## Strade realistiche per i dati
 

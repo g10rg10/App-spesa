@@ -7,6 +7,7 @@ import { loadAldi } from "./aldi.mjs";
 import { ebsnChain } from "./ebsn.mjs";
 import { loadMd } from "./md.mjs";
 import { loadCarrefour } from "./carrefour.mjs";
+import { VO_CHAINS, voChain } from "./volantinoggi.mjs";
 import { aiAvailable } from "./flyer-ai.mjs";
 import { classify, offerKey } from "./classify.mjs";
 
@@ -41,6 +42,8 @@ const ADAPTERS = {
   tigros:   { name: "Tigros",   coverage: "volantino", load: ebsnChain("tigros", "www.tigros.it"), ai: true },
   carrefour: { name: "Carrefour", coverage: "volantino", load: loadCarrefour, ai: true },
   md:       { name: "MD",       coverage: "volantino", load: loadMd, ai: true },
+  // Catene da volantinoggi.it, in ordine di priorità
+  ...Object.fromEntries(VO_CHAINS.map((c) => [c.id, { name: c.name, coverage: "volantino", load: voChain(c), ai: true }])),
   basko:    { name: "Basko",    coverage: "volantino", load: ebsnChain("basko", "www.basko.it"), ai: true },
   lidl: {
     name: "Lidl",
@@ -72,8 +75,6 @@ const ADAPTERS = {
 // Catene note ma non ancora coperte: l'app mostra "dati non disponibili", NON "non trovato".
 const NOT_COVERED = {
   esselunga: { name: "Esselunga", note: "Prezzi online visibili solo dopo login/CAP" },
-  coop:      { name: "Coop",      note: "L'API c'è ma senza negozio selezionato non restituisce prezzi" },
-  conad:     { name: "Conad",     note: "Il sito blocca le richieste automatiche (403)" },
   lidl:      { name: "Lidl",      note: "Il sito blocca le richieste automatiche (401)" },
 };
 
@@ -101,6 +102,10 @@ function pickBest(results, match, unit, productId, cls) {
   return ok[0] || null;
 }
 
+// Ordine di lettura AI: le catene con più punti vendita prima (il budget gratuito giornaliero è limitato).
+const PRIORITY = ["eurospin", "penny", "conad", "coop", "despar", "carrefour", "crai", "md", "aldi", "todis", "sisa", "famila", "ao", "tigros", "basko", "bennet", "iperal", "ali"];
+const ordered = (obj) => Object.entries(obj).sort(([a], [b]) => (PRIORITY.indexOf(a) + 1 || 99) - (PRIORITY.indexOf(b) + 1 || 99));
+
 async function main() {
   const catalog = JSON.parse(await readFile(new URL("scraper/catalog.json", ROOT)));
   const histPath = new URL("data/history.json", ROOT);
@@ -111,7 +116,7 @@ async function main() {
   const products = catalog.products.map((p) => ({ id: p.id, name: p.name, unit: p.unit, category: p.category, aliases: p.aliases, offers: {} }));
 
   const flyers = {}; // offerte complete per catena, per la ricerca libera nell'app
-  for (const [chainId, ad] of Object.entries(ADAPTERS)) {
+  for (const [chainId, ad] of ordered(ADAPTERS)) {
     if (ad.enabled === false) continue;
     let errors = 0, all = null, cls = null;
     if (ad.load) {

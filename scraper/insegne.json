@@ -1,0 +1,1463 @@
+{
+ "_fonte": "QBerg, Grande Distribuzione Italia 2025 (dato al 10/06/2025): https://www.qberg.com/grande-distribuzione-italia-2025-mappa-principali-insegne/",
+ "insegne": [
+  {
+   "insegna": "Conad",
+   "famiglia": "conad",
+   "nomeFamiglia": "Conad",
+   "canali": "Superette,Supermarket",
+   "regioni": 20,
+   "puntiVendita": 1248,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Eurospin",
+   "famiglia": "eurospin",
+   "nomeFamiglia": "Eurospin",
+   "canali": "Discount",
+   "regioni": 20,
+   "puntiVendita": 1243,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Acqua & Sapone",
+   "famiglia": "acquasapone",
+   "nomeFamiglia": "Acqua & Sapone",
+   "canali": "Drug Specialists",
+   "regioni": 20,
+   "puntiVendita": 1005,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Lidl",
+   "famiglia": "lidl",
+   "nomeFamiglia": "Lidl",
+   "canali": "Discount",
+   "regioni": 20,
+   "puntiVendita": 802,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Md Discount",
+   "famiglia": "md",
+   "nomeFamiglia": "MD",
+   "canali": "Discount",
+   "regioni": 20,
+   "puntiVendita": 788,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Despar",
+   "famiglia": "despar",
+   "nomeFamiglia": "Despar",
+   "canali": "Superette,Supermarket",
+   "regioni": 19,
+   "puntiVendita": 1165,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Conad City",
+   "famiglia": "conad",
+   "nomeFamiglia": "Conad",
+   "canali": "Superette,Supermarket",
+   "regioni": 19,
+   "puntiVendita": 1096,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Tigota'",
+   "famiglia": "tigota",
+   "nomeFamiglia": "Tigota'",
+   "canali": "Drug Specialists",
+   "regioni": 18,
+   "puntiVendita": 758,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Coop",
+   "famiglia": "coop",
+   "nomeFamiglia": "Coop",
+   "canali": "Ipermarket,Superette,Supermarket",
+   "regioni": 18,
+   "puntiVendita": 1111,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Crai",
+   "famiglia": "crai",
+   "nomeFamiglia": "Crai",
+   "canali": "Superette,Supermarket",
+   "regioni": 19,
+   "puntiVendita": 960,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Penny Market",
+   "famiglia": "penny",
+   "nomeFamiglia": "Penny",
+   "canali": "Discount",
+   "regioni": 18,
+   "puntiVendita": 463,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Conad Superstore",
+   "famiglia": "conad",
+   "nomeFamiglia": "Conad",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 17,
+   "puntiVendita": 267,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Eurospar",
+   "famiglia": "despar",
+   "nomeFamiglia": "Despar",
+   "canali": "Superette,Supermarket",
+   "regioni": 14,
+   "puntiVendita": 276,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Prodet",
+   "famiglia": "prodet",
+   "nomeFamiglia": "Prodet",
+   "canali": "Drug Specialists",
+   "regioni": 14,
+   "puntiVendita": 54,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Pam",
+   "famiglia": "pam",
+   "nomeFamiglia": "Pam Panorama",
+   "canali": "Superette,Supermarket",
+   "regioni": 14,
+   "puntiVendita": 388,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Ipercoop",
+   "famiglia": "coop",
+   "nomeFamiglia": "Coop",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 15,
+   "puntiVendita": 110,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Caddy's",
+   "famiglia": "caddys",
+   "nomeFamiglia": "Caddy'S",
+   "canali": "Drug Specialists",
+   "regioni": 13,
+   "puntiVendita": 313,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Dpiu'",
+   "famiglia": "dpiu",
+   "nomeFamiglia": "Dpiù",
+   "canali": "Discount,Supermarket",
+   "regioni": 13,
+   "puntiVendita": 321,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Spazio Conad",
+   "famiglia": "conad",
+   "nomeFamiglia": "Conad",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 15,
+   "puntiVendita": 77,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Sigma",
+   "famiglia": "sigma",
+   "nomeFamiglia": "Sigma",
+   "canali": "Superette,Supermarket",
+   "regioni": 16,
+   "puntiVendita": 359,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Piu'Me",
+   "famiglia": "piume",
+   "nomeFamiglia": "Piu'Me",
+   "canali": "Drug Specialists",
+   "regioni": 13,
+   "puntiVendita": 324,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Carrefour Express",
+   "famiglia": "carrefour",
+   "nomeFamiglia": "Carrefour",
+   "canali": "Superette,Supermarket",
+   "regioni": 15,
+   "puntiVendita": 818,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Risparmio Casa",
+   "famiglia": "risparmiocasa",
+   "nomeFamiglia": "Risparmio Casa",
+   "canali": "Drug Specialists",
+   "regioni": 14,
+   "puntiVendita": 182,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Interspar",
+   "famiglia": "despar",
+   "nomeFamiglia": "Despar",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 11,
+   "puntiVendita": 89,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Ok Sigma",
+   "famiglia": "sigma",
+   "nomeFamiglia": "Sigma",
+   "canali": "Superette,Supermarket",
+   "regioni": 14,
+   "puntiVendita": 213,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Famila",
+   "famiglia": "famila",
+   "nomeFamiglia": "Famila",
+   "canali": "Superette,Supermarket",
+   "regioni": 12,
+   "puntiVendita": 302,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "In's",
+   "famiglia": "ins",
+   "nomeFamiglia": "In's",
+   "canali": "Discount",
+   "regioni": 12,
+   "puntiVendita": 573,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "A&O",
+   "famiglia": "ao",
+   "nomeFamiglia": "A&O",
+   "canali": "Superette,Supermarket",
+   "regioni": 11,
+   "puntiVendita": 195,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Margherita Conad",
+   "famiglia": "conad",
+   "nomeFamiglia": "Conad",
+   "canali": "Superette,Supermarket",
+   "regioni": 12,
+   "puntiVendita": 247,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Proshop",
+   "famiglia": "proshop",
+   "nomeFamiglia": "Proshop",
+   "canali": "Drug Specialists",
+   "regioni": 13,
+   "puntiVendita": 341,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Dm Drogeriemarkt",
+   "famiglia": "dmdrogeriemarkt",
+   "nomeFamiglia": "Dm Drogeriemarkt",
+   "canali": "Drug Specialists",
+   "regioni": 9,
+   "puntiVendita": 93,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Carrefour Market",
+   "famiglia": "carrefour",
+   "nomeFamiglia": "Carrefour",
+   "canali": "Superette,Supermarket",
+   "regioni": 11,
+   "puntiVendita": 331,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Carrefour",
+   "famiglia": "carrefour",
+   "nomeFamiglia": "Carrefour",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 9,
+   "puntiVendita": 41,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Incoop",
+   "famiglia": "coop",
+   "nomeFamiglia": "Coop",
+   "canali": "Superette,Supermarket",
+   "regioni": 11,
+   "puntiVendita": 396,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Meta'",
+   "famiglia": "meta",
+   "nomeFamiglia": "Metà",
+   "canali": "Superette,Supermarket",
+   "regioni": 9,
+   "puntiVendita": 51,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Todis",
+   "famiglia": "todis",
+   "nomeFamiglia": "Todis",
+   "canali": "Discount",
+   "regioni": 11,
+   "puntiVendita": 347,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Aldi",
+   "famiglia": "aldi",
+   "nomeFamiglia": "Aldi",
+   "canali": "Discount",
+   "regioni": 6,
+   "puntiVendita": 199,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Tuday Conad",
+   "famiglia": "conad",
+   "nomeFamiglia": "Conad",
+   "canali": "Superette,Supermarket",
+   "regioni": 8,
+   "puntiVendita": 33,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Maury's",
+   "famiglia": "maurys",
+   "nomeFamiglia": "Maury'S",
+   "canali": "Drug Specialists",
+   "regioni": 10,
+   "puntiVendita": 108,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Caddy's Maxistore",
+   "famiglia": "caddysmaxistore",
+   "nomeFamiglia": "Caddy'S Maxistore",
+   "canali": "Drug Specialists",
+   "regioni": 9,
+   "puntiVendita": 19,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Happy Casa",
+   "famiglia": "happycasa",
+   "nomeFamiglia": "Happy Casa",
+   "canali": "Drug Specialists",
+   "regioni": 9,
+   "puntiVendita": 17,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Pam Superstore",
+   "famiglia": "pam",
+   "nomeFamiglia": "Pam Panorama",
+   "canali": "Supermarket",
+   "regioni": 9,
+   "puntiVendita": 38,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Prix Quality",
+   "famiglia": "prix",
+   "nomeFamiglia": "Prix Quality",
+   "canali": "Discount",
+   "regioni": 5,
+   "puntiVendita": 193,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Sirene Blu",
+   "famiglia": "sireneblu",
+   "nomeFamiglia": "Sirene Blu",
+   "canali": "Drug Specialists",
+   "regioni": 5,
+   "puntiVendita": 80,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Eurospesa",
+   "famiglia": "eurospesa",
+   "nomeFamiglia": "Eurospesa",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 49,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Panorama",
+   "famiglia": "pam",
+   "nomeFamiglia": "Pam Panorama",
+   "canali": "Ipermarket,Superette,Supermarket",
+   "regioni": 6,
+   "puntiVendita": 23,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Deco'",
+   "famiglia": "deco",
+   "nomeFamiglia": "Decò",
+   "canali": "Drug Specialists,Superette,Supermarket",
+   "regioni": 8,
+   "puntiVendita": 489,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "La Saponeria",
+   "famiglia": "lasaponeria",
+   "nomeFamiglia": "La Saponeria",
+   "canali": "Drug Specialists",
+   "regioni": 4,
+   "puntiVendita": 51,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Esselunga",
+   "famiglia": "esselunga",
+   "nomeFamiglia": "Esselunga",
+   "canali": "Superette,Supermarket",
+   "regioni": 7,
+   "puntiVendita": 181,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Ekom",
+   "famiglia": "ekom",
+   "nomeFamiglia": "Ekom",
+   "canali": "Discount",
+   "regioni": 6,
+   "puntiVendita": 147,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Sisa",
+   "famiglia": "sisa",
+   "nomeFamiglia": "Sisa",
+   "canali": "Superette,Supermarket",
+   "regioni": 7,
+   "puntiVendita": 328,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Gran Risparmio Super",
+   "famiglia": "granrisparmio",
+   "nomeFamiglia": "Gran Risparmio",
+   "canali": "Superette,Supermarket",
+   "regioni": 7,
+   "puntiVendita": 50,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Deco' Maxistore",
+   "famiglia": "deco",
+   "nomeFamiglia": "Decò",
+   "canali": "Supermarket",
+   "regioni": 7,
+   "puntiVendita": 79,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Dimeglio",
+   "famiglia": "dimeglio",
+   "nomeFamiglia": "Dimeglio",
+   "canali": "Superette,Supermarket",
+   "regioni": 6,
+   "puntiVendita": 60,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Dok",
+   "famiglia": "dok",
+   "nomeFamiglia": "Dok",
+   "canali": "Superette,Supermarket",
+   "regioni": 6,
+   "puntiVendita": 196,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Sapori&Dintorni Conad",
+   "famiglia": "conad",
+   "nomeFamiglia": "Conad",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 10,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Coal Il Market Plus",
+   "famiglia": "coal",
+   "nomeFamiglia": "Coal",
+   "canali": "Superette,Supermarket",
+   "regioni": 6,
+   "puntiVendita": 54,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Ard Discount",
+   "famiglia": "ard",
+   "nomeFamiglia": "ARD Discount",
+   "canali": "Discount",
+   "regioni": 5,
+   "puntiVendita": 253,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Rossotono Local",
+   "famiglia": "rossotono",
+   "nomeFamiglia": "Rossotono",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 94,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Rossotono Market",
+   "famiglia": "rossotono",
+   "nomeFamiglia": "Rossotono",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 53,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Cadoro",
+   "famiglia": "cadoro",
+   "nomeFamiglia": "Cadoro",
+   "canali": "Supermarket",
+   "regioni": 3,
+   "puntiVendita": 25,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Coal Il Market City",
+   "famiglia": "coal",
+   "nomeFamiglia": "Coal",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 132,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Coal Il Market",
+   "famiglia": "coal",
+   "nomeFamiglia": "Coal",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 88,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Pick Up Supermercati",
+   "famiglia": "pickup",
+   "nomeFamiglia": "Pick Up",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 51,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Gulliver",
+   "famiglia": "gulliver",
+   "nomeFamiglia": "Gulliver",
+   "canali": "Superette,Supermarket",
+   "regioni": 4,
+   "puntiVendita": 94,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Basko",
+   "famiglia": "basko",
+   "nomeFamiglia": "Basko",
+   "canali": "Superette,Supermarket",
+   "regioni": 4,
+   "puntiVendita": 56,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Emisfero",
+   "famiglia": "emisfero",
+   "nomeFamiglia": "Emisfero",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 4,
+   "puntiVendita": 14,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Rossotono Easy",
+   "famiglia": "rossotono",
+   "nomeFamiglia": "Rossotono",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 99,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Sidis",
+   "famiglia": "sidis",
+   "nomeFamiglia": "Sidis",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 73,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iper",
+   "famiglia": "iper",
+   "nomeFamiglia": "Iper",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 4,
+   "puntiVendita": 22,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Galassia",
+   "famiglia": "galassia",
+   "nomeFamiglia": "Galassia",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 4,
+   "puntiVendita": 11,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Pam City",
+   "famiglia": "pam",
+   "nomeFamiglia": "Pam Panorama",
+   "canali": "Supermarket",
+   "regioni": 3,
+   "puntiVendita": 4,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Svelto A&O",
+   "famiglia": "ao",
+   "nomeFamiglia": "A&O",
+   "canali": "Superette,Supermarket",
+   "regioni": 4,
+   "puntiVendita": 37,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Ete'",
+   "famiglia": "ete",
+   "nomeFamiglia": "Eté",
+   "canali": "Superette,Supermarket",
+   "regioni": 4,
+   "puntiVendita": 128,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Qui Discount",
+   "famiglia": "qui",
+   "nomeFamiglia": "Qui Discount",
+   "canali": "Discount",
+   "regioni": 4,
+   "puntiVendita": 90,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Tigre",
+   "famiglia": "tigre",
+   "nomeFamiglia": "Tigre",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 174,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Tigre Amico",
+   "famiglia": "tigre",
+   "nomeFamiglia": "Tigre",
+   "canali": "Superette,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 123,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Quick Sisa",
+   "famiglia": "sisa",
+   "nomeFamiglia": "Sisa",
+   "canali": "Superette,Supermarket",
+   "regioni": 4,
+   "puntiVendita": 98,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Oasi",
+   "famiglia": "oasi",
+   "nomeFamiglia": "Oasi",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 5,
+   "puntiVendita": 29,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Unes U!",
+   "famiglia": "unes",
+   "nomeFamiglia": "Unes",
+   "canali": "Superette,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 148,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Il Gigante Super",
+   "famiglia": "ilgigante",
+   "nomeFamiglia": "Il Gigante",
+   "canali": "Superette,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 29,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Il Gigante Iper",
+   "famiglia": "ilgigante",
+   "nomeFamiglia": "Il Gigante",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 23,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Vitulano Drugstore",
+   "famiglia": "vitulanodrugstore",
+   "nomeFamiglia": "Vitulano Drugstore",
+   "canali": "Drug Specialists",
+   "regioni": 4,
+   "puntiVendita": 122,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Italmark",
+   "famiglia": "italmark",
+   "nomeFamiglia": "Italmark",
+   "canali": "Supermarket",
+   "regioni": 3,
+   "puntiVendita": 83,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Kuadrifoglio",
+   "famiglia": "kuadrifoglio",
+   "nomeFamiglia": "Kuadrifoglio",
+   "canali": "Drug Specialists",
+   "regioni": 3,
+   "puntiVendita": 31,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Migross Market",
+   "famiglia": "migross",
+   "nomeFamiglia": "Migross",
+   "canali": "Superette,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 18,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Migross Superstore",
+   "famiglia": "migross",
+   "nomeFamiglia": "Migross",
+   "canali": "Supermarket",
+   "regioni": 3,
+   "puntiVendita": 11,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iperfamila",
+   "famiglia": "famila",
+   "nomeFamiglia": "Famila",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 9,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Maxi'",
+   "famiglia": "maxi",
+   "nomeFamiglia": "Maxi'",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 53,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Il Tulipano",
+   "famiglia": "iltulipano",
+   "nomeFamiglia": "Il Tulipano",
+   "canali": "Drug Specialists",
+   "regioni": 2,
+   "puntiVendita": 36,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Visotto",
+   "famiglia": "visotto",
+   "nomeFamiglia": "Visotto",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 26,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Spak",
+   "famiglia": "spak",
+   "nomeFamiglia": "Spak",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 8,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iperspak",
+   "famiglia": "spak",
+   "nomeFamiglia": "Spak",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 6,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Emi Market",
+   "famiglia": "emi",
+   "nomeFamiglia": "Emi",
+   "canali": "Superette,Supermarket",
+   "regioni": 4,
+   "puntiVendita": 16,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Maxifutura",
+   "famiglia": "futura",
+   "nomeFamiglia": "Futura",
+   "canali": "Supermarket",
+   "regioni": 3,
+   "puntiVendita": 6,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Prestofresco",
+   "famiglia": "prestofresco",
+   "nomeFamiglia": "Prestofresco",
+   "canali": "Superette,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 98,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Bennet",
+   "famiglia": "bennet",
+   "nomeFamiglia": "Bennet",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 54,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Orvea",
+   "famiglia": "orvea",
+   "nomeFamiglia": "Orvea",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 6,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Ipersisa",
+   "famiglia": "sisa",
+   "nomeFamiglia": "Sisa",
+   "canali": "Supermarket",
+   "regioni": 3,
+   "puntiVendita": 26,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Issimo",
+   "famiglia": "issimo",
+   "nomeFamiglia": "Issimo",
+   "canali": "Superette,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 27,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Deco' Superstore",
+   "famiglia": "deco",
+   "nomeFamiglia": "Decò",
+   "canali": "Supermarket",
+   "regioni": 3,
+   "puntiVendita": 31,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Ali'",
+   "famiglia": "ali",
+   "nomeFamiglia": "Alì",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 97,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Gala Superstore",
+   "famiglia": "gala",
+   "nomeFamiglia": "Gala",
+   "canali": "Superette,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 43,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Aliper",
+   "famiglia": "ali",
+   "nomeFamiglia": "Alì",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 24,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Emi Supermercato",
+   "famiglia": "emi",
+   "nomeFamiglia": "Emi",
+   "canali": "Supermarket",
+   "regioni": 3,
+   "puntiVendita": 16,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Super Elite",
+   "famiglia": "superelite",
+   "nomeFamiglia": "Super Elite",
+   "canali": "Superette,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 49,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Superconti",
+   "famiglia": "superconti",
+   "nomeFamiglia": "Superconti",
+   "canali": "Superette,Supermarket",
+   "regioni": 3,
+   "puntiVendita": 32,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Poli",
+   "famiglia": "poli",
+   "nomeFamiglia": "Poli",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 28,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Ete' Smarty",
+   "famiglia": "ete",
+   "nomeFamiglia": "Eté",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 22,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Ete' Prime",
+   "famiglia": "ete",
+   "nomeFamiglia": "Eté",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 5,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iper Futura",
+   "famiglia": "futura",
+   "nomeFamiglia": "Futura",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 3,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Tigros",
+   "famiglia": "tigros",
+   "nomeFamiglia": "Tigros",
+   "canali": "Discount,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 80,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Il Gigante Superstore",
+   "famiglia": "ilgigante",
+   "nomeFamiglia": "Il Gigante",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 18,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Carrefour Contact",
+   "famiglia": "carrefour",
+   "nomeFamiglia": "Carrefour",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 4,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Maxisidis",
+   "famiglia": "sidis",
+   "nomeFamiglia": "Sidis",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 14,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Splendidi E Splendenti",
+   "famiglia": "splendidiesplendenti",
+   "nomeFamiglia": "Splendidi E Splendenti",
+   "canali": "Drug Specialists",
+   "regioni": 2,
+   "puntiVendita": 93,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Mercato'",
+   "famiglia": "mercato",
+   "nomeFamiglia": "Mercatò",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 50,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Mercato' Local",
+   "famiglia": "mercato",
+   "nomeFamiglia": "Mercatò",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 48,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Migross Supermercati",
+   "famiglia": "migross",
+   "nomeFamiglia": "Migross",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 22,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Maxisconto Despar",
+   "famiglia": "despar",
+   "nomeFamiglia": "Despar",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 16,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Famiglia Cooperativa",
+   "famiglia": "coop",
+   "nomeFamiglia": "Coop",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 9,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Maxisconto Supermercati",
+   "famiglia": "maxiscontosupermerca",
+   "nomeFamiglia": "Maxisconto Supermercati",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 7,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Si' Con Te Supermercati",
+   "famiglia": "siconte",
+   "nomeFamiglia": "Sì con te",
+   "canali": "Superette,Supermarket",
+   "regioni": 2,
+   "puntiVendita": 45,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Opportunity Point",
+   "famiglia": "opportunitypoint",
+   "nomeFamiglia": "Opportunity Point",
+   "canali": "Drug Specialists",
+   "regioni": 2,
+   "puntiVendita": 35,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Si' Con Te Superstore",
+   "famiglia": "siconte",
+   "nomeFamiglia": "Sì con te",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 27,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Pilato",
+   "famiglia": "pilato",
+   "nomeFamiglia": "Pilato",
+   "canali": "Drug Specialists",
+   "regioni": 2,
+   "puntiVendita": 17,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Rossotono Minimarket",
+   "famiglia": "rossotono",
+   "nomeFamiglia": "Rossotono",
+   "canali": "Superette",
+   "regioni": 2,
+   "puntiVendita": 11,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Sisa Superstore",
+   "famiglia": "sisa",
+   "nomeFamiglia": "Sisa",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 9,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Extracoop",
+   "famiglia": "coop",
+   "nomeFamiglia": "Coop",
+   "canali": "Ipermarket",
+   "regioni": 1,
+   "puntiVendita": 3,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Gran Risparmio Maxi",
+   "famiglia": "granrisparmio",
+   "nomeFamiglia": "Gran Risparmio",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 3,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iper La Spesa",
+   "famiglia": "iperlaspesa",
+   "nomeFamiglia": "Iper La Spesa",
+   "canali": "Supermarket",
+   "regioni": 2,
+   "puntiVendita": 13,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iperal",
+   "famiglia": "iperal",
+   "nomeFamiglia": "Iperal",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 55,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iper Tosano",
+   "famiglia": "tosano",
+   "nomeFamiglia": "Tosano",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 2,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "D'Ambros",
+   "famiglia": "dambros",
+   "nomeFamiglia": "D'Ambros",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 1,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Isa",
+   "famiglia": "isa",
+   "nomeFamiglia": "Isa",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 135,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Conte'",
+   "famiglia": "conte",
+   "nomeFamiglia": "Conte'",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 58,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Pellicano",
+   "famiglia": "pellicano",
+   "nomeFamiglia": "Pellicano",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 32,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Maxi Nonna Isa",
+   "famiglia": "isa",
+   "nomeFamiglia": "Isa",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 28,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Superpan",
+   "famiglia": "superpan",
+   "nomeFamiglia": "Superpan",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 28,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Piccolo Supermercati",
+   "famiglia": "piccolo",
+   "nomeFamiglia": "Piccolo",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 21,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iper Nonna Isa",
+   "famiglia": "isa",
+   "nomeFamiglia": "Isa",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 8,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iperpan",
+   "famiglia": "iperpan",
+   "nomeFamiglia": "Iperpan",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 7,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Verdeblu",
+   "famiglia": "verdeblu",
+   "nomeFamiglia": "Verdeblu",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 6,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Grand' Ete'",
+   "famiglia": "ete",
+   "nomeFamiglia": "Eté",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 3,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Mercato' Big",
+   "famiglia": "mercato",
+   "nomeFamiglia": "Mercatò",
+   "canali": "Ipermarket",
+   "regioni": 1,
+   "puntiVendita": 3,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iperspar",
+   "famiglia": "despar",
+   "nomeFamiglia": "Despar",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 1,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Saponi&Profumi",
+   "famiglia": "saponiprofumi",
+   "nomeFamiglia": "Saponi&Profumi",
+   "canali": "Drug Specialists",
+   "regioni": 1,
+   "puntiVendita": 1,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Paghipoco",
+   "famiglia": "paghipoco",
+   "nomeFamiglia": "Paghipoco",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 78,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Super Conveniente",
+   "famiglia": "superconveniente",
+   "nomeFamiglia": "Super Conveniente",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 36,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Bernava",
+   "famiglia": "bernava",
+   "nomeFamiglia": "Bernava",
+   "canali": "Drug Specialists",
+   "regioni": 1,
+   "puntiVendita": 29,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Deco' Iperstore",
+   "famiglia": "deco",
+   "nomeFamiglia": "Decò",
+   "canali": "Ipermarket,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 7,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Superstore Sidis",
+   "famiglia": "sidis",
+   "nomeFamiglia": "Sidis",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 3,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iper Sigma",
+   "famiglia": "sigma",
+   "nomeFamiglia": "Sigma",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 2,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Si' Con Te Market",
+   "famiglia": "siconte",
+   "nomeFamiglia": "Sì con te",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 24,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Supermercati Imagross",
+   "famiglia": "supermercatiimagross",
+   "nomeFamiglia": "Supermercati Imagross",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 12,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Smoll",
+   "famiglia": "smoll",
+   "nomeFamiglia": "Smoll",
+   "canali": "Drug Specialists",
+   "regioni": 1,
+   "puntiVendita": 3,
+   "tipo": "drogheria"
+  },
+  {
+   "insegna": "Emi Superstore",
+   "famiglia": "emi",
+   "nomeFamiglia": "Emi",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 2,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Emi Spesa",
+   "famiglia": "emi",
+   "nomeFamiglia": "Emi",
+   "canali": "Superette",
+   "regioni": 1,
+   "puntiVendita": 1,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Pewex",
+   "famiglia": "pewex",
+   "nomeFamiglia": "Pewex",
+   "canali": "Superette,Supermarket",
+   "regioni": 1,
+   "puntiVendita": 38,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Pim",
+   "famiglia": "pim",
+   "nomeFamiglia": "Pim",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 23,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Il Punto Sigma",
+   "famiglia": "sigma",
+   "nomeFamiglia": "Sigma",
+   "canali": "Superette",
+   "regioni": 1,
+   "puntiVendita": 1,
+   "tipo": "alimentare"
+  },
+  {
+   "insegna": "Iperfamily",
+   "famiglia": "famila",
+   "nomeFamiglia": "Famila",
+   "canali": "Supermarket",
+   "regioni": 1,
+   "puntiVendita": 1,
+   "tipo": "alimentare"
+  }
+ ]
+}
