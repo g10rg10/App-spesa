@@ -37,7 +37,13 @@ jobs:
         run: |
           git config user.name "prezzi-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/
-          git diff --cached --quiet || git commit -m "Prezzi $(date -u +%F)"
-          # Il ramo può essere cambiato durante il giro (giri lunghi): riallinea tenendo i dati appena letti.
-          for i in 1 2 3; do git pull --rebase -X theirs origin "${GITHUB_REF_NAME}" && git push && break; sleep 5; done
+          # Unisce (non sovrascrive) le cache con quelle salvate nel frattempo da altri giri.
+          for i in 1 2 3; do
+            git fetch -q origin "${GITHUB_REF_NAME}"
+            mkdir -p /tmp/remote && for f in ai-cache match-cache history; do git show "origin/${GITHUB_REF_NAME}:data/$f.json" > "/tmp/remote/$f.json" 2>/dev/null || rm -f "/tmp/remote/$f.json"; done
+            node scraper/merge-data.mjs /tmp/remote
+            git add data/
+            git diff --cached --quiet || git commit -q -m "Prezzi $(date -u +%F)"
+            git rebase -X theirs "origin/${GITHUB_REF_NAME}" && git push && break
+            sleep 5
+          done
