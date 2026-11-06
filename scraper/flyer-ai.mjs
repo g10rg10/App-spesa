@@ -42,6 +42,11 @@ let geminiModel = process.env.GEMINI_MODEL || null;
 let geminiCandidates = null; // modelli Flash disponibili, dal migliore; si scorre se uno è sovraccarico o senza quota
 const modelOf = (p) => ({ gemini: geminiModel || "gemini", groq: GROQ_MODEL, github: GITHUB_MODEL }[p] || CLAUDE_MODEL);
 const MAX_NEW_PAGES = +(process.env.FLYER_MAX_PAGES || 80); // tetto di sicurezza sulla spesa per singola esecuzione
+// Tempo massimo per la lettura AI: dopo, si smette di leggere pagine nuove e si salvano i dati.
+// Deve restare sotto il limite del workflow, altrimenti GitHub interrompe il giro prima del salvataggio.
+const STARTED = Date.now();
+const TIME_BUDGET_MS = +(process.env.FLYER_TIME_BUDGET_MIN || 60) * 60000;
+const outOfTime = () => Date.now() - STARTED > TIME_BUDGET_MS;
 
 const nullable = (type) => ({ type: [type, "null"] });
 const SCHEMA = {
@@ -110,7 +115,7 @@ export async function extractFlyer(chainId, pages, meta = {}) {
     const key = createHash("sha1").update(data).digest("hex");
     let offers = c[key]?.offers;
     if (offers) cached++;
-    else if (!currentProvider() || newPagesThisRun >= MAX_NEW_PAGES) { skipped++; continue; }
+    else if (!currentProvider() || newPagesThisRun >= MAX_NEW_PAGES || outOfTime()) { skipped++; continue; }
     else {
       const small = await shrink(data);
       const mt = small.mediaType || pg.mediaType || sniff(small.data);
@@ -138,7 +143,7 @@ export async function extractFlyer(chainId, pages, meta = {}) {
     }
     for (const o of offers) out.push(toCommon(o, meta));
   }
-  console.log(`[${chainId}] pagine: ${analysed} lette${used.size ? ` con ${[...used].join(", ")}` : ""}${analysed && tokensUsed ? ` (~${Math.round(tokensUsed / Math.max(1, newPagesThisRun))} token/pagina)` : ""}, ${cached} dalla cache, ${skipped} saltate${PROVIDERS.length ? (currentProvider() ? "" : " (quote AI del giorno esaurite)") : " (nessuna chiave AI)"}`);
+  console.log(`[${chainId}] pagine: ${analysed} lette${used.size ? ` con ${[...used].join(", ")}` : ""}${analysed && tokensUsed ? ` (~${Math.round(tokensUsed / Math.max(1, newPagesThisRun))} token/pagina)` : ""}, ${cached} dalla cache, ${skipped} saltate${PROVIDERS.length ? (currentProvider() ? "" : " (quote AI del giorno esaurite)") : " (nessuna chiave AI)"}${outOfTime() ? " (tempo del giro finito)" : ""}`);
   return out;
 }
 
