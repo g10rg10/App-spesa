@@ -25,10 +25,19 @@ async function shrink(data) {
 }
 
 const CACHE = new URL("../data/ai-cache.json", import.meta.url);
-// Provider: "groq" (piano gratuito, modelli open con visione) oppure "anthropic" (Claude, a pagamento).
-// Si sceglie da solo in base alla chiave presente; FLYER_PROVIDER forza la scelta.
-const PROVIDER = process.env.FLYER_PROVIDER || (process.env.GROQ_API_KEY ? "groq" : "anthropic");
-const MODEL = process.env.FLYER_MODEL || (PROVIDER === "groq" ? "qwen/qwen3.8-27b" : "claude-opus-5-5");
+// Provider in coda: si usa il primo con la chiave presente; quando esaurisce la quota del giorno si passa al successivo.
+//  - gemini    (GEMINI_API_KEY)    piano gratuito, modello Flash scelto automaticamente (o GEMINI_MODEL)
+//  - groq      (GROQ_API_KEY)      piano gratuito, modello con visione (GROQ_MODEL)
+//  - anthropic (ANTHROPIC_API_KEY) a pagamento, Claude
+// FLYER_PROVIDERS cambia l'ordine, es. "groq,gemini".
+const KEYS = { gemini: "GEMINI_API_KEY", groq: "GROQ_API_KEY", anthropic: "ANTHROPIC_API_KEY" };
+const PROVIDERS = (process.env.FLYER_PROVIDERS || "gemini,groq,anthropic").split(",").map((x) => x.trim()).filter((p) => KEYS[p] && process.env[KEYS[p]]);
+const exhausted = new Set();
+const currentProvider = () => PROVIDERS.find((p) => !exhausted.has(p)) || null;
+const GROQ_MODEL = process.env.GROQ_MODEL || process.env.FLYER_MODEL || "qwen/qwen3.8-27b";
+const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-opus-5-5";
+let geminiModel = process.env.GEMINI_MODEL || null;
+const modelOf = (p) => (p === "gemini" ? geminiModel || "gemini" : p === "groq" ? GROQ_MODEL : CLAUDE_MODEL);
 const MAX_NEW_PAGES = +(process.env.FLYER_MAX_PAGES || 80); // tetto di sicurezza sulla spesa per singola esecuzione
 
 const nullable = (type) => ({ type: [type, "null"] });
@@ -69,14 +78,13 @@ Elenca ogni prodotto in offerta con il suo prezzo. Regole:
 
 let cache = null;
 let newPagesThisRun = 0;   // contatore globale sulle pagine nuove (tetto di spesa/limiti)
-let providerExhausted = false; // limite giornaliero raggiunto: si riprende al prossimo giro
 let tokensUsed = 0;
 async function loadCache() {
   if (!cache) { try { cache = JSON.parse(await readFile(CACHE)); } catch { cache = {}; } }
   return cache;
 }
 
-export const aiAvailable = () => (PROVIDER === "groq" ? !!process.env.GROQ_API_KEY : !!(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN));
+export const aiAvailable = () => PROVIDERS.length > 0;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
@@ -86,9 +94,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
  */
 export async function extractFlyer(chainId, pages, meta = {}) {
   const c = await loadCache();
-  const client = !aiAvailable() ? null : PROVIDER === "groq" ? "groq" : new Anthropic();
   const out = [];
   let analysed = 0, cached = 0, skipped = 0;
+  const used = new Set();
   for (const pg of pages) {
     let data = pg.data;
     if (!data) {
@@ -99,26 +107,35 @@ export async function extractFlyer(chainId, pages, meta = {}) {
     const key = createHash("sha1").update(data).digest("hex");
     let offers = c[key]?.offers;
     if (offers) cached++;
-    else if (!client || providerExhausted || newPagesThisRun >= MAX_NEW_PAGES) { skipped++; continue; }
+    else if (!currentProvider() || newPagesThisRun >= MAX_NEW_PAGES) { skipped++; continue; }
     else {
       const small = await shrink(data);
       const mt = small.mediaType || pg.mediaType || sniff(small.data);
-      offers = PROVIDER === "groq" ? await readPageGroq(small.data, mt, chainId) : await readPage(client, small.data, mt, chainId);
-      if (offers === null) continue;
-      c[key] = { chain: chainId, model: MODEL, at: new Date().toISOString().slice(0, 10), offers };
+      // Prova il provider corrente; se nel frattempo esaurisce la quota, riprova la stessa pagina col successivo.
+      let provider = null;
+      for (let p = currentProvider(); p; p = currentProvider()) {
+        provider = p;
+        offers = p === "gemini" ? await readPageGemini(small.data, mt, chainId)
+          : p === "groq" ? await readPageGroq(small.data, mt, chainId)
+          : await readPage(new Anthropic(), small.data, mt, chainId);
+        if (offers !== null || !exhausted.has(p)) break;
+      }
+      if (!offers) { if (!currentProvider()) skipped++; continue; }
+      used.add(`${provider}/${modelOf(provider)}`);
+      c[key] = { chain: chainId, model: modelOf(provider), at: new Date().toISOString().slice(0, 10), offers };
       analysed++; newPagesThisRun++;
       await writeFile(CACHE, JSON.stringify(c)); // salva subito: se il job si interrompe non si ripaga
     }
     for (const o of offers) out.push(toCommon(o, meta));
   }
-  console.log(`[${chainId}] pagine: ${analysed} lette con ${PROVIDER}/${MODEL}${analysed && tokensUsed ? ` (~${Math.round(tokensUsed / Math.max(1, newPagesThisRun))} token/pagina)` : ""}, ${cached} dalla cache, ${skipped} saltate${client ? "" : " (manca la chiave API)"}`);
+  console.log(`[${chainId}] pagine: ${analysed} lette${used.size ? ` con ${[...used].join(", ")}` : ""}${analysed && tokensUsed ? ` (~${Math.round(tokensUsed / Math.max(1, newPagesThisRun))} token/pagina)` : ""}, ${cached} dalla cache, ${skipped} saltate${PROVIDERS.length ? (currentProvider() ? "" : " (quote AI del giorno esaurite)") : " (nessuna chiave AI)"}`);
   return out;
 }
 
 async function readPage(client, data, mediaType, chainId) {
   try {
     const res = await client.beta.messages.create({
-      model: MODEL,
+      model: CLAUDE_MODEL,
       max_tokens: 16000,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
@@ -135,8 +152,8 @@ async function readPage(client, data, mediaType, chainId) {
     const text = res.content.filter((b) => b.type === "text").map((b) => b.text).join("");
     return JSON.parse(text).offers;
   } catch (e) {
-    if (e instanceof Anthropic.AuthenticationError) console.error(`[${chainId}] chiave API non valida`);
-    else if (e instanceof Anthropic.RateLimitError) console.error(`[${chainId}] limite di richieste raggiunto, riprovo al prossimo giro`);
+    if (e instanceof Anthropic.AuthenticationError) { exhausted.add("anthropic"); console.error(`[${chainId}] chiave Anthropic non valida`); }
+    else if (e instanceof Anthropic.RateLimitError) { exhausted.add("anthropic"); console.error(`[${chainId}] limite Anthropic raggiunto, riprovo al prossimo giro`); }
     else if (e instanceof Anthropic.APIError) console.error(`[${chainId}] errore API ${e.status}: ${e.message}`);
     else console.error(`[${chainId}] ${e.message}`);
     return null;
@@ -150,7 +167,7 @@ const CATEGORIES = SCHEMA.properties.offers.items.properties.category.enum.join(
 let groqNoReasoning = true;
 async function readPageGroq(data, mediaType, chainId) {
   const body = {
-    model: MODEL,
+    model: GROQ_MODEL,
     temperature: 0,
     max_completion_tokens: 4000,
     response_format: { type: "json_object" },
@@ -169,13 +186,13 @@ async function readPageGroq(data, mediaType, chainId) {
     if (res.status === 429) {
       const wait = (+res.headers.get("retry-after") || 20) * 1000;
       const txt = await res.text();
-      if (wait > 120000 || /tokens per day|TPD|requests per day|RPD/i.test(txt)) { providerExhausted = true; console.error(`[${chainId}] limite giornaliero Groq raggiunto: riprendo al prossimo giro`); return null; }
+      if (wait > 120000 || /tokens per day|TPD|requests per day|RPD/i.test(txt)) { exhausted.add("groq"); console.error(`[${chainId}] limite giornaliero Groq raggiunto`); return null; }
       await sleep(wait); continue;
     }
     if (!res.ok) {
       const txt = await res.text();
       if (res.status === 400 && groqNoReasoning && /reasoning/i.test(txt)) { groqNoReasoning = false; delete body.reasoning_effort; attempt--; continue; }
-      if (/tokens per day|TPD/i.test(txt)) { providerExhausted = true; console.error(`[${chainId}] limite giornaliero Groq raggiunto: riprendo al prossimo giro`); return null; }
+      if (/tokens per day|TPD/i.test(txt)) { exhausted.add("groq"); console.error(`[${chainId}] limite giornaliero Groq raggiunto`); return null; }
       console.error(`[${chainId}] errore Groq ${res.status}: ${txt.slice(0, 300)}`); return null;
     }
     const json = await res.json();
@@ -186,6 +203,62 @@ async function readPageGroq(data, mediaType, chainId) {
       await sleep(+(process.env.FLYER_DELAY_MS || 2500));
       return offers.filter((o) => o && typeof o.name === "string" && typeof o.price === "number" && o.price > 0);
     } catch (e) { console.error(`[${chainId}] risposta Groq non valida: ${e.message}`); return null; }
+  }
+  return null;
+}
+
+// Gemini (Google AI Studio). Sceglie il modello "Flash" più recente e stabile disponibile per la chiave.
+async function resolveGeminiModel() {
+  if (geminiModel) return geminiModel;
+  try {
+    const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200", { headers: { "x-goog-api-key": process.env.GEMINI_API_KEY } });
+    const list = ((await r.json()).models || []).filter((m) => (m.supportedGenerationMethods || []).includes("generateContent"))
+      .map((m) => m.name.replace(/^models\//, ""))
+      .filter((n) => /^gemini-[\d.]+-flash/.test(n) && !/(image|tts|audio|live|thinking|exp|embedding)/.test(n));
+    const score = (n) => (parseFloat(n.match(/gemini-([\d.]+)/)[1]) * 100) - (/preview/.test(n) ? 50 : 0) - (/lite/.test(n) ? 20 : 0) - (/-\d{3,}$/.test(n) ? 1 : 0);
+    list.sort((a, b) => score(b) - score(a));
+    geminiModel = list[0] || "gemini-2.5-flash";
+  } catch { geminiModel = "gemini-2.5-flash"; }
+  console.log(`[ai] modello Gemini: ${geminiModel}`);
+  return geminiModel;
+}
+let geminiNoThinking = true;
+async function readPageGemini(data, mediaType, chainId) {
+  const model = await resolveGeminiModel();
+  const cfg = () => ({ temperature: 0, maxOutputTokens: 8192, responseMimeType: "application/json", ...(geminiNoThinking ? { thinkingConfig: { thinkingBudget: 0 } } : {}) });
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: "POST",
+      headers: { "x-goog-api-key": process.env.GEMINI_API_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ role: "user", parts: [
+        { inline_data: { mime_type: mediaType, data: data.toString("base64") } },
+        { text: `${PROMPT}\n- unit è "kg", "l", "pz" o null. category è una di: ${CATEGORIES}.\nRispondi SOLO con JSON in questo formato:\n${GROQ_EXAMPLE}` },
+      ] }], generationConfig: cfg() }),
+    });
+    if (res.status === 429) {
+      const err = await res.json().catch(() => ({}));
+      const details = JSON.stringify(err);
+      if (/PerDay|per day/i.test(details)) { exhausted.add("gemini"); console.error(`[${chainId}] quota giornaliera Gemini esaurita`); return null; }
+      const delay = +(details.match(/"retryDelay":"(\d+)/)?.[1] || 20);
+      await sleep(Math.min(delay, 90) * 1000); continue;
+    }
+    if (!res.ok) {
+      const txt = await res.text();
+      if (res.status === 400 && geminiNoThinking && /thinking/i.test(txt)) { geminiNoThinking = false; attempt--; continue; }
+      if (res.status === 400 && /API key|API_KEY/i.test(txt) || res.status === 403) { exhausted.add("gemini"); console.error(`[${chainId}] chiave Gemini non valida o senza permessi: ${txt.slice(0, 200)}`); return null; }
+      if (res.status === 404) { exhausted.add("gemini"); console.error(`[${chainId}] modello Gemini ${model} non disponibile`); return null; }
+      if (res.status >= 500 && attempt < 4) { await sleep(5000); continue; }
+      console.error(`[${chainId}] errore Gemini ${res.status}: ${txt.slice(0, 300)}`); return null;
+    }
+    const json = await res.json();
+    if (json.usageMetadata) tokensUsed += json.usageMetadata.totalTokenCount || 0;
+    const text = (json.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("");
+    try {
+      const offers = JSON.parse(text.replace(/^```(?:json)?|```$/g, "")).offers;
+      if (!Array.isArray(offers)) throw new Error("campo offers mancante");
+      await sleep(+(process.env.GEMINI_DELAY_MS || 6500)); // piano gratuito: ~10 richieste al minuto
+      return offers.filter((o) => o && typeof o.name === "string" && typeof o.price === "number" && o.price > 0);
+    } catch (e) { console.error(`[${chainId}] risposta Gemini non valida: ${e.message}`); return null; }
   }
   return null;
 }
