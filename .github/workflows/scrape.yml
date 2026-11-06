@@ -2,8 +2,8 @@ name: Aggiorna prezzi
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "17 4 * * *"   # ogni giorno alle 04:17 UTC (05:17 / 06:17 in Italia)
-    - cron: "17 14 * * *"  # secondo giro: con il piano gratuito di Groq (~1 pagina/minuto) recupera le pagine rimaste
+    - cron: "37 8 * * *"   # 09:37 in Italia: dopo l'azzeramento delle quote gratuite Gemini (mezzanotte del Pacifico)
+    - cron: "17 18 * * *"  # 19:17 in Italia: recupera le pagine rimaste con le quote che si liberano durante il giorno
 concurrency:
   group: aggiorna-prezzi
   cancel-in-progress: false

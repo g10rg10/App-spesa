@@ -12,6 +12,9 @@ import { aiAvailable } from "./flyer-ai.mjs";
 import { classify, offerKey } from "./classify.mjs";
 
 const ROOT = new URL("../", import.meta.url);
+// Ogni richiesta di rete ha un tempo massimo: una risposta che non arriva non deve bloccare il giro per ore.
+const _fetch = globalThis.fetch;
+globalThis.fetch = (url, opts = {}) => _fetch(url, { signal: AbortSignal.timeout(+(process.env.FETCH_TIMEOUT_MS || 120000)), ...opts });
 const UA = "Mozilla/5.0 (compatible; AppSpesaBot/0.1; prototipo personale)";
 const today = new Date().toISOString().slice(0, 10);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
