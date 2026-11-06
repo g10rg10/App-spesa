@@ -30,7 +30,8 @@
      "polvere",
      "snack"
     ]
-   }
+   },
+   "category": "Latticini e uova"
   },
   {
    "id": "latte-ps",
@@ -58,7 +59,8 @@
      "polvere",
      "snack"
     ]
-   }
+   },
+   "category": "Latticini e uova"
   },
   {
    "id": "yogurt",
@@ -86,7 +88,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Latticini e uova"
   },
   {
    "id": "burro",
@@ -119,7 +122,8 @@
      "snack",
      "stollen"
     ]
-   }
+   },
+   "category": "Latticini e uova"
   },
   {
    "id": "mozzarella",
@@ -146,7 +150,8 @@
      "snack",
      "sticks"
     ]
-   }
+   },
+   "category": "Latticini e uova"
   },
   {
    "id": "parmigiano",
@@ -172,7 +177,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Salumi e formaggi"
   },
   {
    "id": "grana-padano",
@@ -197,7 +203,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Salumi e formaggi"
   },
   {
    "id": "prosciutto-cotto",
@@ -223,7 +230,8 @@
      "toast",
      "tramezz"
     ]
-   }
+   },
+   "category": "Salumi e formaggi"
   },
   {
    "id": "prosciutto-crudo",
@@ -250,7 +258,8 @@
      "snack",
      "tramezz"
     ]
-   }
+   },
+   "category": "Salumi e formaggi"
   },
   {
    "id": "uova",
@@ -279,7 +288,8 @@
      "snack",
      "sorpresa"
     ]
-   }
+   },
+   "category": "Latticini e uova"
   },
   {
    "id": "pane",
@@ -304,7 +314,8 @@
      "panino al latte",
      "tramezz"
     ]
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "pancarre",
@@ -321,7 +332,8 @@
      "pancarr|bauletto|in cassetta"
     ],
     "exclude": []
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "fette-biscottate",
@@ -336,7 +348,8 @@
      "fette biscottate"
     ],
     "exclude": []
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "spaghetti",
@@ -363,7 +376,8 @@
      "snack",
      "sugo"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "penne",
@@ -390,7 +404,8 @@
      "snack",
      "sugo"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "riso",
@@ -422,7 +437,8 @@
      "snack",
      "soffiat"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "farina",
@@ -449,7 +465,8 @@
      "preparato",
      "snack"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "zucchero",
@@ -478,7 +495,8 @@
      "setaccio",
      "snack"
     ]
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "caffe-macinato",
@@ -508,7 +526,8 @@
      "snack",
      "solubile"
     ]
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "caffe-capsule",
@@ -537,7 +556,8 @@
      "porta",
      "snack"
     ]
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "te",
@@ -574,7 +594,8 @@
      "snack",
      "tealight"
     ]
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "biscotti",
@@ -593,7 +614,8 @@
      "fette",
      "gelato"
     ]
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "cereali",
@@ -619,7 +641,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "marmellata",
@@ -647,7 +670,8 @@
      "snack",
      "stollen"
     ]
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "crema-spalmabile",
@@ -674,7 +698,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Pane e colazione"
   },
   {
    "id": "olio-evo",
@@ -704,7 +729,8 @@
      "spray",
      "tonno"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "olio-semi",
@@ -729,7 +755,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "aceto",
@@ -758,7 +785,8 @@
      "snack",
      "sott"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "passata",
@@ -783,7 +811,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "pelati",
@@ -808,7 +837,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "tonno",
@@ -837,7 +867,8 @@
      "snack",
      "tramezz"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "legumi",
@@ -864,7 +895,8 @@
      "snack",
      "zupp"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "sale",
@@ -899,7 +931,8 @@
      "sales",
      "snack"
     ]
-   }
+   },
+   "category": "Pasta, riso e dispensa"
   },
   {
    "id": "acqua",
@@ -931,7 +964,8 @@
      "snack",
      "tonica"
     ]
-   }
+   },
+   "category": "Bevande"
   },
   {
    "id": "birra",
@@ -956,7 +990,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Bevande"
   },
   {
    "id": "vino",
@@ -983,7 +1018,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Bevande"
   },
   {
    "id": "succo",
@@ -1007,7 +1043,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Bevande"
   },
   {
    "id": "coca-cola",
@@ -1034,7 +1071,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Bevande"
   },
   {
    "id": "pollo",
@@ -1072,7 +1110,8 @@
      "snack",
      "wurstel"
     ]
-   }
+   },
+   "category": "Carne e pesce"
   },
   {
    "id": "macinato",
@@ -1098,7 +1137,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Carne e pesce"
   },
   {
    "id": "bistecca",
@@ -1133,7 +1173,8 @@
      "snack",
      "tartare"
     ]
-   }
+   },
+   "category": "Carne e pesce"
   },
   {
    "id": "salmone",
@@ -1158,7 +1199,8 @@
      "snack",
      "tramezz"
     ]
-   }
+   },
+   "category": "Carne e pesce"
   },
   {
    "id": "hamburger",
@@ -1185,7 +1227,8 @@
      "salsa",
      "snack"
     ]
-   }
+   },
+   "category": "Carne e pesce"
   },
   {
    "id": "wurstel",
@@ -1210,7 +1253,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Salumi e formaggi"
   },
   {
    "id": "mele",
@@ -1243,7 +1287,8 @@
      "succo",
      "yogurt"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "banane",
@@ -1271,7 +1316,8 @@
      "succo",
      "yogurt"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "arance",
@@ -1301,7 +1347,8 @@
      "succo",
      "yogurt"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "clementine",
@@ -1327,7 +1374,8 @@
      "snack",
      "succo"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "kiwi",
@@ -1353,7 +1401,8 @@
      "succo",
      "yogurt"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "pere",
@@ -1381,7 +1430,8 @@
      "succo",
      "yogurt"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "uva",
@@ -1408,7 +1458,8 @@
      "succo",
      "sultanin"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "pomodori-ciliegino",
@@ -1444,7 +1495,8 @@
      "snack",
      "sugo"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "patate",
@@ -1477,7 +1529,8 @@
      "surgel",
      "vortic"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "cipolle",
@@ -1504,7 +1557,8 @@
      "sott",
      "tonno"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "carote",
@@ -1530,7 +1584,8 @@
      "succo",
      "torta"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "zucchine",
@@ -1557,7 +1612,8 @@
      "snack",
      "surgel"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "insalata",
@@ -1589,7 +1645,8 @@
      "snack",
      "tonno"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "broccoli",
@@ -1616,7 +1673,8 @@
      "surgel",
      "zuppa"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "avocado",
@@ -1644,7 +1702,8 @@
      "salsa",
      "snack"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "peperoncino-verde",
@@ -1679,7 +1738,8 @@
      "snack",
      "tonno"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "zenzero",
@@ -1708,7 +1768,8 @@
      "snack",
      "tisana"
     ]
-   }
+   },
+   "category": "Frutta e verdura"
   },
   {
    "id": "surgelati-verdure",
@@ -1737,7 +1798,8 @@
      "polpett",
      "snack"
     ]
-   }
+   },
+   "category": "Surgelati"
   },
   {
    "id": "carta-igienica",
@@ -1761,7 +1823,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Casa e igiene"
   },
   {
    "id": "detersivo-lavatrice",
@@ -1786,7 +1849,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Casa e igiene"
   },
   {
    "id": "detersivo-piatti",
@@ -1811,7 +1875,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Casa e igiene"
   },
   {
    "id": "shampoo",
@@ -1835,7 +1900,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Casa e igiene"
   },
   {
    "id": "dentifricio",
@@ -1859,7 +1925,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Casa e igiene"
   },
   {
    "id": "pannolini",
@@ -1883,7 +1950,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Casa e igiene"
   },
   {
    "id": "cibo-cani",
@@ -1909,7 +1977,8 @@
      "pizza",
      "snack"
     ]
-   }
+   },
+   "category": "Animali"
   },
   {
    "id": "cibo-gatti",
@@ -1936,7 +2005,8 @@
      "sabbia",
      "snack"
     ]
-   }
+   },
+   "category": "Animali"
   }
  ]
 }

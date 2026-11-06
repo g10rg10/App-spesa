@@ -40,7 +40,7 @@ async function loadReal() {
           history: (hist[p.id]?.[c.id] || []).map(([d, , ppu, promo]) => ({ day: day(d), price: ppu * qty, promo: !!promo })),
         };
       }
-      return { ...p, category: "", listings };
+      return { ...p, category: p.category || "", listings };
     });
     FLYERS = latest.flyers || {};
     chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
@@ -58,30 +58,90 @@ const store = {
 // ---------- Posizione e negozio più vicino ----------
 let userPos = { lat: 45.4642, lon: 9.19 }; // fallback: Milano centro
 let posIsReal = false;
-navigator.geolocation?.getCurrentPosition((p) => { userPos = { lat: p.coords.latitude, lon: p.coords.longitude }; posIsReal = true; route(); }, () => {}, { timeout: 5000 });
+navigator.geolocation?.getCurrentPosition((p) => { userPos = { lat: p.coords.latitude, lon: p.coords.longitude }; posIsReal = true; if (MODE === "real") loadNearby(); route(); }, () => {}, { timeout: 5000 });
 function km(a, b) {
   const R = 6371, dLat = ((b.lat - a.lat) * Math.PI) / 180, dLon = ((b.lon - a.lon) * Math.PI) / 180;
   const x = Math.sin(dLat / 2) ** 2 + Math.cos((a.lat * Math.PI) / 180) * Math.cos((b.lat * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(x));
 }
+// Punti vendita reali vicino a te, da OpenStreetMap (gratuito, nessuna chiave).
+// La richiesta parte dal browser dell'utente solo dopo che ha concesso la posizione.
+let NEARBY = {}, nearbyState = "idle";
+const OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"];
+async function loadNearby() {
+  if (!posIsReal || nearbyState === "loading" || nearbyState === "done") return;
+  nearbyState = "loading";
+  const names = CHAINS.map((c) => c.name).join("|");
+  const q = `[out:json][timeout:20];nwr["shop"~"supermarket|convenience"]["name"~"${names}",i](around:15000,${userPos.lat},${userPos.lon});out center tags 300;`;
+  for (const url of OVERPASS) {
+    try {
+      const res = await fetch(url, { method: "POST", body: "data=" + encodeURIComponent(q), headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+      if (!res.ok) continue;
+      const els = (await res.json()).elements || [];
+      NEARBY = {};
+      for (const e of els) {
+        const t = e.tags || {}, lat = e.lat ?? e.center?.lat, lon = e.lon ?? e.center?.lon;
+        const chain = CHAINS.find((c) => norm(t.name || "").includes(norm(c.name)) || norm(t.brand || "").includes(norm(c.name)));
+        if (!chain || lat == null) continue;
+        const st = { name: t.name, addr: [t["addr:street"], t["addr:housenumber"]].filter(Boolean).join(" ") + (t["addr:city"] ? `, ${t["addr:city"]}` : ""), lat, lon, km: km(userPos, { lat, lon }) };
+        if (!NEARBY[chain.id] || st.km < NEARBY[chain.id].km) NEARBY[chain.id] = st;
+      }
+      nearbyState = "done"; route(); return;
+    } catch {}
+  }
+  nearbyState = "error"; route();
+}
+function storeLine(chainId) {
+  const name = chainById[chainId]?.name || chainId;
+  if (MODE !== "real") return null;
+  if (!posIsReal) return `<a href="#" data-askpos="1">Attiva la posizione per vedere il ${name} più vicino</a>`;
+  const s = NEARBY[chainId];
+  if (s) return `<a href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}" target="_blank" rel="noopener">${s.name}${s.addr ? ` · ${s.addr}` : ""}</a> · <b>${s.km < 1 ? Math.round(s.km * 1000) + " m" : s.km.toFixed(1) + " km"}</b>`;
+  if (nearbyState === "loading" || nearbyState === "idle") return "Cerco il negozio più vicino…";
+  return `<a href="https://www.google.com/maps/search/${encodeURIComponent(name)}/@${userPos.lat},${userPos.lon},13z" target="_blank" rel="noopener">Nessun ${name} entro 15 km: cerca su Maps</a>`;
+}
+function askPosition() {
+  navigator.geolocation?.getCurrentPosition((p) => { userPos = { lat: p.coords.latitude, lon: p.coords.longitude }; posIsReal = true; nearbyState = "idle"; loadNearby(); route(); }, () => alert("Posizione non disponibile: controlla i permessi del browser."), { timeout: 8000 });
+}
+
 function nearest(chainId) {
   if (MODE === "real") return null;
   return STORES.filter((s) => s.chain === chainId).map((s) => ({ ...s, km: km(userPos, s) })).sort((a, b) => a.km - b.km)[0];
 }
 
 // ---------- Ricerca ----------
+// Ricerca a parole intere (inizio parola): "latte" non deve trovare "fiordilatte".
+const wordRe = (w) => new RegExp("(^|[^a-z0-9])" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
 function search(q) {
   const t = norm(q).split(/\s+/).filter(Boolean);
   if (!t.length) return [];
-  return PRODUCTS.map((p) => {
-    const hay = [p.name, ...p.aliases, ...Object.values(p.listings).filter(Boolean).map((l) => l.label)].map(norm).join(" | ");
-    const score = t.reduce((s, w) => s + (hay.includes(w) ? 1 : 0), 0);
-    return { p, score };
-  }).filter((x) => x.score === t.length).map((x) => x.p);
+  return PRODUCTS.filter((p) => {
+    const hay = [p.name, ...p.aliases].map(norm).join(" | ");
+    return t.every((w) => wordRe(w).test(hay));
+  });
+}
+// Nei volantini la parola cercata non deve comparire come ingrediente o gusto:
+// "cioccolato al latte", "burro da creme di latte", "panini al latte" non sono latte.
+const PREP = /(?:\/\s*$)|(?:^|\s)(?:al|allo|alla|ai|agli|alle|all'|con|di|da|del|dello|della|dei|degli|delle|gusto|sapore|aroma|ripien[oaie]|e)\s+$/;
+function mainWord(title, w) {
+  const t = norm(title);
+  const re = new RegExp("(^|[^a-z0-9])" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g");
+  let m;
+  while ((m = re.exec(t))) { if (!PREP.test(t.slice(0, m.index + m[1].length))) return true; }
+  return false;
 }
 const offers = (p) => Object.entries(p.listings).filter(([, l]) => l).map(([chain, l]) => ({ chain, ...l, ppu: l.price / l.qty }));
 const bestOffer = (p) => offers(p).sort((a, b) => a.ppu - b.ppu)[0];
-const flyerHits = (q) => { const t = norm(q).split(/\s+/).filter(Boolean); if (!t.length) return []; return Object.entries(FLYERS).flatMap(([c, list]) => list.filter((o) => t.every((w) => norm(o.title + " " + o.pack + " " + (o.category || "")).includes(w))).map((o) => ({ chain: c, ...o }))).sort((a, b) => (a.ppu ?? 1e9) - (b.ppu ?? 1e9)).slice(0, 30); };
+const flyerHits = (q) => {
+  const t = norm(q).split(/\s+/).filter(Boolean);
+  if (!t.length) return [];
+  // Se la ricerca corrisponde a prodotti del catalogo, mostra solo le offerte che l'AI ha riconosciuto come quei prodotti.
+  const pids = new Set(search(q).map((p) => p.id));
+  const hasPid = Object.values(FLYERS).some((l) => l.some((o) => o.pid));
+  const ok = (o) => (pids.size && hasPid ? pids.has(o.pid) : t.every((w) => mainWord(o.title, w)));
+  return Object.entries(FLYERS).flatMap(([c, list]) => list.filter(ok).map((o) => ({ chain: c, ...o })))
+    .sort((a, b) => (a.ppu ?? 1e9) - (b.ppu ?? 1e9)).slice(0, 30);
+};
 
 // ---------- Alert ----------
 const getAlerts = () => store.get("alerts", {});
@@ -136,7 +196,7 @@ function productView(id) {
         <div class="price">${o.promo ? `<span class="old">${eur(o.listPrice)}</span>` : ""}${eur(o.price)}</div>
         <div class="muted">${o.label}</div>
         <div class="ppu">${eur(o.ppu)}/${u}</div>
-        <div class="muted">📍 ${s ? `${s.name} · ${s.km.toFixed(1)} km${posIsReal ? "" : " (da Milano centro)"}` : `<a href="https://www.google.com/maps/search/${encodeURIComponent(chainById[o.chain].name)}" target="_blank" rel="noopener">Negozio più vicino</a>`}</div><div></div>
+        <div class="muted">📍 ${s ? `${s.name} · ${s.km.toFixed(1)} km${posIsReal ? "" : " (da Milano centro)"}` : storeLine(o.chain)}</div><div></div>
         ${o.cardPrice ? `<div class="promo">Con carta fedeltà: ${eur(o.cardPrice)}</div><div></div>` : ""}
         ${o.validUntil && !o.promo ? `<div class="muted">Prezzo volantino valido fino al ${fmtDate(o.validUntil)}</div><div></div>` : ""}
         <div class="muted ${age > 0 ? "stale" : ""}">Aggiornato ${age === 0 ? "oggi" : age === 1 ? "ieri" : `${age} giorni fa`}</div><div></div>
@@ -181,7 +241,9 @@ function chart(p) {
 }
 
 // ---------- Offerte ----------
-let offChain = "tutte", offCat = "tutte", offSort = "sconto";
+let offChain = "tutte", offCat = "tutte", offSort = "sconto", maxPrice = 0, offQ = "";
+const PRICE_STEPS = [0, 1, 2, 5, 10];
+const priceChips = () => `<div class="filters">${PRICE_STEPS.map((v) => `<button class="chip ${maxPrice === v ? "on" : ""}" data-maxprice="${v}">${v ? `fino a ${v} €` : "Qualsiasi prezzo"}</button>`).join("")}</div>`;
 const titleCase = (s) => (s === s.toUpperCase() ? s.charAt(0) + s.slice(1).toLowerCase() : s);
 function allOffers() {
   return Object.entries(FLYERS).flatMap(([c, list]) => list.map((o) => ({ chain: c, ...o, pct: o.promo?.pct || 0, cat: o.category ? titleCase(o.category) : "Altro" })));
@@ -193,10 +255,13 @@ function offersView() {
   const all = allOffers();
   const cats = [...new Set(all.filter((o) => offChain === "tutte" || o.chain === offChain).map((o) => o.cat))].sort();
   if (!cats.includes(offCat)) offCat = "tutte";
-  let list = all.filter((o) => (offChain === "tutte" || o.chain === offChain) && (offCat === "tutte" || o.cat === offCat));
+  const qWords = norm(offQ).split(/\s+/).filter(Boolean);
+  let list = all.filter((o) => (offChain === "tutte" || o.chain === offChain) && (offCat === "tutte" || o.cat === offCat) && (!maxPrice || o.price <= maxPrice)
+    && qWords.every((w) => mainWord(o.title, w) || wordRe(w).test(norm(o.pack))));
   list.sort(offSort === "sconto" ? (a, b) => b.pct - a.pct || a.price - b.price : offSort === "ppu" ? (a, b) => (a.ppu ?? 1e9) - (b.ppu ?? 1e9) : (a, b) => a.price - b.price);
   const shown = list.slice(0, 150);
   view.innerHTML = `
+    <input id="offq" class="search" type="search" placeholder="Cerca nelle offerte, es. tonno, pannolini…" value="${offQ.replace(/"/g, "&quot;")}" autocomplete="off" style="margin-bottom:10px">
     <div class="filters">
       ${["tutte", ...CHAINS.map((c) => c.id)].map((c) => `<button class="chip ${offChain === c ? "on" : ""}" data-offchain="${c}">${c === "tutte" ? "Tutte le catene" : logo(c, 16) + " " + chainById[c].name}</button>`).join("")}
     </div>
@@ -204,21 +269,60 @@ function offersView() {
       <select class="chip" id="offcat"><option value="tutte">Tutte le categorie</option>${cats.map((c) => `<option ${c === offCat ? "selected" : ""}>${c}</option>`).join("")}</select>
       ${[["sconto", "Sconto più alto"], ["prezzo", "Prezzo più basso"], ["ppu", "€/kg più basso"]].map(([k, l]) => `<button class="chip ${offSort === k ? "on" : ""}" data-offsort="${k}">${l}</button>`).join("")}
     </div>
-    <p class="muted">${list.length} offerte${list.length > shown.length ? ` · prime ${shown.length}` : ""} · volantini validi fino al ${fmtDate(new Date(Math.max(...all.map((o) => +new Date(o.validUntil || 0)))))}</p>
-    ${shown.map((o) => `<div class="card row"><div><b>${o.pct ? `<span class="disc">−${o.pct}%</span>` : ""}${titleCase(o.title)}</b><br><small class="muted">${logo(o.chain)} ${chainById[o.chain].name}${o.pack ? " · " + o.pack : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("")}`;
+    ${priceChips()}
+    <div id="offlist"><p class="muted">${list.length} offerte${list.length > shown.length ? ` · prime ${shown.length}` : ""} · volantini validi fino al ${fmtDate(new Date(Math.max(...all.map((o) => +new Date(o.validUntil || 0)))))}</p>
+    ${shown.map((o) => `<div class="card row"><div><b>${o.pct ? `<span class="disc">−${o.pct}%</span>` : ""}${titleCase(o.title)}</b><br><small class="muted">${logo(o.chain)} ${chainById[o.chain].name}${o.pack ? " · " + o.pack : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("")}${!list.length ? `<p class="hint">Nessuna offerta con questi filtri.</p>` : ""}</div>`;
+  const inp = $("#offq");
+  inp.oninput = () => { offQ = inp.value; const pos = inp.selectionStart; offersView(); const n = $("#offq"); n.focus(); n.setSelectionRange(pos, pos); };
   $("#offcat").onchange = (e) => { offCat = e.target.value; offersView(); };
+}
+
+// ---------- Catalogo ----------
+let catOnlyAvail = false, catChain = "tutte", catCat = "tutte", catSort = "nome";
+function catalogView() {
+  $("#title").textContent = "Catalogo";
+  $("#back").hidden = true;
+  const pick = (p) => (catChain === "tutte" ? bestOffer(p) : offers(p).find((o) => o.chain === catChain));
+  const cats = [...new Set(PRODUCTS.map((p) => p.category || "Altro"))].sort();
+  let rows = PRODUCTS.map((p) => ({ p, b: pick(p), n: offers(p).length }))
+    .filter((r) => (!catOnlyAvail && catChain === "tutte" || r.b) && (!maxPrice || (r.b && r.b.price <= maxPrice)) && (catCat === "tutte" || (r.p.category || "Altro") === catCat));
+  if (catSort !== "nome") {
+    rows.sort((a, b) => (a.b ? (catSort === "ppu" ? a.b.ppu : a.b.price) : 1e9) - (b.b ? (catSort === "ppu" ? b.b.ppu : b.b.price) : 1e9));
+  }
+  const groups = {};
+  for (const r of rows) (groups[r.p.category || "Altro"] ||= []).push(r);
+  setTimeout(() => { const sel = $("#catcat"); if (sel) sel.onchange = (e) => { catCat = e.target.value; catalogView(); }; });
+  const upd = Math.max(0, ...PRODUCTS.flatMap((p) => offers(p).map((o) => o.updatedAt || 0)));
+  view.innerHTML = `
+    <div class="filters">
+      ${["tutte", ...CHAINS.map((c) => c.id)].map((c) => `<button class="chip ${catChain === c ? "on" : ""}" data-catchain="${c}">${c === "tutte" ? "Tutte le catene" : logo(c, 16) + " " + chainById[c].name}</button>`).join("")}
+    </div>
+    <div class="filters">
+      <select class="chip" id="catcat"><option value="tutte">Tutte le categorie</option>${cats.map((c) => `<option ${c === catCat ? "selected" : ""}>${c}</option>`).join("")}</select>
+      ${[["nome", "A-Z"], ["prezzo", "Prezzo più basso"], ["ppu", "€/kg più basso"]].map(([k, l]) => `<button class="chip ${catSort === k ? "on" : ""}" data-catsort="${k}">${l}</button>`).join("")}
+      <button class="chip ${catOnlyAvail ? "on" : ""}" data-onlyavail="1">Solo con prezzo</button>
+    </div>
+    ${priceChips()}
+    <p class="muted">${rows.length} prodotti · ${PRODUCTS.filter((p) => bestOffer(p)).length} con almeno un prezzo${upd ? ` · aggiornato ${fmtDate(upd)}` : ""}${maxPrice ? ` · prezzo confezione fino a ${maxPrice} €` : ""}</p>
+    ${(catSort === "nome" ? Object.keys(groups).sort().map((g) => [g, groups[g].sort((a, b) => a.p.name.localeCompare(b.p.name))]) : [["", rows]]).map(([g, items]) => (g ? `<h2>${g}</h2>` : "") + items.map(({ p, b, n }) => `
+      <div class="card prod" data-go="${p.id}">
+        <div><b>${p.name}</b><br><small class="muted">${n ? `${n} su ${CHAINS.length} ${CHAINS.length === 1 ? "catena" : "catene"}${b.promo ? " · in offerta" : ""}` : "nessuna offerta questa settimana"}</small></div>
+        <div class="price" style="font-size:16px">${b ? `${eur(b.ppu)}<small class="muted">/${unitLabel(p.unit)}</small><br><small class="muted">${logo(b.chain, 14)} ${eur(b.price)}</small>` : `<small class="muted">—</small>`}</div>
+      </div>`).join("")).join("")}`;
 }
 
 // ---------- Router ----------
 function route() {
   const h = location.hash;
-  document.querySelectorAll(".tabs a").forEach((a) => a.classList.toggle("on", a.dataset.tab === (h.startsWith("#offerte") ? "offerte" : "cerca")));
-  if (h.startsWith("#offerte")) offersView();
+  const tab = h.startsWith("#offerte") ? "offerte" : h.startsWith("#catalogo") ? "catalogo" : "cerca";
+  document.querySelectorAll(".tabs a").forEach((a) => a.classList.toggle("on", a.dataset.tab === tab));
+  if (tab === "offerte") offersView();
+  else if (tab === "catalogo") catalogView();
   else if (h.startsWith("#p/")) productView(h.slice(3));
   else homeView(h.startsWith("#q=") ? decodeURIComponent(h.slice(3)) : "");
 }
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-go],[data-q],[data-sort],[data-period],[data-offchain],[data-offsort]");
+  const t = e.target.closest("[data-go],[data-q],[data-sort],[data-period],[data-offchain],[data-offsort],[data-maxprice],[data-onlyavail],[data-askpos],[data-catchain],[data-catsort]");
   if (!t) return;
   if (t.dataset.go) location.hash = "#p/" + t.dataset.go;
   if (t.dataset.q) { $("#q").value = t.dataset.q; $("#q").dispatchEvent(new Event("input")); }
@@ -226,7 +330,12 @@ document.addEventListener("click", (e) => {
   if (t.dataset.period) { period = +t.dataset.period; route(); }
   if (t.dataset.offchain) { offChain = t.dataset.offchain; offersView(); }
   if (t.dataset.offsort) { offSort = t.dataset.offsort; offersView(); }
+  if (t.dataset.askpos) { e.preventDefault(); askPosition(); }
+  if (t.dataset.maxprice) { maxPrice = +t.dataset.maxprice; route(); }
+  if (t.dataset.onlyavail) { catOnlyAvail = !catOnlyAvail; catalogView(); }
+  if (t.dataset.catchain) { catChain = t.dataset.catchain; catalogView(); }
+  if (t.dataset.catsort) { catSort = t.dataset.catsort; catalogView(); }
 });
 $("#back").onclick = () => history.length > 1 ? history.back() : (location.hash = "");
 addEventListener("hashchange", route);
-loadReal().then(route);
+loadReal().then(() => { if (posIsReal) loadNearby(); route(); });

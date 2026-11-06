@@ -102,7 +102,7 @@ async function main() {
   try { history = JSON.parse(await readFile(histPath)); } catch {}
 
   const chains = [];
-  const products = catalog.products.map((p) => ({ id: p.id, name: p.name, unit: p.unit, aliases: p.aliases, offers: {} }));
+  const products = catalog.products.map((p) => ({ id: p.id, name: p.name, unit: p.unit, category: p.category, aliases: p.aliases, offers: {} }));
 
   const flyers = {}; // offerte complete per catena, per la ricerca libera nell'app
   for (const [chainId, ad] of Object.entries(ADAPTERS)) {
@@ -114,6 +114,7 @@ async function main() {
         if (!all.length) { chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: ad.ai && !aiAvailable() ? "Volantino letto con AI: serve GROQ_API_KEY" : "Nessuna offerta letta" }); continue; }
         flyers[chainId] = all; console.log(`[${chainId}] ${all.length} offerte`);
         cls = await classify(all, catalog);
+        for (const o of all) { const pid = cls.get(offerKey(o)); if (pid) o.pid = pid; } // l'app usa pid per la ricerca
       }
       catch (e) { console.error(`[${chainId}] ${e.message}`); chains.push({ id: chainId, name: ad.name, coverage: ad.coverage, status: "errore" }); continue; }
     }
