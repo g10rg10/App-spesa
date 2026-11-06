@@ -1,0 +1,55 @@
+/* Spesa Smart · aggiunte specifiche dell'app (dopo tokens.css e components.css) */
+.main:focus { outline: none; }
+.main > .h1:first-child, .page-head { margin: 22px var(--gutter) 0; }
+.page-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.sub { margin: 4px var(--gutter) 0; }
+.row-link { color: inherit; text-decoration: none; }
+.offer[data-go], .product__link { cursor: pointer; }
+.offer__name s, .offer__pack s { color: var(--muted); }
+.logo img { width: 26px; height: 26px; object-fit: contain; }
+.logo { background: #fff; border: 1px solid var(--line); color: #16201A; }
+.logo--sm img { width: 18px; height: 18px; }
+.verdict .tag { flex: none; }
+.verdict__head .verdict__chain { display: flex; align-items: center; gap: 8px; }
+.verdict .logo { width: 32px; height: 32px; border-radius: 9px; border: 0; }
+.unreliable { margin: 16px var(--gutter) 0; }
+
+/* Grafico andamento: migliore in verde spesso, altre neutre tratteggiate */
+.chart { margin-top: 12px; padding: 14px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
+.chart svg { display: block; width: 100%; height: auto; }
+.chart text { fill: var(--muted); font: 600 11px var(--font-body); }
+.chart .grid { stroke: var(--line); }
+.chart .best { stroke: var(--brand); stroke-width: 3; fill: none; }
+.chart .other { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 4 4; fill: none; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 16px; height: 0; margin-right: 6px; vertical-align: middle; border-top: 2px dashed var(--muted); }
+.legend i.best { border-top: 3px solid var(--brand); }
+
+/* Fogli (sheet) */
+.sheet { max-width: 560px; margin: 0 auto; max-height: 86dvh; overflow: auto; }
+.sheet .h2 { margin-bottom: 4px; }
+.sheet p { margin: 6px 0 0; color: var(--muted); font-size: 14px; line-height: 1.45; }
+.sheet .stack { margin-top: 14px; }
+.field { width: 100%; height: 54px; padding: 0 16px; border-radius: var(--r-md); border: 1.5px solid var(--line); background: var(--bg); font-size: 16px; color: var(--ink); }
+.field:focus { border-color: var(--brand); outline: none; }
+.select-field { appearance: none; -webkit-appearance: none; }
+.sheet label.lbl { display: block; margin: 12px 0 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+
+/* Toast con annullamento */
+.toast { position: fixed; left: var(--gutter); right: var(--gutter); bottom: calc(150px + env(safe-area-inset-bottom)); z-index: 30; max-width: 528px; margin: 0 auto; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; border-radius: var(--r-md); background: var(--ink); color: var(--bg); font-size: 14px; font-weight: 600; }
+.toast button { min-height: var(--tap); padding: 0 14px; border: 0; border-radius: var(--r-sm); background: none; color: var(--tag); font-weight: 800; }
+
+/* Varie */
+.coverage-row { display: flex; align-items: center; gap: 10px; padding-top: 22px; }
+.chips--wrap { flex-wrap: wrap; overflow: visible; padding: 0; margin-top: 8px; }
+.group-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 50px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); font-weight: 800; }
+.result-card { margin-top: 8px; display: flex; align-items: center; gap: 4px; padding-right: 6px; border-radius: 18px; background: var(--hero); color: var(--onhero); }
+.result-card + .result-card { margin-top: 8px; }
+.result-card a { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 14px; text-decoration: none; color: inherit; }
+.result-card .star-btn { color: var(--onhero); }
+.result-card .star-btn[aria-pressed="true"] { color: var(--tag); }
+.herom { color: var(--herom); }
+.status-ok { color: var(--brand); }
+
+/* [hidden] deve vincere sui display dei componenti */
+[hidden] { display: none !important; }
