@@ -6,6 +6,13 @@ const fmtDate = (t) => new Date(t).toLocaleDateString("it-IT", { day: "numeric",
 const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
 let chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
 let MODE = "demo";
+// Loghi: icona ufficiale del sito della catena (favicon). Se non si carica resta il pallino colorato.
+const DOMAINS = { eurospin: "eurospin.it", penny: "penny.it", aldi: "aldi.it", lidl: "lidl.it", esselunga: "esselunga.it", coop: "coop.it", conad: "conad.it", carrefour: "carrefour.it", md: "mdspa.it", tigros: "tigros.it" };
+function logo(chainId, size = 20) {
+  const c = chainById[chainId] || {};
+  const d = DOMAINS[chainId];
+  return `<span class="logo" style="width:${size}px;height:${size}px;background:${c.color || "#888"}">${d ? `<img src="https://www.google.com/s2/favicons?domain=${d}&sz=64" alt="" loading="lazy" onerror="this.remove()">` : ""}</span>`;
+}
 let FLYERS = {};      // offerte complete dei volantini (dati reali)
 let OTHER_CHAINS = []; // catene senza dati
 const COLORS = { eurospin: "#ca8a04", penny: "#cd1719", aldi: "#00005f", md: "#e30613", tigros: "#00843d", lidl: "#1d4ed8", coop: "#e85d04", conad: "#2a9d8f", esselunga: "#d62828", carrefour: "#7c3aed" };
@@ -97,10 +104,10 @@ function homeView(q = "") {
   const render = () => {
     const v = input.value; history.replaceState(null, "", v ? `#q=${encodeURIComponent(v)}` : "#");
     const res = search(v), fh = MODE === "real" ? flyerHits(v) : [];
-    const flyerHtml = fh.length ? `<h2>Nei volantini (${fh.length})</h2>` + fh.map((o) => `<div class="card row"><div><b>${o.title}</b><br><small>${chainById[o.chain]?.name || o.chain} · ${o.pack}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("") : "";
+    const flyerHtml = fh.length ? `<h2>Nei volantini (${fh.length})</h2>` + fh.map((o) => `<div class="card row"><div><b>${o.title}</b><br><small>${logo(o.chain, 14)} ${chainById[o.chain]?.name || o.chain} · ${o.pack}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("") : "";
     $("#results").innerHTML = !v.trim() ? `<p class="hint">Scrivi il nome di un prodotto: ti mostro dove costa meno, al kg o al litro.</p>`
       : !res.length && !fh.length ? `<p class="hint">Nessun prodotto trovato per “${v}”. Prova con un nome più generico.</p>`
-      : res.map((p) => { const b = bestOffer(p); return `<div class="card prod" data-go="${p.id}"><div><b>${p.name}</b><br><small>${offers(p).length ? `${offers(p).length} su ${CHAINS.length} ${CHAINS.length === 1 ? "catena" : "catene"}` : "nessuna offerta oggi"}${p.category ? " · " + p.category : ""}</small></div><div class="price" style="font-size:16px">${b ? `da ${eur(b.ppu)}<br><small>/${unitLabel(p.unit)} · ${chainById[b.chain].name}</small>` : `<small class="muted">non trovato da<br>${CHAINS.map((c) => c.name).join(", ")}</small>`}</div></div>`; }).join("") + flyerHtml;
+      : res.map((p) => { const b = bestOffer(p); return `<div class="card prod" data-go="${p.id}"><div><b>${p.name}</b><br><small>${offers(p).length ? `${offers(p).length} su ${CHAINS.length} ${CHAINS.length === 1 ? "catena" : "catene"}` : "nessuna offerta oggi"}${p.category ? " · " + p.category : ""}</small></div><div class="price" style="font-size:16px">${b ? `da ${eur(b.ppu)}<br><small>/${unitLabel(p.unit)} · ${logo(b.chain, 14)} ${chainById[b.chain].name}</small>` : `<small class="muted">non trovato da<br>${CHAINS.map((c) => c.name).join(", ")}</small>`}</div></div>`; }).join("") + flyerHtml;
   };
   input.addEventListener("input", render);
   render();
@@ -125,7 +132,7 @@ function productView(id) {
     ${!list.length ? `<p class="hint">Al momento nessuna catena coperta lo vende a un prezzo rilevato.</p>` : ""}
     ${list.map((o, i) => { const s = nearest(o.chain); const age = Math.round((TODAY - o.updatedAt) / 86400000); return `
       <div class="card row ${i === 0 ? "best" : ""}">
-        <div class="chain"><span class="dot" style="background:${chainById[o.chain].color}"></span>${chainById[o.chain].name}${i === 0 ? '<span class="tag">PIÙ CONVENIENTE</span>' : ""}</div>
+        <div class="chain">${logo(o.chain)}${chainById[o.chain].name}${i === 0 ? '<span class="tag">PIÙ CONVENIENTE</span>' : ""}</div>
         <div class="price">${o.promo ? `<span class="old">${eur(o.listPrice)}</span>` : ""}${eur(o.price)}</div>
         <div class="muted">${o.label}</div>
         <div class="ppu">${eur(o.ppu)}/${u}</div>
@@ -169,7 +176,7 @@ function chart(p) {
     ${series.map((s) => `<polyline fill="none" stroke="${chainById[s.chain].color}" stroke-width="2" stroke-linejoin="round" points="${s.pts.map((q) => `${x(q.day).toFixed(1)},${y(q.v).toFixed(1)}`).join(" ")}"/>`).join("")}
     <circle cx="${x(best.low.day)}" cy="${y(best.low.v)}" r="4" fill="${chainById[best.s.chain].color}" stroke="#fff" stroke-width="1.5"/>
   </svg>
-  <div class="chips" style="margin:6px 0 0">${series.map((s) => `<span class="muted"><span class="dot" style="background:${chainById[s.chain].color}"></span> ${chainById[s.chain].name}</span>`).join("")}</div>
+  <div class="chips" style="margin:6px 0 0">${series.map((s) => `<span class="muted">${logo(s.chain)} ${chainById[s.chain].name}</span>`).join("")}</div>
   <p class="muted" style="margin:6px 0 0">Minimo del periodo: ${eur(best.low.v)} da ${chainById[best.s.chain].name} il ${fmtDate(best.low.day)}. I cali improvvisi sono promo.</p>`;
 }
 
@@ -191,14 +198,14 @@ function offersView() {
   const shown = list.slice(0, 150);
   view.innerHTML = `
     <div class="filters">
-      ${["tutte", ...CHAINS.map((c) => c.id)].map((c) => `<button class="chip ${offChain === c ? "on" : ""}" data-offchain="${c}">${c === "tutte" ? "Tutte le catene" : chainById[c].name}</button>`).join("")}
+      ${["tutte", ...CHAINS.map((c) => c.id)].map((c) => `<button class="chip ${offChain === c ? "on" : ""}" data-offchain="${c}">${c === "tutte" ? "Tutte le catene" : logo(c, 16) + " " + chainById[c].name}</button>`).join("")}
     </div>
     <div class="filters">
       <select class="chip" id="offcat"><option value="tutte">Tutte le categorie</option>${cats.map((c) => `<option ${c === offCat ? "selected" : ""}>${c}</option>`).join("")}</select>
       ${[["sconto", "Sconto più alto"], ["prezzo", "Prezzo più basso"], ["ppu", "€/kg più basso"]].map(([k, l]) => `<button class="chip ${offSort === k ? "on" : ""}" data-offsort="${k}">${l}</button>`).join("")}
     </div>
     <p class="muted">${list.length} offerte${list.length > shown.length ? ` · prime ${shown.length}` : ""} · volantini validi fino al ${fmtDate(new Date(Math.max(...all.map((o) => +new Date(o.validUntil || 0)))))}</p>
-    ${shown.map((o) => `<div class="card row"><div><b>${o.pct ? `<span class="disc">−${o.pct}%</span>` : ""}${titleCase(o.title)}</b><br><small class="muted"><span class="dot" style="background:${chainById[o.chain].color}"></span> ${chainById[o.chain].name}${o.pack ? " · " + o.pack : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("")}`;
+    ${shown.map((o) => `<div class="card row"><div><b>${o.pct ? `<span class="disc">−${o.pct}%</span>` : ""}${titleCase(o.title)}</b><br><small class="muted">${logo(o.chain)} ${chainById[o.chain].name}${o.pack ? " · " + o.pack : ""}${o.validUntil ? ` · fino al ${fmtDate(new Date(o.validUntil))}` : ""}${o.cardPrice ? ` · con carta ${eur(o.cardPrice)}` : ""}</small></div><div class="price" style="font-size:16px">${o.promo ? `<span class="old">${eur(o.promo.oldPrice)}</span>` : ""}${eur(o.price)}<br><small class="muted">${o.ppu ? `${eur(o.ppu)}/${o.unit}` : ""}</small></div></div>`).join("")}`;
   $("#offcat").onchange = (e) => { offCat = e.target.value; offersView(); };
 }
 

@@ -969,7 +969,7 @@
    "match": {
     "query": "vino rosso",
     "must": [
-     "vino"
+     "vino|montepulciano|chianti|negroamaro|prosecco|spumante|lambrusco|barbera|primitivo|nero d'avola|sangiovese|merlot|cabernet|pinot|chardonnay|vermentino|falanghina|valpolicella"
     ],
     "exclude": [
      "aceto",

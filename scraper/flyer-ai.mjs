@@ -176,6 +176,11 @@ function qtyFromPack(pack) {
 function toCommon(o, meta) {
   let ppu = o.unit_price ?? null, unit = o.unit || null;
   if (ppu == null) { const q = qtyFromPack(o.pack); if (q && q[0] > 0) { ppu = +(o.price / q[0]).toFixed(2); unit = q[1]; } }
+  // Controllo di coerenza: il modello a volte scambia il prezzo al kg per il prezzo barrato.
+  // Scartiamo il "barrato" se coincide col prezzo per unità o implica uno sconto oltre il 60%.
+  let old = o.old_price;
+  if (old && ((ppu && Math.abs(old - ppu) < 0.02) || old > o.price * 2.5)) old = null;
+
   return {
     title: [o.name, o.brand].filter(Boolean).join(" · "),
     pack: o.pack || "",
@@ -183,7 +188,7 @@ function toCommon(o, meta) {
     price: o.price,
     ppu,
     unit,
-    promo: o.old_price && o.old_price > o.price ? { oldPrice: o.old_price, pct: Math.floor((1 - o.price / o.old_price) * 100), until: meta.validUntil || null } : null,
+    promo: old && old > o.price ? { oldPrice: old, pct: Math.floor((1 - o.price / old) * 100), until: meta.validUntil || null } : null,
     cardPrice: o.card_price && o.card_price < o.price ? o.card_price : null,
     validUntil: meta.validUntil || null,
     url: meta.sourceUrl || null,

@@ -5,6 +5,7 @@ import { loadEurospin } from "./eurospin.mjs";
 import { loadPenny } from "./penny.mjs";
 import { loadAldi } from "./aldi.mjs";
 import { aiAvailable } from "./flyer-ai.mjs";
+import { classify, offerKey } from "./classify.mjs";
 
 const ROOT = new URL("../", import.meta.url);
 const UA = "Mozilla/5.0 (compatible; AppSpesaBot/0.1; prototipo personale)";
@@ -79,9 +80,15 @@ const hasWord = (t, w) => {
   return new RegExp("(^|[^a-z0-9])" + term + (whole ? "(?![a-z0-9])" : "")).test(t);
 };
 
-function pickBest(results, match, unit) {
+// cls: Map(offerKey -> productId|null) dal classificatore AI. Per le offerte classificate vale l'AI,
+// per le altre (nessuna chiave e non in cache) si usano le regole del catalogo.
+function pickBest(results, match, unit, productId, cls) {
   const ok = results.filter((r) => {
+    const k = offerKey(r);
     const t = norm(r.title + " " + r.pack);
+    // Se l'offerta è stata classificata, l'AI deve essere d'accordo; in ogni caso devono valere anche le regole.
+    // Doppio controllo: l'AI elimina i falsi positivi delle parole chiave, le regole quelli dell'AI.
+    if (cls?.has(k) && cls.get(k) !== productId) return false;
     return match.must.every((w) => w.split("|").some((alt) => hasWord(t, alt))) && !match.exclude.some((w) => hasWord(t, w));
   });
   ok.sort((a, b) => ((a.unit === unit ? a.ppu : null) ?? 1e9) - ((b.unit === unit ? b.ppu : null) ?? 1e9) || a.price - b.price);
@@ -100,19 +107,20 @@ async function main() {
   const flyers = {}; // offerte complete per catena, per la ricerca libera nell'app
   for (const [chainId, ad] of Object.entries(ADAPTERS)) {
     if (ad.enabled === false) continue;
-    let errors = 0, all = null;
+    let errors = 0, all = null, cls = null;
     if (ad.load) {
       try {
         all = await ad.load();
         if (!all.length) { chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: ad.ai && !aiAvailable() ? "Volantino letto con AI: serve GROQ_API_KEY" : "Nessuna offerta letta" }); continue; }
         flyers[chainId] = all; console.log(`[${chainId}] ${all.length} offerte`);
+        cls = await classify(all, catalog);
       }
       catch (e) { console.error(`[${chainId}] ${e.message}`); chains.push({ id: chainId, name: ad.name, coverage: ad.coverage, status: "errore" }); continue; }
     }
     for (const [i, p] of catalog.products.entries()) {
       const m = p.match[chainId] || p.match;
       try {
-        const best = pickBest(all || (await ad.search(m.query)), m, p.unit);
+        const best = pickBest(all || (await ad.search(m.query)), m, p.unit, p.id, cls);
         products[i].offers[chainId] = best ? { found: true, ...best, updatedAt: today } : { found: false, updatedAt: today };
         if (best) {
           const h = ((history[p.id] ||= {})[chainId] ||= []);
