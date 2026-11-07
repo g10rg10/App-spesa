@@ -3,7 +3,6 @@ on:
   workflow_dispatch: {}
   schedule:
     - cron: "37 8 * * *"   # 09:37 in Italia: dopo l'azzeramento delle quote gratuite Gemini (mezzanotte del Pacifico)
-    - cron: "17 18 * * *"  # 19:17 in Italia: recupera le pagine rimaste con le quote che si liberano durante il giorno
 concurrency:
   group: aggiorna-prezzi
   cancel-in-progress: false
@@ -13,7 +12,7 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 355   # repo pubblico: minuti illimitati, massimo GitHub 6 ore (da privato tornare a ~60)
+    timeout-minutes: 70    # manutenzione: un giro al giorno, ~1.500 minuti/mese (sotto i 2.000 gratuiti dei repo privati)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,7 +20,7 @@ jobs:
       - name: Installa dipendenze e browser headless
         run: npm ci && npx playwright install --with-deps chromium && sudo apt-get install -y poppler-utils
       - run: node scraper/scrape.mjs
-        timeout-minutes: 340
+        timeout-minutes: 55
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
@@ -31,7 +30,7 @@ jobs:
           FLYER_MODEL: ${{ vars.FLYER_MODEL }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
           FLYER_MAX_PAGES: "2000"
-          FLYER_TIME_BUDGET_MIN: "320"   # da privato: 40
+          FLYER_TIME_BUDGET_MIN: "40"    # bastano per i volantini nuovi della settimana
       - name: Salva i dati nel repo
         if: always()   # anche se lo scraper si interrompe, le pagine già lette (cache) non si perdono
         run: |
