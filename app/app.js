@@ -21,15 +21,17 @@ const store = {
 
 /* ---------- Catene e loghi ---------- */
 let chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
-const DOMAINS = { conad: "conad.it", coop: "coop.it", crai: "crai.it", todis: "todis.it", famila: "famila.it", ao: "aeo.it", bennet: "bennet.com", iperal: "iperal.it", ali: "alisupermercati.it", pewex: "pewex.it", prestofresco: "prestofresco.it", sidis: "sidis.it", sisa: "sisa.it", eurospin: "eurospin.it", penny: "penny.it", aldi: "aldi.it", lidl: "lidl.it", esselunga: "esselunga.it", carrefour: "carrefour.it", md: "mdspa.it", tigros: "tigros.it", basko: "basko.it" };
+const DOMAINS = { pam: "pampanorama.it", sigma: "supersigma.com", deco: "supermercatideco.it", ins: "insmercato.it", unes: "unes.it", prix: "prixquality.com", dpiu: "dpiu.it", ekom: "ekomdiscount.it", ilgigante: "ilgigante.net", migross: "migross.it", tosano: "tosano.it", superconti: "superconti.it", italmark: "italmark.it", iper: "iper.it", dok: "supermercatidok.it", gala: "galasupermercati.it", conad: "conad.it", coop: "coop.it", crai: "crai.it", todis: "todis.it", famila: "famila.it", ao: "aeo.it", bennet: "bennet.com", iperal: "iperal.it", ali: "alisupermercati.it", pewex: "pewex.it", prestofresco: "prestofresco.it", sidis: "sidis.it", sisa: "sisa.it", eurospin: "eurospin.it", penny: "penny.it", aldi: "aldi.it", lidl: "lidl.it", esselunga: "esselunga.it", carrefour: "carrefour.it", md: "mdspa.it", tigros: "tigros.it", basko: "basko.it" };
 const chainName = (id) => chainById[id]?.name || ALL_CHAINS.find((c) => c.id === id)?.name || id;
 const initials = (name) => name.replace(/[^A-Za-zÀ-ú]/g, "").slice(0, 2);
 function logo(id, cls = "") {
   const name = chainName(id), d = DOMAINS[id];
+  if (LOGOS[id]) return `<span class="logo logo--brand ${cls}" role="img" aria-label="${esc(name)}"><img src="${esc(LOGOS[id])}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${initials(name)}'))"></span>`;
   return `<span class="logo ${cls}" role="img" aria-label="${esc(name)}">${d ? `<img src="https://www.google.com/s2/favicons?domain=${d}&sz=64" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${initials(name)}'))">` : initials(name)}</span>`;
 }
 
 /* ---------- Dati ---------- */
+let LOGOS = {}; // loghi ufficiali delle insegne (indirizzi da latest.json)
 let MODE = "demo", FLYERS = {}, ALL_CHAINS = [], INSEGNE = [], GENERATED = null, LOAD_ERROR = false;
 const unitShort = (u) => ({ litro: "l", pezzo: "pz" }[u] || u);
 
@@ -57,6 +59,7 @@ async function loadReal() {
       return { ...p, listings };
     });
     FLYERS = latest.flyers || {};
+    try { LOGOS = await (await fetch("../data/logos.json", { cache: "no-store" })).json(); } catch { LOGOS = {}; }
     ALL_CHAINS = latest.chains;
     GENERATED = latest.generatedAt || latest.date;
     chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));

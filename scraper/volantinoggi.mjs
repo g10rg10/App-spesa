@@ -83,3 +83,21 @@ export function voChain(chain) {
     return out;
   };
 }
+
+// Loghi ufficiali delle insegne (immagini pubblicate da volantinoggi): l'app li mostra al posto delle iniziali.
+// Non vengono salvati nel repo: si salva solo l'indirizzo dell'immagine.
+const EXTRA_LOGO_MATCH = { tigros: /^tigros\b/i, basko: /^basko\b/i, carrefour: /^carrefour/i, aldi: /^aldi\b/i, md: /^md\b/i, penny: /^penny/i, eurospin: /^eurospin/i, lidl: /^lidl/i, esselunga: /^esselunga/i };
+export async function voLogos() {
+  const out = {};
+  const matchers = [...VO_CHAINS.map((c) => [c.id, c.prefer || c.match]), ...Object.entries(EXTRA_LOGO_MATCH)];
+  const fl = await allFlyers();
+  for (const [id, re] of matchers) {
+    const f = fl.find((x) => re.test(x.name.trim())) || fl.find((x) => VO_CHAINS.find((c) => c.id === id)?.match.test(x.name.trim()));
+    if (!f) continue;
+    try {
+      const d = (await (await fetch(`${API}/flyers/details/${f.id}`, { headers: UA })).json()).details;
+      if (d?.signboardImage) out[id] = `${API}/${d.signboardImage.replace(/^\.\//, "").split("/").map(encodeURIComponent).join("/")}`;
+    } catch {}
+  }
+  return out;
+}

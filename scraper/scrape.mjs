@@ -7,7 +7,7 @@ import { loadAldi } from "./aldi.mjs";
 import { ebsnChain } from "./ebsn.mjs";
 import { loadMd } from "./md.mjs";
 import { loadCarrefour } from "./carrefour.mjs";
-import { VO_CHAINS, voChain } from "./volantinoggi.mjs";
+import { VO_CHAINS, voChain, voLogos } from "./volantinoggi.mjs";
 import { aiAvailable } from "./flyer-ai.mjs";
 import { classify, offerKey } from "./classify.mjs";
 
@@ -170,6 +170,8 @@ async function main() {
   if (chains.every((c) => c.status !== "ok")) { console.error("Nessuna fonte funzionante: dati NON sovrascritti."); process.exit(1); }
   await writeFile(new URL("data/latest.json", ROOT), JSON.stringify({ generatedAt: new Date().toISOString(), date: today, chains, products, flyers }));
   await writeFile(histPath, JSON.stringify(history));
+  // Loghi ufficiali in un file a parte: se la raccolta fallisce si tiene la versione precedente.
+  try { const logos = await voLogos(); if (Object.keys(logos).length) await writeFile(new URL("data/logos.json", ROOT), JSON.stringify(logos, null, 1)); } catch {}
   const found = products.filter((p) => Object.values(p.offers).some((o) => o.found)).length;
   console.log(`OK ${today}: ${found}/${products.length} prodotti trovati`);
 }
