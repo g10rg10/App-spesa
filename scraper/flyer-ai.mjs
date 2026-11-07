@@ -96,6 +96,9 @@ async function loadCache() {
 
 export const aiAvailable = () => PROVIDERS.length > 0;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// Le chiamate all'AI possono essere lente quando i servizi sono carichi: tempo massimo più lungo del normale.
+const aiSignal = () => AbortSignal.timeout(+(process.env.AI_TIMEOUT_MS || 300000));
+const failures = {}; // errori inattesi consecutivi per servizio
 
 /**
  * pages: [{ url, data?: Buffer, mediaType? }]
@@ -132,10 +135,13 @@ export async function extractFlyer(chainId, pages, meta = {}) {
             : p === "github" ? await readPageGithub(small.data, mt, chainId)
             : await readPage(new Anthropic(), small.data, mt, chainId);
         } catch (e) {
-          // Una risposta inattesa non deve fermare il giro: si scarta questo provider per oggi.
-          console.error(`[${chainId}] ${p}: risposta inattesa (${e.message.slice(0, 120)}), passo al successivo`);
-          exhausted.add(p); offers = null;
+          // Un errore inatteso (es. tempo scaduto) fa saltare questa pagina; il servizio si scarta solo dopo 3 errori di fila.
+          failures[p] = (failures[p] || 0) + 1;
+          console.error(`[${chainId}] ${p}: errore (${e.message.slice(0, 120)})${failures[p] >= 3 ? ", 3 di fila: lo scarto per questo giro" : ", salto la pagina"}`);
+          if (failures[p] >= 3) exhausted.add(p);
+          offers = null;
         }
+        if (offers) failures[p] = 0;
         if (offers !== null || !exhausted.has(p)) break;
       }
       if (!offers) { if (!currentProvider()) skipped++; continue; }
@@ -197,7 +203,7 @@ async function readPageGroq(data, mediaType, chainId) {
   };
   for (let attempt = 1; attempt <= 4; attempt++) {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
+      method: "POST", signal: aiSignal(),
       headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
@@ -236,7 +242,7 @@ async function readPageMistral(data, mediaType, chainId) {
   };
   for (let attempt = 1; attempt <= 4; attempt++) {
     const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
-      method: "POST",
+      method: "POST", signal: aiSignal(),
       headers: { Authorization: `Bearer ${process.env.MISTRAL_API_KEY}`, "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify(body),
     });
@@ -273,7 +279,7 @@ async function readPageGithub(data, mediaType, chainId) {
   };
   for (let attempt = 1; attempt <= 3; attempt++) {
     const res = await fetch("https://models.github.ai/inference/chat/completions", {
-      method: "POST",
+      method: "POST", signal: aiSignal(),
       headers: { Authorization: `Bearer ${process.env.GITHUB_MODELS_TOKEN}`, "Content-Type": "application/json", Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
       body: JSON.stringify(body),
     });
@@ -332,7 +338,7 @@ async function readPageGemini(data, mediaType, chainId) {
   let busy = 0; // 503 consecutivi sullo stesso modello
   for (let attempt = 1; attempt <= 8 && model; attempt++) {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method: "POST",
+      method: "POST", signal: aiSignal(),
       headers: { "x-goog-api-key": process.env.GEMINI_API_KEY, "Content-Type": "application/json" },
       body: JSON.stringify({ contents: [{ role: "user", parts: [
         { inline_data: { mime_type: mediaType, data: data.toString("base64") } },
