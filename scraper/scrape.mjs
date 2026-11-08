@@ -8,7 +8,7 @@ import { ebsnChain } from "./ebsn.mjs";
 import { loadMd } from "./md.mjs";
 import { loadCarrefour } from "./carrefour.mjs";
 import { VO_CHAINS, voChain, voLogos } from "./volantinoggi.mjs";
-import { aiAvailable } from "./flyer-ai.mjs";
+import { aiAvailable, incompleteChains } from "./flyer-ai.mjs";
 import { classify, offerKey } from "./classify.mjs";
 
 const ROOT = new URL("../", import.meta.url);
@@ -139,6 +139,11 @@ async function main() {
     if (ad.load) {
       try {
         all = await ad.load();
+        // Volantino nuovo letto solo in parte: se le offerte valide del giro prima sono di più, si tengono quelle.
+        if (incompleteChains.has(chainId) && stillValid(chainId).length > all.length && !all.noFlyer) {
+          console.warn(`[${chainId}] volantino letto in parte (${all.length} offerte): tengo le ${stillValid(chainId).length} ancora valide del giro precedente`);
+          all = stillValid(chainId);
+        }
         if (!all.length && stillValid(chainId).length) {
           all = stillValid(chainId);
           console.warn(`[${chainId}] nessuna offerta letta oggi: tengo ${all.length} offerte ancora valide del giro precedente`);

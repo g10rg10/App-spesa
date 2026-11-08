@@ -89,6 +89,8 @@ Elenca ogni prodotto in offerta con il suo prezzo. Regole:
 let cache = null;
 let newPagesThisRun = 0;   // contatore globale sulle pagine nuove (tetto di spesa/limiti)
 let tokensUsed = 0;
+// Catene con pagine non lette in questo giro: lo scraper può preferire le offerte valide del giro prima.
+export const incompleteChains = new Set();
 async function loadCache() {
   if (!cache) { try { cache = JSON.parse(await readFile(CACHE)); } catch { cache = {}; } }
   return cache;
@@ -152,6 +154,7 @@ export async function extractFlyer(chainId, pages, meta = {}) {
     }
     for (const o of offers) out.push(toCommon(o, meta));
   }
+  if (skipped > 0) incompleteChains.add(chainId);
   console.log(`[${chainId}] pagine: ${analysed} lette${used.size ? ` con ${[...used].join(", ")}` : ""}${analysed && tokensUsed ? ` (~${Math.round(tokensUsed / Math.max(1, newPagesThisRun))} token/pagina)` : ""}, ${cached} dalla cache, ${skipped} saltate${PROVIDERS.length ? (currentProvider() ? "" : " (quote AI del giorno esaurite)") : " (nessuna chiave AI)"}${outOfTime() ? " (tempo del giro finito)" : ""}`);
   return out;
 }
@@ -337,14 +340,21 @@ async function readPageGemini(data, mediaType, chainId) {
   const cfg = () => ({ temperature: 0, maxOutputTokens: 8192, responseMimeType: "application/json", ...(geminiThinkingOk[model] !== false ? { thinkingConfig: { thinkingBudget: 0 } } : {}) });
   let busy = 0; // 503 consecutivi sullo stesso modello
   for (let attempt = 1; attempt <= 8 && model; attempt++) {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method: "POST", signal: aiSignal(),
+    let res;
+    try {
+    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: "POST", signal: AbortSignal.timeout(+(process.env.GEMINI_TIMEOUT_MS || 90000)),
       headers: { "x-goog-api-key": process.env.GEMINI_API_KEY, "Content-Type": "application/json" },
       body: JSON.stringify({ contents: [{ role: "user", parts: [
         { inline_data: { mime_type: mediaType, data: data.toString("base64") } },
         { text: `${PROMPT}\n- unit è "kg", "l", "pz" o null. category è una di: ${CATEGORIES}.\nRispondi SOLO con JSON in questo formato:\n${GROQ_EXAMPLE}` },
       ] }], generationConfig: cfg() }),
     });
+    } catch (e) {
+      // Il modello non risponde (sovraccarico): si passa al prossimo modello Gemini invece di scartare Gemini.
+      if (/abort|timeout/i.test(`${e.name} ${e.message}`)) { model = nextGeminiModel("non risponde entro il tempo massimo"); continue; }
+      throw e;
+    }
     if (res.status === 429) {
       const details = JSON.stringify(await res.json().catch(() => ({})));
       if (/PerDay|per day|limit: 0/i.test(details)) { model = nextGeminiModel(`quota giornaliera esaurita (${(details.match(/"quotaId":"([^"]+)/) || [])[1] || "?"})`); continue; }
