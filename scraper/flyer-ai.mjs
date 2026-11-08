@@ -82,6 +82,7 @@ const PROMPT = `Questa è una pagina di un volantino di un supermercato italiano
 Elenca ogni prodotto in offerta con il suo prezzo. Regole:
 - Riporta solo prodotti con un prezzo leggibile sulla pagina; ignora banner, ricette e pubblicità senza prezzo.
 - "price" è il prezzo che paga chiunque. Se c'è anche un prezzo con carta fedeltà/app, mettilo in "card_price".
+- Se un prezzo è indicato "solo con carta" / "solo con fidelity card" / "riservato ai soci" e non c'è un prezzo per tutti, metti quel prezzo sia in "price" sia in "card_price" e aggiungi " (solo con carta)" alla fine di "name".
 - Se un prodotto è venduto a peso ("al kg"), metti price = prezzo al kg, pack = "al kg", unit_price = price, unit = "kg".
 - Non inventare: se un valore non è stampato, usa null.
 - Se la pagina non contiene offerte, restituisci una lista vuota.`;
