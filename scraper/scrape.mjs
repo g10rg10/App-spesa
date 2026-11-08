@@ -43,7 +43,6 @@ const ADAPTERS = {
   penny:    { name: "Penny",    coverage: "volantino", load: loadPenny },
   aldi:     { name: "Aldi",     coverage: "volantino", load: loadAldi, ai: true },
   tigros:   { name: "Tigros",   coverage: "volantino", load: ebsnChain("tigros", "www.tigros.it"), ai: true },
-  carrefour: { name: "Carrefour", coverage: "volantino", load: loadCarrefour, ai: true },
   md:       { name: "MD",       coverage: "volantino", load: loadMd, ai: true },
   // Catene da volantinoggi.it, in ordine di priorità
   ...Object.fromEntries(VO_CHAINS.map((c) => [c.id, { name: c.name, coverage: "volantino", load: voChain(c), ai: true }])),
@@ -106,10 +105,21 @@ function pickBest(results, match, unit, productId, cls) {
 }
 
 // Ordine di lettura AI: le catene con più punti vendita prima (il budget gratuito giornaliero è limitato).
-const PRIORITY = ["eurospin", "penny", "conad", "coop", "despar", "carrefour", "crai", "md", "aldi", "todis", "sisa", "famila", "ao", "tigros", "basko", "bennet", "iperal", "ali"];
+const PRIORITY = ["conad", "eurospin", "coop", "despar", "carrefour", "crai", "md", "penny", "aldi", "mercato", "bennet", "basko", "tigros", "famila", "ao", "gulliver", "iper", "galassia", "prestofresco"];
 const ordered = (obj) => Object.entries(obj).sort(([a], [b]) => (PRIORITY.indexOf(a) + 1 || 99) - (PRIORITY.indexOf(b) + 1 || 99));
 
+// Regione dell'app: si leggono solo le catene con negozi in questa regione (elenco QBerg in insegne.json).
+const REGION = process.env.REGION || "Piemonte";
+async function chainsInRegion() {
+  const ins = JSON.parse(await readFile(new URL("scraper/insegne.json", ROOT))).insegne;
+  return new Set(ins.filter((i) => (i.regioniElenco || []).includes(REGION)).map((i) => i.famiglia));
+}
+
 async function main() {
+  const inRegion = await chainsInRegion();
+  for (const id of Object.keys(ADAPTERS)) if (!inRegion.has(id)) delete ADAPTERS[id];
+  for (const id of Object.keys(NOT_COVERED)) if (!inRegion.has(id)) delete NOT_COVERED[id];
+  console.log(`[regione] ${REGION}: ${Object.keys(ADAPTERS).length} catene da leggere`);
   const catalog = JSON.parse(await readFile(new URL("scraper/catalog.json", ROOT)));
   const histPath = new URL("data/history.json", ROOT);
   let history = {};
@@ -134,7 +144,7 @@ async function main() {
           console.warn(`[${chainId}] nessuna offerta letta oggi: tengo ${all.length} offerte ancora valide del giro precedente`);
         }
         if (!all.length) {
-          console.warn(`[${chainId}] nessuna offerta`); chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: ad.ai ? (aiAvailable() ? "Volantino in lettura con AI: pronto nei prossimi giri" : "Volantino letto con AI: serve GROQ_API_KEY su GitHub") : "Nessuna offerta letta" }); continue; }
+          console.warn(`[${chainId}] nessuna offerta`); chains.push({ id: chainId, name: ad.name, status: "non_coperta", note: all.noFlyer ? "Nessun volantino attivo questa settimana" : ad.ai ? (aiAvailable() ? "Volantino in lettura con AI: pronto nei prossimi giri" : "Volantino letto con AI: serve una chiave AI su GitHub") : "Nessuna offerta letta" }); continue; }
         flyers[chainId] = all; console.log(`[${chainId}] ${all.length} offerte`);
         cls = await classify(all, catalog);
         for (const o of all) { const pid = cls.get(offerKey(o)); if (pid) o.pid = pid; } // l'app usa pid per la ricerca
@@ -168,7 +178,7 @@ async function main() {
   for (const [id, c] of Object.entries(NOT_COVERED)) chains.push({ id, name: c.name, status: "non_coperta", note: c.note });
 
   if (chains.every((c) => c.status !== "ok")) { console.error("Nessuna fonte funzionante: dati NON sovrascritti."); process.exit(1); }
-  await writeFile(new URL("data/latest.json", ROOT), JSON.stringify({ generatedAt: new Date().toISOString(), date: today, chains, products, flyers }));
+  await writeFile(new URL("data/latest.json", ROOT), JSON.stringify({ generatedAt: new Date().toISOString(), date: today, region: REGION, chains, products, flyers }));
   await writeFile(histPath, JSON.stringify(history));
   // Loghi ufficiali in un file a parte: se la raccolta fallisce si tiene la versione precedente.
   try { const logos = await voLogos(); if (Object.keys(logos).length) await writeFile(new URL("data/logos.json", ROOT), JSON.stringify(logos, null, 1)); } catch {}

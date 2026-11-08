@@ -21,7 +21,7 @@ const store = {
 
 /* ---------- Catene e loghi ---------- */
 let chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
-const DOMAINS = { pam: "pampanorama.it", sigma: "supersigma.com", deco: "supermercatideco.it", ins: "insmercato.it", unes: "unes.it", prix: "prixquality.com", dpiu: "dpiu.it", ekom: "ekomdiscount.it", ilgigante: "ilgigante.net", migross: "migross.it", tosano: "tosano.it", superconti: "superconti.it", italmark: "italmark.it", iper: "iper.it", dok: "supermercatidok.it", gala: "galasupermercati.it", conad: "conad.it", coop: "coop.it", crai: "crai.it", todis: "todis.it", famila: "famila.it", ao: "aeo.it", bennet: "bennet.com", iperal: "iperal.it", ali: "alisupermercati.it", pewex: "pewex.it", prestofresco: "prestofresco.it", sidis: "sidis.it", sisa: "sisa.it", eurospin: "eurospin.it", penny: "penny.it", aldi: "aldi.it", lidl: "lidl.it", esselunga: "esselunga.it", carrefour: "carrefour.it", md: "mdspa.it", tigros: "tigros.it", basko: "basko.it" };
+const DOMAINS = { mercato: "mercatosupermercati.it",  pam: "pampanorama.it", sigma: "supersigma.com", deco: "supermercatideco.it", ins: "insmercato.it", unes: "unes.it", prix: "prixquality.com", dpiu: "dpiu.it", ekom: "ekomdiscount.it", ilgigante: "ilgigante.net", migross: "migross.it", tosano: "tosano.it", superconti: "superconti.it", italmark: "italmark.it", iper: "iper.it", dok: "supermercatidok.it", gala: "galasupermercati.it", conad: "conad.it", coop: "coop.it", crai: "crai.it", todis: "todis.it", famila: "famila.it", ao: "aeo.it", bennet: "bennet.com", iperal: "iperal.it", ali: "alisupermercati.it", pewex: "pewex.it", prestofresco: "prestofresco.it", sidis: "sidis.it", sisa: "sisa.it", eurospin: "eurospin.it", penny: "penny.it", aldi: "aldi.it", lidl: "lidl.it", esselunga: "esselunga.it", carrefour: "carrefour.it", md: "mdspa.it", tigros: "tigros.it", basko: "basko.it" };
 const chainName = (id) => chainById[id]?.name || ALL_CHAINS.find((c) => c.id === id)?.name || id;
 const initials = (name) => name.replace(/[^A-Za-zÀ-ú]/g, "").slice(0, 2);
 function logo(id, cls = "") {
@@ -32,6 +32,7 @@ function logo(id, cls = "") {
 
 /* ---------- Dati ---------- */
 let LOGOS = {}; // loghi ufficiali delle insegne (indirizzi da latest.json)
+let REGION = "";
 let MODE = "demo", FLYERS = {}, ALL_CHAINS = [], INSEGNE = [], GENERATED = null, LOAD_ERROR = false;
 const unitShort = (u) => ({ litro: "l", pezzo: "pz" }[u] || u);
 
@@ -61,6 +62,7 @@ async function loadReal() {
     FLYERS = latest.flyers || {};
     try { LOGOS = await (await fetch("../data/logos.json", { cache: "no-store" })).json(); } catch { LOGOS = {}; }
     ALL_CHAINS = latest.chains;
+    REGION = latest.region || "";
     GENERATED = latest.generatedAt || latest.date;
     chainById = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
     MODE = "real";
@@ -274,7 +276,7 @@ function homeHtml(hot) {
     </section>
     <section class="section small muted coverage-row">
       <span class="logo-stack">${CHAINS.slice(0, 5).map((c) => logo(c.id, "logo--sm")).join("")}</span>
-      <span style="margin-left:6px">Prezzi dai volantini di ${CHAINS.length} ${CHAINS.length === 1 ? "catena" : "catene"}.</span>
+      <span style="margin-left:6px">Prezzi dai volantini di ${CHAINS.length} ${CHAINS.length === 1 ? "catena" : "catene"}${REGION ? ` in ${esc(REGION)}` : ""}.</span>
       <a class="link" href="#catene" style="margin-left:auto">Copertura</a>
     </section>`;
 }
@@ -546,27 +548,27 @@ function chainsView() {
   setDock();
   const st = Object.fromEntries(ALL_CHAINS.map((c) => [c.id, c]));
   const fams = {};
-  for (const i of INSEGNE) {
+  for (const i of INSEGNE.filter((x) => !REGION || (x.regioniElenco || []).includes(REGION))) {
     const f = (fams[i.famiglia] ||= { id: i.famiglia, name: i.nomeFamiglia, pv: 0, insegne: [], tipo: i.tipo });
     f.pv += i.puntiVendita; f.insegne.push(i.insegna);
   }
-  const status = (f) => f.tipo === "drogheria" ? "fuori" : !st[f.id] ? "dafare" : (st[f.id].status === "ok" || st[f.id].status === "parziale") ? "attiva" : /AI/.test(st[f.id].note || "") ? "arrivo" : "bloccata";
-  const groups = { attiva: [], arrivo: [], bloccata: [], dafare: [], fuori: [] };
+  const status = (f) => f.tipo === "drogheria" ? "fuori" : !st[f.id] ? "dafare" : (st[f.id].status === "ok" || st[f.id].status === "parziale") ? "attiva" : /AI/.test(st[f.id].note || "") ? "arrivo" : /volantino attivo/.test(st[f.id].note || "") ? "pausa" : "bloccata";
+  const groups = { attiva: [], arrivo: [], pausa: [], bloccata: [], dafare: [], fuori: [] };
   for (const f of Object.values(fams)) groups[status(f)].push(f);
-  const titles = { attiva: "Con prezzi", arrivo: "In arrivo", bloccata: "Non leggibili", dafare: "Non ancora collegate", fuori: "Drogherie, per ora escluse" };
+  const titles = { attiva: "Con prezzi", arrivo: "In arrivo", pausa: "Senza volantino questa settimana", bloccata: "Non leggibili", dafare: "Non ancora collegate", fuori: "Drogherie, per ora escluse" };
   const food = Object.values(fams).filter((f) => f.tipo !== "drogheria");
   const pct = food.length ? Math.round((groups.attiva.reduce((s, f) => s + f.pv, 0) / food.reduce((s, f) => s + f.pv, 0)) * 100) : 0;
-  const why = (f, k) => k === "bloccata" ? `${f.name} non è disponibile: il sito non permette di leggere il volantino` : k === "arrivo" ? "Volantino trovato, lettura in corso" : f.insegne.join(", ");
+  const why = (f, k) => k === "pausa" ? "Il nuovo volantino non è ancora uscito" : k === "bloccata" ? `${f.name} non è disponibile: il sito non permette di leggere il volantino` : k === "arrivo" ? "Volantino trovato, lettura in corso" : f.insegne.join(", ");
   view.innerHTML = `
     <div class="backbar"><a class="icon-btn" href="#" aria-label="Indietro" data-back>${icon("chev-l", "icon--lg")}</a></div>
-    <h1 class="h1" style="margin:0 var(--gutter)">Copertura</h1>
+    <h1 class="h1" style="margin:0 var(--gutter)">Copertura${REGION ? ` in ${esc(REGION)}` : ""}</h1>
     <p class="small muted sub">${groups.attiva.length} catene con prezzi su ${food.length} catene alimentari</p>
-    <section class="verdict" aria-label="Copertura"><span class="tag">Punti vendita coperti</span>
-      <div class="verdict__price"><strong>${pct}%</strong></div>
-      <div class="verdict__euro">${groups.arrivo.length} catene in arrivo nei prossimi giorni</div></section>
+    <section class="verdict" aria-label="Copertura"><span class="tag">Catene con prezzi</span>
+      <div class="verdict__price"><strong>${groups.attiva.length}</strong><span>su ${food.length}</span></div>
+      <div class="verdict__euro">${groups.arrivo.length ? `${groups.arrivo.length} in arrivo · ` : ""}Il numero di negozi è nazionale: QBerg non lo divide per regione.</div></section>
     ${Object.keys(titles).filter((k) => groups[k].length).map((k) => `<section class="section"><div class="section-head"><h2 class="h3">${titles[k]}</h2><span class="small muted">${groups[k].length}</span></div>
       <div class="list">${groups[k].sort((a, b) => b.pv - a.pv).map((f) => `<div class="product" style="padding:10px 14px">${logo(f.id)}<span style="flex:1;min-width:0"><span class="product__name" style="display:block">${esc(f.name)}</span><span class="small muted">${esc(why(f, k))}</span></span><span class="small muted num">${f.pv} negozi</span></div>`).join("")}</div></section>`).join("")}
-    <p class="xsmall muted" style="margin:14px var(--gutter) 0">Elenco insegne: QBerg, Grande Distribuzione Italia 2025.</p>`;
+    <p class="xsmall muted" style="margin:14px var(--gutter) 0">Catene con negozi in ${esc(REGION || "Italia")}. Elenco insegne: QBerg, Grande Distribuzione Italia 2025.</p>`;
 }
 
 /* ---------- Avvisi su dati vecchi o errori ---------- */

@@ -8,7 +8,29 @@
    "canali": "Superette,Supermarket",
    "regioni": 20,
    "puntiVendita": 1248,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Eurospin",
@@ -17,7 +39,29 @@
    "canali": "Discount",
    "regioni": 20,
    "puntiVendita": 1243,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Acqua & Sapone",
@@ -26,7 +70,29 @@
    "canali": "Drug Specialists",
    "regioni": 20,
    "puntiVendita": 1005,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Lidl",
@@ -35,7 +101,29 @@
    "canali": "Discount",
    "regioni": 20,
    "puntiVendita": 802,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Md Discount",
@@ -44,7 +132,29 @@
    "canali": "Discount",
    "regioni": 20,
    "puntiVendita": 788,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Despar",
@@ -53,7 +163,28 @@
    "canali": "Superette,Supermarket",
    "regioni": 19,
    "puntiVendita": 1165,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Conad City",
@@ -62,7 +193,28 @@
    "canali": "Superette,Supermarket",
    "regioni": 19,
    "puntiVendita": 1096,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Tigota'",
@@ -71,7 +223,27 @@
    "canali": "Drug Specialists",
    "regioni": 18,
    "puntiVendita": 758,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Coop",
@@ -80,7 +252,27 @@
    "canali": "Ipermarket,Superette,Supermarket",
    "regioni": 18,
    "puntiVendita": 1111,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Crai",
@@ -89,7 +281,28 @@
    "canali": "Superette,Supermarket",
    "regioni": 19,
    "puntiVendita": 960,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Penny Market",
@@ -98,7 +311,27 @@
    "canali": "Discount",
    "regioni": 18,
    "puntiVendita": 463,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Conad Superstore",
@@ -107,7 +340,26 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 17,
    "puntiVendita": 267,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Eurospar",
@@ -116,7 +368,23 @@
    "canali": "Superette,Supermarket",
    "regioni": 14,
    "puntiVendita": 276,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Liguria",
+    "Lombardia",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Trentino-Alto Adige",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Prodet",
@@ -125,7 +393,23 @@
    "canali": "Drug Specialists",
    "regioni": 14,
    "puntiVendita": 54,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Molise",
+    "Puglia",
+    "Sicilia",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Pam",
@@ -134,7 +418,23 @@
    "canali": "Superette,Supermarket",
    "regioni": 14,
    "puntiVendita": 388,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Ipercoop",
@@ -143,7 +443,24 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 15,
    "puntiVendita": 110,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Puglia",
+    "Sicilia",
+    "Toscana",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Caddy's",
@@ -152,7 +469,22 @@
    "canali": "Drug Specialists",
    "regioni": 13,
    "puntiVendita": 313,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Sardegna",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Dpiu'",
@@ -161,7 +493,22 @@
    "canali": "Discount,Supermarket",
    "regioni": 13,
    "puntiVendita": 321,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Spazio Conad",
@@ -170,7 +517,24 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 15,
    "puntiVendita": 77,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Sigma",
@@ -179,7 +543,25 @@
    "canali": "Superette,Supermarket",
    "regioni": 16,
    "puntiVendita": 359,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Piu'Me",
@@ -188,7 +570,22 @@
    "canali": "Drug Specialists",
    "regioni": 13,
    "puntiVendita": 324,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Carrefour Express",
@@ -197,7 +594,24 @@
    "canali": "Superette,Supermarket",
    "regioni": 15,
    "puntiVendita": 818,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Campania",
+    "Emilia Romagna",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Umbria",
+    "Val d'Aosta"
+   ]
   },
   {
    "insegna": "Risparmio Casa",
@@ -206,7 +620,23 @@
    "canali": "Drug Specialists",
    "regioni": 14,
    "puntiVendita": 182,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Abruzzo",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Interspar",
@@ -215,7 +645,20 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 11,
    "puntiVendita": 89,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lombardia",
+    "Puglia",
+    "Sicilia",
+    "Trentino-Alto Adige",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Ok Sigma",
@@ -224,7 +667,23 @@
    "canali": "Superette,Supermarket",
    "regioni": 14,
    "puntiVendita": 213,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Toscana",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Famila",
@@ -233,7 +692,21 @@
    "canali": "Superette,Supermarket",
    "regioni": 12,
    "puntiVendita": 302,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sicilia",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "In's",
@@ -242,7 +715,21 @@
    "canali": "Discount",
    "regioni": 12,
    "puntiVendita": 573,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Toscana",
+    "Umbria",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "A&O",
@@ -251,7 +738,20 @@
    "canali": "Superette,Supermarket",
    "regioni": 11,
    "puntiVendita": 195,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lombardia",
+    "Piemonte",
+    "Puglia",
+    "Toscana",
+    "Val d'Aosta",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Margherita Conad",
@@ -260,7 +760,21 @@
    "canali": "Superette,Supermarket",
    "regioni": 12,
    "puntiVendita": 247,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Emilia Romagna",
+    "Lazio",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Trentino-Alto Adige"
+   ]
   },
   {
    "insegna": "Proshop",
@@ -269,7 +783,22 @@
    "canali": "Drug Specialists",
    "regioni": 13,
    "puntiVendita": 341,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Lazio",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Sicilia",
+    "Toscana"
+   ]
   },
   {
    "insegna": "Dm Drogeriemarkt",
@@ -278,7 +807,18 @@
    "canali": "Drug Specialists",
    "regioni": 9,
    "puntiVendita": 93,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Toscana",
+    "Trentino-Alto Adige",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Carrefour Market",
@@ -287,7 +827,20 @@
    "canali": "Superette,Supermarket",
    "regioni": 11,
    "puntiVendita": 331,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Piemonte",
+    "Toscana",
+    "Umbria",
+    "Val d'Aosta"
+   ]
   },
   {
    "insegna": "Carrefour",
@@ -296,7 +849,18 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 9,
    "puntiVendita": 41,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Piemonte",
+    "Sardegna",
+    "Toscana",
+    "Val d'Aosta"
+   ]
   },
   {
    "insegna": "Incoop",
@@ -305,7 +869,20 @@
    "canali": "Superette,Supermarket",
    "regioni": 11,
    "puntiVendita": 396,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Emilia Romagna",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+    "Toscana",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Meta'",
@@ -314,7 +891,18 @@
    "canali": "Superette,Supermarket",
    "regioni": 9,
    "puntiVendita": 51,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Piemonte",
+    "Puglia",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Todis",
@@ -323,7 +911,20 @@
    "canali": "Discount",
    "regioni": 11,
    "puntiVendita": 347,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Lazio",
+    "Marche",
+    "Molise",
+    "Puglia",
+    "Sicilia",
+    "Toscana",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Aldi",
@@ -332,7 +933,15 @@
    "canali": "Discount",
    "regioni": 6,
    "puntiVendita": 199,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lombardia",
+    "Piemonte",
+    "Trentino-Alto Adige",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Tuday Conad",
@@ -341,7 +950,17 @@
    "canali": "Superette,Supermarket",
    "regioni": 8,
    "puntiVendita": 33,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Toscana",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Maury's",
@@ -350,7 +969,19 @@
    "canali": "Drug Specialists",
    "regioni": 10,
    "puntiVendita": 108,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Abruzzo",
+    "Campania",
+    "Lazio",
+    "Lombardia",
+    "Marche",
+    "Molise",
+    "Sardegna",
+    "Toscana",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Caddy's Maxistore",
@@ -359,7 +990,18 @@
    "canali": "Drug Specialists",
    "regioni": 9,
    "puntiVendita": 19,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lazio",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Sardegna",
+    "Toscana",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Happy Casa",
@@ -368,7 +1010,18 @@
    "canali": "Drug Specialists",
    "regioni": 9,
    "puntiVendita": 17,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Calabria",
+    "Campania",
+    "Emilia Romagna",
+    "Lazio",
+    "Lombardia",
+    "Marche",
+    "Puglia",
+    "Sicilia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Pam Superstore",
@@ -377,7 +1030,18 @@
    "canali": "Supermarket",
    "regioni": 9,
    "puntiVendita": 38,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania",
+    "Emilia Romagna",
+    "Lazio",
+    "Molise",
+    "Piemonte",
+    "Puglia",
+    "Toscana",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Prix Quality",
@@ -386,7 +1050,14 @@
    "canali": "Discount",
    "regioni": 5,
    "puntiVendita": 193,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lombardia",
+    "Trentino-Alto Adige",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Sirene Blu",
@@ -395,7 +1066,14 @@
    "canali": "Drug Specialists",
    "regioni": 5,
    "puntiVendita": 80,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lombardia",
+    "Trentino-Alto Adige",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Eurospesa",
@@ -404,7 +1082,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 49,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Piemonte",
+    "Trentino-Alto Adige",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Panorama",
@@ -413,7 +1098,15 @@
    "canali": "Ipermarket,Superette,Supermarket",
    "regioni": 6,
    "puntiVendita": 23,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Piemonte",
+    "Toscana",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Deco'",
@@ -422,7 +1115,17 @@
    "canali": "Drug Specialists,Superette,Supermarket",
    "regioni": 8,
    "puntiVendita": 489,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Lazio",
+    "Molise",
+    "Puglia",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "La Saponeria",
@@ -431,7 +1134,13 @@
    "canali": "Drug Specialists",
    "regioni": 4,
    "puntiVendita": 51,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Trentino-Alto Adige",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Esselunga",
@@ -440,7 +1149,16 @@
    "canali": "Superette,Supermarket",
    "regioni": 7,
    "puntiVendita": 181,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Piemonte",
+    "Toscana",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Ekom",
@@ -449,7 +1167,15 @@
    "canali": "Discount",
    "regioni": 6,
    "puntiVendita": 147,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Liguria",
+    "Lombardia",
+    "Piemonte",
+    "Toscana",
+    "Val d'Aosta"
+   ]
   },
   {
    "insegna": "Sisa",
@@ -458,7 +1184,16 @@
    "canali": "Superette,Supermarket",
    "regioni": 7,
    "puntiVendita": 328,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Lazio",
+    "Puglia",
+    "Sicilia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Gran Risparmio Super",
@@ -467,7 +1202,16 @@
    "canali": "Superette,Supermarket",
    "regioni": 7,
    "puntiVendita": 50,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Lazio",
+    "Molise",
+    "Puglia"
+   ]
   },
   {
    "insegna": "Deco' Maxistore",
@@ -476,7 +1220,16 @@
    "canali": "Supermarket",
    "regioni": 7,
    "puntiVendita": 79,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Campania",
+    "Lazio",
+    "Molise",
+    "Puglia",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Dimeglio",
@@ -485,7 +1238,15 @@
    "canali": "Superette,Supermarket",
    "regioni": 6,
    "puntiVendita": 60,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania",
+    "Emilia Romagna",
+    "Liguria",
+    "Puglia",
+    "Sardegna",
+    "Toscana"
+   ]
   },
   {
    "insegna": "Dok",
@@ -494,7 +1255,15 @@
    "canali": "Superette,Supermarket",
    "regioni": 6,
    "puntiVendita": 196,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Molise",
+    "Puglia"
+   ]
   },
   {
    "insegna": "Sapori&Dintorni Conad",
@@ -503,7 +1272,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 10,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania",
+    "Emilia Romagna",
+    "Lombardia",
+    "Sardegna",
+    "Toscana"
+   ]
   },
   {
    "insegna": "Coal Il Market Plus",
@@ -512,7 +1288,15 @@
    "canali": "Superette,Supermarket",
    "regioni": 6,
    "puntiVendita": 54,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Emilia Romagna",
+    "Lazio",
+    "Marche",
+    "Molise",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Ard Discount",
@@ -521,7 +1305,14 @@
    "canali": "Discount",
    "regioni": 5,
    "puntiVendita": 253,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Puglia",
+    "Sardegna",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Rossotono Local",
@@ -530,7 +1321,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 94,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Puglia",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Rossotono Market",
@@ -539,7 +1337,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 53,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Puglia",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Cadoro",
@@ -548,7 +1353,12 @@
    "canali": "Supermarket",
    "regioni": 3,
    "puntiVendita": 25,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Friuli-Venezia Giulia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Coal Il Market City",
@@ -557,7 +1367,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 132,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Emilia Romagna",
+    "Lazio",
+    "Marche",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Coal Il Market",
@@ -566,7 +1383,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 88,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Emilia Romagna",
+    "Lazio",
+    "Marche",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Pick Up Supermercati",
@@ -575,7 +1399,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 51,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Molise",
+    "Puglia"
+   ]
   },
   {
    "insegna": "Gulliver",
@@ -584,7 +1415,13 @@
    "canali": "Superette,Supermarket",
    "regioni": 4,
    "puntiVendita": 94,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Liguria",
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Basko",
@@ -593,7 +1430,13 @@
    "canali": "Superette,Supermarket",
    "regioni": 4,
    "puntiVendita": 56,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Liguria",
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Emisfero",
@@ -602,7 +1445,13 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 4,
    "puntiVendita": 14,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Umbria",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Rossotono Easy",
@@ -611,7 +1460,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 99,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Lazio",
+    "Puglia",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Sidis",
@@ -620,7 +1476,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 73,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Calabria",
+    "Campania",
+    "Lazio",
+    "Sardegna",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Iper",
@@ -629,7 +1492,13 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 4,
    "puntiVendita": 22,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Piemonte",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Galassia",
@@ -638,7 +1507,13 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 4,
    "puntiVendita": 11,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Piemonte",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Pam City",
@@ -647,7 +1522,12 @@
    "canali": "Supermarket",
    "regioni": 3,
    "puntiVendita": 4,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Friuli-Venezia Giulia",
+    "Lombardia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Svelto A&O",
@@ -656,7 +1536,13 @@
    "canali": "Superette,Supermarket",
    "regioni": 4,
    "puntiVendita": 37,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Marche",
+    "Puglia",
+    "Toscana"
+   ]
   },
   {
    "insegna": "Ete'",
@@ -665,7 +1551,13 @@
    "canali": "Superette,Supermarket",
    "regioni": 4,
    "puntiVendita": 128,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Puglia"
+   ]
   },
   {
    "insegna": "Qui Discount",
@@ -674,7 +1566,13 @@
    "canali": "Discount",
    "regioni": 4,
    "puntiVendita": 90,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Puglia"
+   ]
   },
   {
    "insegna": "Tigre",
@@ -683,7 +1581,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 174,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Lazio",
+    "Marche",
+    "Molise",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Tigre Amico",
@@ -692,7 +1597,14 @@
    "canali": "Superette,Supermarket",
    "regioni": 5,
    "puntiVendita": 123,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Lazio",
+    "Marche",
+    "Molise",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Quick Sisa",
@@ -701,7 +1613,13 @@
    "canali": "Superette,Supermarket",
    "regioni": 4,
    "puntiVendita": 98,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Calabria",
+    "Puglia",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Oasi",
@@ -710,7 +1628,14 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 5,
    "puntiVendita": 29,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Lazio",
+    "Marche",
+    "Molise",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Unes U!",
@@ -719,7 +1644,12 @@
    "canali": "Superette,Supermarket",
    "regioni": 3,
    "puntiVendita": 148,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Il Gigante Super",
@@ -728,7 +1658,12 @@
    "canali": "Superette,Supermarket",
    "regioni": 3,
    "puntiVendita": 29,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Il Gigante Iper",
@@ -737,7 +1672,12 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 3,
    "puntiVendita": 23,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Vitulano Drugstore",
@@ -746,7 +1686,13 @@
    "canali": "Drug Specialists",
    "regioni": 4,
    "puntiVendita": 122,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Molise",
+    "Puglia"
+   ]
   },
   {
    "insegna": "Italmark",
@@ -755,7 +1701,12 @@
    "canali": "Supermarket",
    "regioni": 3,
    "puntiVendita": 83,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Kuadrifoglio",
@@ -764,7 +1715,12 @@
    "canali": "Drug Specialists",
    "regioni": 3,
    "puntiVendita": 31,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Migross Market",
@@ -773,7 +1729,12 @@
    "canali": "Superette,Supermarket",
    "regioni": 3,
    "puntiVendita": 18,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Migross Superstore",
@@ -782,7 +1743,12 @@
    "canali": "Supermarket",
    "regioni": 3,
    "puntiVendita": 11,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Iperfamila",
@@ -791,7 +1757,12 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 3,
    "puntiVendita": 9,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Lombardia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Maxi'",
@@ -800,7 +1771,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 53,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Friuli-Venezia Giulia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Il Tulipano",
@@ -809,7 +1784,11 @@
    "canali": "Drug Specialists",
    "regioni": 2,
    "puntiVendita": 36,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Friuli-Venezia Giulia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Visotto",
@@ -818,7 +1797,11 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 2,
    "puntiVendita": 26,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Friuli-Venezia Giulia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Spak",
@@ -827,7 +1810,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 8,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Friuli-Venezia Giulia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Iperspak",
@@ -836,7 +1823,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 6,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Friuli-Venezia Giulia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Emi Market",
@@ -845,7 +1836,13 @@
    "canali": "Superette,Supermarket",
    "regioni": 4,
    "puntiVendita": 16,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lazio",
+    "Marche",
+    "Toscana",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Maxifutura",
@@ -854,7 +1851,12 @@
    "canali": "Supermarket",
    "regioni": 3,
    "puntiVendita": 6,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Basilicata",
+    "Campania"
+   ]
   },
   {
    "insegna": "Prestofresco",
@@ -863,7 +1865,12 @@
    "canali": "Superette,Supermarket",
    "regioni": 3,
    "puntiVendita": 98,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Liguria",
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Bennet",
@@ -872,7 +1879,12 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 3,
    "puntiVendita": 54,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Liguria",
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Orvea",
@@ -881,7 +1893,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 6,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Trentino-Alto Adige",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Ipersisa",
@@ -890,7 +1906,12 @@
    "canali": "Supermarket",
    "regioni": 3,
    "puntiVendita": 26,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Calabria",
+    "Campania",
+    "Puglia"
+   ]
   },
   {
    "insegna": "Issimo",
@@ -899,7 +1920,12 @@
    "canali": "Superette,Supermarket",
    "regioni": 3,
    "puntiVendita": 27,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Calabria",
+    "Campania",
+    "Lazio"
+   ]
   },
   {
    "insegna": "Deco' Superstore",
@@ -908,7 +1934,12 @@
    "canali": "Supermarket",
    "regioni": 3,
    "puntiVendita": 31,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania",
+    "Lazio",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Ali'",
@@ -917,7 +1948,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 97,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Gala Superstore",
@@ -926,7 +1961,12 @@
    "canali": "Superette,Supermarket",
    "regioni": 3,
    "puntiVendita": 43,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Marche",
+    "Toscana",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Aliper",
@@ -935,7 +1975,11 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 2,
    "puntiVendita": 24,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Emi Supermercato",
@@ -944,7 +1988,12 @@
    "canali": "Supermarket",
    "regioni": 3,
    "puntiVendita": 16,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lazio",
+    "Toscana",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Super Elite",
@@ -953,7 +2002,12 @@
    "canali": "Superette,Supermarket",
    "regioni": 3,
    "puntiVendita": 49,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lazio",
+    "Marche",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Superconti",
@@ -962,7 +2016,12 @@
    "canali": "Superette,Supermarket",
    "regioni": 3,
    "puntiVendita": 32,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lazio",
+    "Marche",
+    "Umbria"
+   ]
   },
   {
    "insegna": "Poli",
@@ -971,7 +2030,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 28,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Trentino-Alto Adige"
+   ]
   },
   {
    "insegna": "Ete' Smarty",
@@ -980,7 +2042,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 22,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Campania"
+   ]
   },
   {
    "insegna": "Ete' Prime",
@@ -989,7 +2055,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 5,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Campania"
+   ]
   },
   {
    "insegna": "Iper Futura",
@@ -998,7 +2068,11 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 2,
    "puntiVendita": 3,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Basilicata",
+    "Campania"
+   ]
   },
   {
    "insegna": "Tigros",
@@ -1007,7 +2081,11 @@
    "canali": "Discount,Supermarket",
    "regioni": 2,
    "puntiVendita": 80,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Il Gigante Superstore",
@@ -1016,7 +2094,11 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 2,
    "puntiVendita": 18,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Carrefour Contact",
@@ -1025,7 +2107,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 4,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lombardia",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Maxisidis",
@@ -1034,7 +2120,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 14,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania",
+    "Sardegna"
+   ]
   },
   {
    "insegna": "Splendidi E Splendenti",
@@ -1043,7 +2133,11 @@
    "canali": "Drug Specialists",
    "regioni": 2,
    "puntiVendita": 93,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Calabria",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Mercato'",
@@ -1052,7 +2146,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 50,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Liguria",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Mercato' Local",
@@ -1061,7 +2159,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 48,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Liguria",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Migross Supermercati",
@@ -1070,7 +2172,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 22,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lombardia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Maxisconto Despar",
@@ -1079,7 +2185,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 16,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Calabria",
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Famiglia Cooperativa",
@@ -1088,7 +2198,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 9,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lombardia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Maxisconto Supermercati",
@@ -1097,7 +2211,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 7,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Liguria",
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Si' Con Te Supermercati",
@@ -1106,7 +2224,11 @@
    "canali": "Superette,Supermarket",
    "regioni": 2,
    "puntiVendita": 45,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Marche"
+   ]
   },
   {
    "insegna": "Opportunity Point",
@@ -1115,7 +2237,11 @@
    "canali": "Drug Specialists",
    "regioni": 2,
    "puntiVendita": 35,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Campania",
+    "Lazio"
+   ]
   },
   {
    "insegna": "Si' Con Te Superstore",
@@ -1124,7 +2250,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 27,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Marche"
+   ]
   },
   {
    "insegna": "Pilato",
@@ -1133,7 +2263,11 @@
    "canali": "Drug Specialists",
    "regioni": 2,
    "puntiVendita": 17,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Campania",
+    "Lazio"
+   ]
   },
   {
    "insegna": "Rossotono Minimarket",
@@ -1142,7 +2276,11 @@
    "canali": "Superette",
    "regioni": 2,
    "puntiVendita": 11,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania",
+    "Lazio"
+   ]
   },
   {
    "insegna": "Sisa Superstore",
@@ -1151,7 +2289,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 9,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sicilia",
+    "Veneto"
+   ]
   },
   {
    "insegna": "Extracoop",
@@ -1160,7 +2302,10 @@
    "canali": "Ipermarket",
    "regioni": 1,
    "puntiVendita": 3,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Emilia Romagna"
+   ]
   },
   {
    "insegna": "Gran Risparmio Maxi",
@@ -1169,7 +2314,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 3,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania",
+    "Lazio"
+   ]
   },
   {
    "insegna": "Iper La Spesa",
@@ -1178,7 +2327,11 @@
    "canali": "Supermarket",
    "regioni": 2,
    "puntiVendita": 13,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Abruzzo",
+    "Lazio"
+   ]
   },
   {
    "insegna": "Iperal",
@@ -1187,7 +2340,10 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 1,
    "puntiVendita": 55,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lombardia"
+   ]
   },
   {
    "insegna": "Iper Tosano",
@@ -1196,7 +2352,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 2,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lombardia"
+   ]
   },
   {
    "insegna": "D'Ambros",
@@ -1205,7 +2364,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 1,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lombardia"
+   ]
   },
   {
    "insegna": "Isa",
@@ -1214,7 +2376,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 135,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sardegna"
+   ]
   },
   {
    "insegna": "Conte'",
@@ -1223,7 +2388,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 58,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Calabria"
+   ]
   },
   {
    "insegna": "Pellicano",
@@ -1232,7 +2400,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 32,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania"
+   ]
   },
   {
    "insegna": "Maxi Nonna Isa",
@@ -1241,7 +2412,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 28,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sardegna"
+   ]
   },
   {
    "insegna": "Superpan",
@@ -1250,7 +2424,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 28,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sardegna"
+   ]
   },
   {
    "insegna": "Piccolo Supermercati",
@@ -1259,7 +2436,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 21,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania"
+   ]
   },
   {
    "insegna": "Iper Nonna Isa",
@@ -1268,7 +2448,10 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 1,
    "puntiVendita": 8,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sardegna"
+   ]
   },
   {
    "insegna": "Iperpan",
@@ -1277,7 +2460,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 7,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sardegna"
+   ]
   },
   {
    "insegna": "Verdeblu",
@@ -1286,7 +2472,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 6,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Calabria"
+   ]
   },
   {
    "insegna": "Grand' Ete'",
@@ -1295,7 +2484,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 3,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania"
+   ]
   },
   {
    "insegna": "Mercato' Big",
@@ -1304,7 +2496,10 @@
    "canali": "Ipermarket",
    "regioni": 1,
    "puntiVendita": 3,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Piemonte"
+   ]
   },
   {
    "insegna": "Iperspar",
@@ -1313,7 +2508,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 1,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Campania"
+   ]
   },
   {
    "insegna": "Saponi&Profumi",
@@ -1322,7 +2520,10 @@
    "canali": "Drug Specialists",
    "regioni": 1,
    "puntiVendita": 1,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Sardegna"
+   ]
   },
   {
    "insegna": "Paghipoco",
@@ -1331,7 +2532,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 78,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Super Conveniente",
@@ -1340,7 +2544,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 36,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Bernava",
@@ -1349,7 +2556,10 @@
    "canali": "Drug Specialists",
    "regioni": 1,
    "puntiVendita": 29,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Deco' Iperstore",
@@ -1358,7 +2568,10 @@
    "canali": "Ipermarket,Supermarket",
    "regioni": 1,
    "puntiVendita": 7,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Superstore Sidis",
@@ -1367,7 +2580,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 3,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Iper Sigma",
@@ -1376,7 +2592,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 2,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Sicilia"
+   ]
   },
   {
    "insegna": "Si' Con Te Market",
@@ -1385,7 +2604,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 24,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Marche"
+   ]
   },
   {
    "insegna": "Supermercati Imagross",
@@ -1394,7 +2616,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 12,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Puglia"
+   ]
   },
   {
    "insegna": "Smoll",
@@ -1403,7 +2628,10 @@
    "canali": "Drug Specialists",
    "regioni": 1,
    "puntiVendita": 3,
-   "tipo": "drogheria"
+   "tipo": "drogheria",
+   "regioniElenco": [
+    "Marche"
+   ]
   },
   {
    "insegna": "Emi Superstore",
@@ -1412,7 +2640,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 2,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Umbria"
+   ]
   },
   {
    "insegna": "Emi Spesa",
@@ -1421,7 +2652,10 @@
    "canali": "Superette",
    "regioni": 1,
    "puntiVendita": 1,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Umbria"
+   ]
   },
   {
    "insegna": "Pewex",
@@ -1430,7 +2664,10 @@
    "canali": "Superette,Supermarket",
    "regioni": 1,
    "puntiVendita": 38,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lazio"
+   ]
   },
   {
    "insegna": "Pim",
@@ -1439,7 +2676,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 23,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lazio"
+   ]
   },
   {
    "insegna": "Il Punto Sigma",
@@ -1448,7 +2688,10 @@
    "canali": "Superette",
    "regioni": 1,
    "puntiVendita": 1,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lazio"
+   ]
   },
   {
    "insegna": "Iperfamily",
@@ -1457,7 +2700,10 @@
    "canali": "Supermarket",
    "regioni": 1,
    "puntiVendita": 1,
-   "tipo": "alimentare"
+   "tipo": "alimentare",
+   "regioniElenco": [
+    "Lazio"
+   ]
   }
  ]
 }

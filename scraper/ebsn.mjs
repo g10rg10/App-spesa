@@ -16,7 +16,7 @@ async function pagesFrom(prefix, ext) {
   return pages;
 }
 
-export function ebsnChain(chainId, host, { types = [1, 2], skip = /enoteca|vini/i } = {}) {
+export function ebsnChain(chainId, host, { types = [1, 2], skip = /enoteca|vini|genova|spezia|piacentino|pavese|liguria/i } = {}) {
   return async function load() {
     const today = new Date().toISOString().slice(0, 10);
     const leaflets = [];

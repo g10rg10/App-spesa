@@ -5,9 +5,10 @@
 import { extractFlyer } from "./flyer-ai.mjs";
 const UA = { "User-Agent": "Mozilla/5.0" };
 const API = "https://volantinoggi.promomediaeng.it/api";
+// Città di riferimento: Piemonte (Torino prima, poi gli altri capoluoghi). Si cambia con REF_LAT/REF_LON.
 const CITIES = [
-  [+(process.env.REF_LAT || 45.4642), +(process.env.REF_LON || 9.19)], // città di riferimento (Milano)
-  [45.07, 7.68], [44.49, 11.34], [44.41, 8.95], [45.44, 10.99], [41.9, 12.5], [40.85, 14.27], [41.12, 16.87], [38.12, 13.36], [39.22, 9.12],
+  [+(process.env.REF_LAT || 45.0703), +(process.env.REF_LON || 7.6869)], // Torino
+  [45.4469, 8.6219], [44.3845, 7.5427], [44.9129, 8.6155], [44.9008, 8.2064], [45.5663, 8.0533], [45.3249, 8.4234], [45.9216, 8.5513], // Novara, Cuneo, Alessandria, Asti, Biella, Vercelli, Verbania
 ];
 const MAX_FLYERS = +(process.env.VO_MAX_FLYERS || 1); // volantini per catena: 1 = solo il principale (il budget AI gratuito è limitato)
 
@@ -33,6 +34,9 @@ export const VO_CHAINS = [
   { id: "prestofresco", name: "Prestofresco", match: /^prestofresco\b/i },
   { id: "sidis", name: "Sidis", match: /sidis/i },
   { id: "piccolo", name: "Piccolo", match: /piccolo/i },
+  { id: "carrefour", name: "Carrefour", match: /^carrefour (market|iper|express)\b/i, prefer: /^carrefour market$/i },
+  { id: "mercato", name: "Mercatò", match: /^mercato'?\b/i, prefer: /^mercato'?$/i },
+  { id: "iper", name: "Iper", match: /^iper$/i },
 ];
 
 let flyersCache = null;
@@ -67,7 +71,7 @@ async function pages(id) {
 export function voChain(chain) {
   return async function load() {
     const fl = (await allFlyers()).filter((f) => chain.match.test(f.name.trim()));
-    if (!fl.length) return [];
+    if (!fl.length) { const none = []; none.noFlyer = true; return none; } // nessun volantino attivo nella zona
     const bestCity = Math.min(...fl.map((f) => f.cityRank));
     const pick = fl.filter((f) => f.cityRank === bestCity)
       .sort((a, b) => (chain.prefer && chain.prefer.test(b.name.trim())) - (chain.prefer && chain.prefer.test(a.name.trim())) || b.startDate.localeCompare(a.startDate))
