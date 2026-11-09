@@ -1,8 +1,9 @@
 {
  "conad": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/conad/9c1a785986984b4cb73dbd1502f83e55conad.png",
  "coop": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/coopv/168b941c29a746c7b21aedfa47464b1bcoop.png",
- "despar": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/eurospar/21e071e9e1414f9babde016143a9e158eurospar.png",
+ "despar": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/despar/f3ff6587d1a24248a5ed66d49129b321Despar.png",
  "famila": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/famila/7bf6873769eb4e11aa624df167b507bbfamila.png",
+ "sisa": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/quick/a840c7b948a947cc95b006dc9e0d1245QUICK.png",
  "ao": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/ao/ba0aeea53d524f18ad12eeb3e6c5c8c2A%26O.png",
  "bennet": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/bennet/09b202faabc04612a60e0198a60e8acbbennet.png",
  "iperal": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/iperal/8c9b89c1c15747d78f0ebd0677eba54eiperal.png",
@@ -15,5 +16,8 @@
  "tigros": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/tigros/8511c29db9284c4680a3788bd9a89fe4tigros.png",
  "basko": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/basko/3421cb9bb1684f0f9b7b63bc782c6e3cbasko.png",
  "aldi": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/aldi/3ea24d7b3c0d46389329e04b9fdaa2b0Progetto%20senza%20titolo%20(2).png",
- "eurospin": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/eurospin/0c69cae050654a7fb708985dbd826363eurospin.png"
+ "md": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/md/c167711d94e4497bbaf7ea5ae3b4c12bMD_Italia_Logo.jpg",
+ "eurospin": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/eurospin/0c69cae050654a7fb708985dbd826363eurospin.png",
+ "lidl": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/lidl/7f4c6e201b684f48bd542b2f5ceb8ed9LIDL.png",
+ "esselunga": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/esselunga/399f71a1821142fb94a0767dbabbd664esselunga.png"
 }
