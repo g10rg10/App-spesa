@@ -2,6 +2,7 @@
  "conad": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/conad/9c1a785986984b4cb73dbd1502f83e55conad.png",
  "coop": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/coopv/168b941c29a746c7b21aedfa47464b1bcoop.png",
  "despar": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/eurospar/21e071e9e1414f9babde016143a9e158eurospar.png",
+ "crai": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/crai/a5a1d459458a43159051f965ac4d5f5fCrai.png",
  "famila": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/famila/7bf6873769eb4e11aa624df167b507bbfamila.png",
  "ao": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/ao/ba0aeea53d524f18ad12eeb3e6c5c8c2A%26O.png",
  "bennet": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/bennet/09b202faabc04612a60e0198a60e8acbbennet.png",
@@ -10,8 +11,11 @@
  "prestofresco": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/prestofresco/c980d6a2cf914896bc5f1a931413696aprestofresco.png",
  "carrefour": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/carrefourmarket/f1a9692d8dc747c1842a5e211c6b2e90Carrefour-market.png",
  "mercato": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/mercato/7ac862e663ad4c2b94d0bd2f2ba1d8a4mercato.png",
+ "iper": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/iper/525d1c3fef03483d82a0c70016a5e5e3INSEGNA%20FINIPER.png",
  "tigros": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/tigros/8511c29db9284c4680a3788bd9a89fe4tigros.png",
  "basko": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/basko/3421cb9bb1684f0f9b7b63bc782c6e3cbasko.png",
  "aldi": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/aldi/3ea24d7b3c0d46389329e04b9fdaa2b0Progetto%20senza%20titolo%20(2).png",
- "md": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/md/c167711d94e4497bbaf7ea5ae3b4c12bMD_Italia_Logo.jpg"
+ "md": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/md/c167711d94e4497bbaf7ea5ae3b4c12bMD_Italia_Logo.jpg",
+ "eurospin": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/eurospin/0c69cae050654a7fb708985dbd826363eurospin.png",
+ "lidl": "https://volantinoggi.promomediaeng.it/api/Resources/Signboard/lidl/7f4c6e201b684f48bd542b2f5ceb8ed9LIDL.png"
 }
